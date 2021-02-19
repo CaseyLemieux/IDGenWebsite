@@ -1,7 +1,9 @@
 ﻿using ExcelDataReader;
+using IDGenWebsite.Data;
 using IDGenWebsite.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,10 +16,12 @@ namespace IDGenWebsite.Controllers
     public class LoginController : Controller
     {
         private readonly ILogger<LoginController> _logger;
+        private readonly SchoolContext _context;
 
-        public LoginController(ILogger<LoginController> logger)
+        public LoginController(ILogger<LoginController> logger, SchoolContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -32,15 +36,15 @@ namespace IDGenWebsite.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         //[HttpGet]
-        public IActionResult TestExcel()
+        public async Task<IActionResult> ViewStudents()
         {
-            return View(new List<StudentModel>());
+            return View("TestExcel", await _context.Students.ToListAsync());
         }
 
         [HttpPost]
         public IActionResult TestExcel(IFormCollection form)
         {
-            List<StudentModel> students = new List<StudentModel>();
+            //List<StudentModel> students = new List<StudentModel>();
 
             var fileName = "./Focus Students Feburary.xlsx";
 
@@ -53,7 +57,7 @@ namespace IDGenWebsite.Controllers
                     reader.Read();
                     while (reader.Read())
                     {
-                        students.Add(new StudentModel
+                        _context.Add(new StudentModel
                         {
                             StudentID = reader.GetValue(0).ToString(),
                             LastName = reader.GetValue(1).ToString(),
@@ -62,9 +66,10 @@ namespace IDGenWebsite.Controllers
                             GradeLevel = reader.GetValue(4).ToString()
                         });
                     }
+                    _context.SaveChanges();
                 }
             }
-            return View(students);
+            return View(ViewStudents());
         }
     }
 }
