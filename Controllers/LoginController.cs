@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace IDGenWebsite.Controllers
         //[HttpGet]
         public async Task<IActionResult> ViewStudents()
         {
-            return View("TestExcel", await _context.Students.ToListAsync());
+            return View(await _context.Students.ToListAsync());
         }
 
         [HttpPost]
@@ -57,19 +58,58 @@ namespace IDGenWebsite.Controllers
                     reader.Read();
                     while (reader.Read())
                     {
-                        _context.Add(new StudentModel
+                        StudentModel student = new StudentModel();
+                        student.StudentID = reader.GetValue(0).ToString();
+                        student.LastName = reader.GetValue(0).ToString();
+                        student.FirstName = reader.GetValue(0).ToString();
+                        student.Email = reader.GetValue(0).ToString();
+                        student.GradeLevel = reader.GetValue(0).ToString();
+
+                        var dbEntry = _context.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
+                        if(dbEntry == null)
+                        {
+                            _context.Add(student);
+                        }
+                        /*_context.Add(new StudentModel
                         {
                             StudentID = reader.GetValue(0).ToString(),
                             LastName = reader.GetValue(1).ToString(),
                             FirstName = reader.GetValue(2).ToString(),
                             Email = reader.GetValue(3).ToString(),
                             GradeLevel = reader.GetValue(4).ToString()
-                        });
+                        }); */
                     }
                     _context.SaveChanges();
                 }
             }
-            return View(ViewStudents());
+            return RedirectToAction("ViewStudents");
+        }
+        public IActionResult UploadStudents()
+        {
+            return View();
+        }
+        [HttpPost("FileUpload")]
+        public async Task<IActionResult> UploadFocus(List<IFormFile> files)
+        {
+            long size = files.Sum(f => f.Length);
+
+            var filePaths = new List<string>();
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    // full path to file in temp location
+                    var filePath = Path.GetTempFileName(); //we are using Temp file name just for the example. Add your own file path.
+                    filePaths.Add(filePath);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+            }
+            // process uploaded files
+            // Don't rely on or trust the FileName property without validation.
+            return Ok(new { count = files.Count, size, filePaths });
         }
     }
 }
