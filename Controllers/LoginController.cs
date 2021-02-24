@@ -1,6 +1,7 @@
 ﻿using ExcelDataReader;
 using IDGenWebsite.Data;
 using IDGenWebsite.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace IDGenWebsite.Controllers
     {
         private readonly ILogger<LoginController> _logger;
         private readonly SchoolContext _context;
+        private readonly IWebHostEnvironment _env;
 
         public LoginController(ILogger<LoginController> logger, SchoolContext context)
         {
@@ -42,12 +44,11 @@ namespace IDGenWebsite.Controllers
             return View(await _context.Students.ToListAsync());
         }
 
-        [HttpPost]
-        public IActionResult TestExcel(IFormCollection form)
+        public async Task<IActionResult> TestExcel()
         {
             //List<StudentModel> students = new List<StudentModel>();
 
-            var fileName = "./Focus Students Feburary.xlsx";
+            var fileName = "./Uploads/Focus Students Feburary.xlsx";
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -60,15 +61,15 @@ namespace IDGenWebsite.Controllers
                     {
                         StudentModel student = new StudentModel();
                         student.StudentID = reader.GetValue(0).ToString();
-                        student.LastName = reader.GetValue(0).ToString();
-                        student.FirstName = reader.GetValue(0).ToString();
-                        student.Email = reader.GetValue(0).ToString();
-                        student.GradeLevel = reader.GetValue(0).ToString();
+                        student.LastName = reader.GetValue(1).ToString();
+                        student.FirstName = reader.GetValue(2).ToString();
+                        student.Email = reader.GetValue(3).ToString();
+                        student.GradeLevel = reader.GetValue(4).ToString();
 
-                        var dbEntry = _context.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
+                        var dbEntry = await _context.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
                         if(dbEntry == null)
                         {
-                            _context.Add(student);
+                             _context.Add(student);
                         }
                         /*_context.Add(new StudentModel
                         {
@@ -91,25 +92,27 @@ namespace IDGenWebsite.Controllers
         [HttpPost("FileUpload")]
         public async Task<IActionResult> UploadFocus(List<IFormFile> files)
         {
-            long size = files.Sum(f => f.Length);
+            var folderName = "Uploads";
 
-            var filePaths = new List<string>();
-            foreach (var formFile in files)
+            if (files != null)
             {
-                if (formFile.Length > 0)
+                foreach (var formFile in files)
                 {
-                    // full path to file in temp location
-                    var filePath = Path.GetTempFileName(); //we are using Temp file name just for the example. Add your own file path.
-                    filePaths.Add(filePath);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    var fileName = Path.GetFileName(formFile.FileName);
+                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    using(var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
-                        await formFile.CopyToAsync(stream);
+                        await formFile.CopyToAsync(fileStream);
                     }
                 }
             }
             // process uploaded files
             // Don't rely on or trust the FileName property without validation.
-            return Ok(new { count = files.Count, size, filePaths });
+            //var fileName = filePaths.FirstOrDefault();
+            return RedirectToAction("TestExcel");
         }
+
+        
     }
 }

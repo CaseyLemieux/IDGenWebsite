@@ -1,20 +1,92 @@
-﻿@page
+﻿@using IDGenWebsite.Models
+@model IEnumerable<StudentModel>
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
 
-<form method="post" enctype="multipart/form-data" asp-controller="Login" asp-action="UploadFocus">
-    <div class="form-group">
-        <div class="col-md-10">
-            <p>Upload one or more files using this form:</p>
-            <input type="file" name="files" multiple />
+<html>
+<div>
+    <form method="post" enctype="multipart/form-data" asp-controller="Login" asp-action="UploadFocus">
+        <div class="form-group">
+            <div class="col-md-10">
+                <p>Upload Focus File:</p>
+                <input type="file" name="files" multiple />
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <input type="submit" value="Upload" />
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Upload" />
+            </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
+<div>
+    <form method="post" enctype="multipart/form-data" asp-controller="Login" asp-action="UploadClassLink">
+        <div class="form-group">
+            <div class="col-md-10">
+                <p>Upload ClassLink File:</p>
+                <input type="file" name="files" multiple />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Upload" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<body>
+    @if (Model != null && Model.Count() > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StudentID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GradeLevel)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StudentID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GradeLevel)
+                        </td>
+                        <td>
+                            <a asp-action="PrintID">Print ID Badge</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</body>
+</html>
