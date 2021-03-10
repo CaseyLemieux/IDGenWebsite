@@ -44,6 +44,29 @@ namespace IDGenWebsite.Controllers
             return View(await _context.Students.ToListAsync());
         }
 
+        public async Task<IActionResult> ParseClasslinkFile(string fileName)
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            using (var stream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    reader.Read();
+                    while (reader.Read())
+                    {
+                        var student = await _context.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
+                        if(student != null)
+                        {
+                            student.DisplayName = reader.GetValue(3).ToString();
+                            student.QrCode = reader.GetValue(4).ToString();
+                        }
+                    }
+                    _context.SaveChanges();
+                }
+            }
+            return RedirectToAction("ViewStudents");
+        }
+
         public async Task<IActionResult> TestExcel()
         {
             //List<StudentModel> students = new List<StudentModel>();
@@ -89,14 +112,14 @@ namespace IDGenWebsite.Controllers
         {
             return View();
         }
-        [HttpPost("FileUpload")]
-        public async Task<IActionResult> UploadFocus(List<IFormFile> files)
+        [HttpPost("FocusFileUpload")]
+        public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
             var folderName = "Uploads";
 
-            if (files != null)
+            if (focusFiles != null)
             {
-                foreach (var formFile in files)
+                foreach (var formFile in focusFiles)
                 {
                     var fileName = Path.GetFileName(formFile.FileName);
                     var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
@@ -113,6 +136,30 @@ namespace IDGenWebsite.Controllers
             return RedirectToAction("TestExcel");
         }
 
-        
+        [HttpPost("ClassLinkFileUpload")]
+        public async Task<IActionResult> UploadClassLink(List<IFormFile> classLinkFiles)
+        {
+            var folderName = "Uploads";
+            var fullPath = "";
+            if (classLinkFiles != null)
+            {
+                foreach (var formFile in classLinkFiles)
+                {
+                    var fileName = Path.GetFileName(formFile.FileName);
+                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    fullPath = Path.Combine(pathToSave, fileName);
+                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(fileStream);
+                    }
+                }
+            }
+            // process uploaded files
+            // Don't rely on or trust the FileName property without validation.
+            //var fileName = filePaths.FirstOrDefault();
+            return await ParseClasslinkFile(fullPath);
+        }
+
+
     }
 }
