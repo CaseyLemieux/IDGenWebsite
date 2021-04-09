@@ -19,7 +19,7 @@ namespace IDGenWebsite.Controllers
     {
         private readonly ILogger<LoginController> _logger;
         private readonly SchoolContext _context;
-        private readonly IWebHostEnvironment _env;
+        //private readonly IWebHostEnvironment _env;
 
         public LoginController(ILogger<LoginController> logger, SchoolContext context)
         {
