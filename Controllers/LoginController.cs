@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using IronPdf;
 
 namespace IDGenWebsite.Controllers
 {
@@ -160,6 +161,49 @@ namespace IDGenWebsite.Controllers
             return await ParseClasslinkFile(fullPath);
         }
 
+        public async Task<IActionResult> UploadIDs(List<IFormFile> idPdfs)
+        {
+            var folderName = "Uploads";
+            var fullPath = "";
+            if(idPdfs != null)
+            {
+                foreach(var formFile in idPdfs)
+                {
+                    var fileName = Path.GetFileName(formFile.FileName);
+                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    fullPath = Path.Combine(pathToSave, fileName);
+                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(fileStream);
+                    }
+                }
+            }
+            return await ParseFocusPDF(fullPath);
+        }
 
+        public async Task<IActionResult> ParseFocusPDF(string path)
+        {
+            PdfDocument pdf = PdfDocument.FromFile(path);
+            for(int i = 0; i < pdf.PageCount; i++)
+            {
+                string text = pdf.ExtractTextFromPage(i);
+                string[] textArray = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                if(textArray.Length == 3)
+                {
+                    string id = textArray[2];
+                    var student = await _context.Students.FirstOrDefaultAsync(s => s.StudentID == id);
+                    if(student != null)
+                    {
+                        PdfDocument page = pdf.CopyPage(i);
+                        byte[] bytes = page.BinaryData;
+                        student.IdPic = bytes;
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            //string text = pdf.ExtractAllText();
+            //string[] splitText = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            return RedirectToAction("ViewStudents");
+        }
     }
 }

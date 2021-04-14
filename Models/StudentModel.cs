@@ -15,6 +15,6 @@ namespace IDGenWebsite.Models
         public string DisplayName { get; set; }
         public string QrCode { get; set; }
         public string GradeLevel { get; set; }
-        public byte IdPic { get; set; }
+        public byte[] IdPic { get; set; }
     }
 }
