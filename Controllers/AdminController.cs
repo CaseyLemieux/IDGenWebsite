@@ -18,13 +18,13 @@ using System.Drawing;
 
 namespace IDGenWebsite.Controllers
 {
-    public class LoginController : Controller
+    public class AdminController : Controller
     {
-        private readonly ILogger<LoginController> _logger;
+        private readonly ILogger<AdminController> _logger;
         private readonly SchoolContext _context;
         //private readonly IWebHostEnvironment _env;
 
-        public LoginController(ILogger<LoginController> logger, SchoolContext context)
+        public AdminController(ILogger<AdminController> logger, SchoolContext context)
         {
             _logger = logger;
             _context = context;
@@ -209,7 +209,7 @@ namespace IDGenWebsite.Controllers
                         {
                             QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
                             QRCode qRCode = new QRCode(qRCodeData);
-                            Bitmap qrCodeImage = qRCode.GetGraphic(20);
+                            Bitmap qrCodeImage = qRCode.GetGraphic(15);
                             PdfDocument qrDoc = ImageToPdfConverter.ImageToPdf(qrCodeImage);
                             page.AppendPdf(qrDoc);
                             byte[] bytes = page.BinaryData;
