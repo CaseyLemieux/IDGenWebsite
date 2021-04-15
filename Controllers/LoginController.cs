@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IronPdf;
+using QRCoder;
+using System.Drawing;
 
 namespace IDGenWebsite.Controllers
 {
@@ -183,7 +185,10 @@ namespace IDGenWebsite.Controllers
 
         public async Task<IActionResult> ParseFocusPDF(string path)
         {
+            //Create the QrCode generator and get the pdf from the uploaded files
+            QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
             PdfDocument pdf = PdfDocument.FromFile(path);
+            //Loop through the pages and extract the text to match id pages with students
             for(int i = 0; i < pdf.PageCount; i++)
             {
                 string text = pdf.ExtractTextFromPage(i);
@@ -194,15 +199,45 @@ namespace IDGenWebsite.Controllers
                     var student = await _context.Students.FirstOrDefaultAsync(s => s.StudentID == id);
                     if(student != null)
                     {
+                        //Save the page as their ID picture
                         PdfDocument page = pdf.CopyPage(i);
-                        byte[] bytes = page.BinaryData;
-                        student.IdPic = bytes;
+                        
+
+                        //Generate their QR Code if their QR Code field isnt null
+                        //TODO Redo this later to a seperate method that can be called on demand. 
+                        if (student.QrCode != null)
+                        {
+                            QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
+                            QRCode qRCode = new QRCode(qRCodeData);
+                            Bitmap qrCodeImage = qRCode.GetGraphic(20);
+                            PdfDocument qrDoc = ImageToPdfConverter.ImageToPdf(qrCodeImage);
+                            page.AppendPdf(qrDoc);
+                            byte[] bytes = page.BinaryData;
+                            student.IdPic = bytes;
+                        }
+                        else
+                        {
+                            byte[] bytes = page.BinaryData;
+                            student.IdPic = bytes;
+                        }
                         _context.SaveChanges();
                     }
                 }
             }
             //string text = pdf.ExtractAllText();
             //string[] splitText = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            return RedirectToAction("ViewStudents");
+        }
+        [HttpPost]
+        public async Task<IActionResult> SaveID(int id)
+        {
+            
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
+            if (student != null && student.IdPic != null)
+            {
+                return File(student.IdPic, "application/pdf", string.Concat(student.Email, ".pdf"));
+            }
+
             return RedirectToAction("ViewStudents");
         }
     }
