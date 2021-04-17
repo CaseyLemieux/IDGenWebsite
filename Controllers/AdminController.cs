@@ -74,7 +74,7 @@ namespace IDGenWebsite.Controllers
         {
             //List<StudentModel> students = new List<StudentModel>();
 
-            var fileName = "./Uploads/Focus Students Feburary.xlsx";
+            var fileName = "./Focus Students Feburary.xlsx";
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -125,7 +125,7 @@ namespace IDGenWebsite.Controllers
                 foreach (var formFile in focusFiles)
                 {
                     var fileName = Path.GetFileName(formFile.FileName);
-                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
                     var fullPath = Path.Combine(pathToSave, fileName);
                     using(var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
@@ -149,7 +149,7 @@ namespace IDGenWebsite.Controllers
                 foreach (var formFile in classLinkFiles)
                 {
                     var fileName = Path.GetFileName(formFile.FileName);
-                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
                     fullPath = Path.Combine(pathToSave, fileName);
                     using (var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
@@ -172,7 +172,7 @@ namespace IDGenWebsite.Controllers
                 foreach(var formFile in idPdfs)
                 {
                     var fileName = Path.GetFileName(formFile.FileName);
-                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
                     fullPath = Path.Combine(pathToSave, fileName);
                     using (var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
@@ -185,6 +185,7 @@ namespace IDGenWebsite.Controllers
 
         public async Task<IActionResult> ParseFocusPDF(string path)
         {
+          
             //Create the QrCode generator and get the pdf from the uploaded files
             QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
             PdfDocument pdf = PdfDocument.FromFile(path);

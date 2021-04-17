@@ -20,6 +20,8 @@ namespace IDGenWebsite
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            //Iron PDF Settings
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -47,12 +49,15 @@ namespace IDGenWebsite
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+           
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,5 +1,7 @@
 using IDGenWebsite.Data;
+using IDGenWebsite.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +19,8 @@ namespace IDGenWebsite
         {
             var host = CreateHostBuilder(args).Build();
             CreateDbIfNotExists(host);
+            CreateIdentityDBIfNotExists(host);
+            SeedData(host);
             host.Run();
         }
 
@@ -40,7 +44,43 @@ namespace IDGenWebsite
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred creating the DB.");
+                    logger.LogError(ex, "An error occurred creating the Student DB.");
+                }
+            }
+        }
+
+        public static void CreateIdentityDBIfNotExists(IHost host)
+        {
+            using(var scope = host.Services.CreateScope()){
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<IDGenWebsiteContext>();
+                    DbInitializer.InitializeIdentityDB(context);
+                }
+                catch(Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "AN error occured creating the Identity DB");
+                }
+            }
+        }
+
+        public static void SeedData(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var userManager = services.GetRequiredService<UserManager<EmployeeModel>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    DbInitializer.SeedData(userManager, roleManager);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An Error occured seeding the data");
                 }
             }
         }

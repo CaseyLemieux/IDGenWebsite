@@ -1,5 +1,6 @@
 ﻿using System;
 using IDGenWebsite.Data;
+using IDGenWebsite.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -19,8 +20,10 @@ namespace IDGenWebsite.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("IDGenWebsiteContextConnection")));
 
-                services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<IDGenWebsiteContext>();
+                /*services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<IDGenWebsiteContext>(); */
+                services.AddIdentity<EmployeeModel, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IDGenWebsiteContext>()
+                .AddDefaultTokenProviders().AddDefaultUI().AddDefaultTokenProviders(); 
             });
         }
     }

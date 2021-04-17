@@ -8,6 +8,7 @@ namespace IDGenWebsite.Models
 {
     public class EmployeeModel : IdentityUser
     {
-        
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }
