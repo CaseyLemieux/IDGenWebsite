@@ -27,5 +27,7 @@ namespace IDGenWebsite.Models
         public byte[] IdPic { get; set; }
         [Display(Name = "Generated QR Code:")]
         public byte[] GeneratedQrCode { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
