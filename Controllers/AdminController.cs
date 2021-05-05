@@ -35,6 +35,10 @@ namespace IDGenWebsite.Controllers
             return View();
         }
 
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -44,6 +48,7 @@ namespace IDGenWebsite.Controllers
         //[HttpGet]
         public async Task<IActionResult> ViewStudents()
         {
+            var user = User.Identity.Name;
             return View(await _context.Students.ToListAsync());
         }
 

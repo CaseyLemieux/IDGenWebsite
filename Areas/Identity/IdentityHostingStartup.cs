@@ -23,7 +23,18 @@ namespace IDGenWebsite.Areas.Identity
                 /*services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<IDGenWebsiteContext>(); */
                 services.AddIdentity<EmployeeModel, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IDGenWebsiteContext>()
-                .AddDefaultTokenProviders().AddDefaultUI().AddDefaultTokenProviders(); 
+                .AddDefaultTokenProviders().AddDefaultUI().AddRoleManager<RoleManager<IdentityRole>>();
+
+                /*services.ConfigureApplicationCookie(options =>
+                {
+                    // Cookie settings
+                    options.Cookie.HttpOnly = true;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                    options.LoginPath = "/Identity/Account/Login";
+                    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                    options.SlidingExpiration = true;
+                }); */
             });
         }
     }
