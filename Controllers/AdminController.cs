@@ -46,10 +46,10 @@ namespace IDGenWebsite.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         //[HttpGet]
-        public async Task<IActionResult> ViewStudents()
+        public IActionResult ViewStudents()
         {
-            var user = User.Identity.Name;
-            return View(await _context.Students.ToListAsync());
+            //var user = User.Identity.Name;
+            return RedirectToAction("Index", "Student");
         }
 
         public async Task<IActionResult> ParseClasslinkFile(string fileName)
@@ -234,17 +234,6 @@ namespace IDGenWebsite.Controllers
             //string[] splitText = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             return RedirectToAction("ViewStudents");
         }
-        [HttpPost]
-        public async Task<IActionResult> SaveID(int id)
-        {
-            
-            var student = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
-            if (student != null && student.IdPic != null)
-            {
-                return File(student.IdPic, "application/pdf", string.Concat(student.Email, ".pdf"));
-            }
-
-            return RedirectToAction("ViewStudents");
-        }
+        
     }
 }

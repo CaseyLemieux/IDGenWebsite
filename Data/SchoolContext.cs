@@ -15,5 +15,6 @@ namespace IDGenWebsite.Data
         }
 
         public DbSet<StudentModel> Students { get; set; }
+        public DbSet<IDRequestModel> IDRequests { get; set; }
     }
 }
