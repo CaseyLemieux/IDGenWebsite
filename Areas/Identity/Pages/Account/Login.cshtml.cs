@@ -94,11 +94,13 @@ namespace IDGenWebsite.Areas.Identity.Pages.Account
                     if (roles.Contains("Admin"))
                     {
                         return RedirectToAction("Dashboard", "Admin");
+
                     } else if (roles.Contains("User"))
                     {
-                        return("")
+                        return RedirectToAction("Dashboard", "User");
                     }
-                    return LocalRedirect(returnUrl);
+                    //If the user dosent match either role something is wrong, redisplay form
+                    return Page();
                 }
                 if (result.RequiresTwoFactor)
                 {
