@@ -79,7 +79,7 @@ namespace IDGenWebsite.Controllers
         {
             //List<StudentModel> students = new List<StudentModel>();
 
-            var fileName = "./Focus Students Feburary.xlsx";
+            var fileName = "./Focus Students May.xlsx";
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -118,7 +118,7 @@ namespace IDGenWebsite.Controllers
         }
         public IActionResult UploadStudents()
         {
-            return View();
+            return View("UploadFiles");
         }
         [HttpPost("FocusFileUpload")]
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
