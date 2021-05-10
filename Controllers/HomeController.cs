@@ -10,7 +10,20 @@ namespace IDGenWebsite.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Dashboard", "Admin");
+                } else
+                {
+                    return RedirectToAction("Dashboard", "User");
+                }
+            }
+            else
+            {
+                return LocalRedirect("/Identity/Account/Login");
+            }
         }
     }
 }

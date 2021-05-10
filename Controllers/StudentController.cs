@@ -21,9 +21,24 @@ namespace IDGenWebsite.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View("ViewStudents", await _context.Students.ToListAsync());
+            return View();
+        }
+
+        public async Task<IActionResult> GetStudentPartial()
+        {
+            return PartialView("_ViewStudentsPartial", await _context.Students.ToListAsync());
+        }
+
+        public async Task<IActionResult> SearchStudents(string searchString)
+        {
+            var students = from s in _context.Students select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                students = students.Where(s => s.LastName.Contains(searchString) || s.FirstName.Contains(searchString));
+            }
+            return PartialView("_ViewStudentsPartial", await students.ToListAsync());
         }
 
         [HttpPost]

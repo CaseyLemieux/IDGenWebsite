@@ -25,16 +25,17 @@ namespace IDGenWebsite.Areas.Identity
                 services.AddIdentity<EmployeeModel, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IDGenWebsiteContext>()
                 .AddDefaultTokenProviders().AddDefaultUI().AddRoleManager<RoleManager<IdentityRole>>();
 
-                /*services.ConfigureApplicationCookie(options =>
+                services.ConfigureApplicationCookie(options =>
                 {
                     // Cookie settings
                     options.Cookie.HttpOnly = true;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
+                    options.Cookie.Name = "IDGenWebsite.Cookie";
                     options.LoginPath = "/Identity/Account/Login";
                     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                     options.SlidingExpiration = true;
-                }); */
+                    options.LogoutPath = "/Identity/Account/Logout";
+                }); 
             });
         }
     }
