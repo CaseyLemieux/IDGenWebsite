@@ -21,13 +21,15 @@ namespace IDGenWebsite.Controllers
     public class AdminController : Controller
     {
         private readonly ILogger<AdminController> _logger;
-        private readonly SchoolContext _context;
+        private readonly SchoolContext _schoolContext;
+        private readonly IDGenWebsiteContext _userContext;
         //private readonly IWebHostEnvironment _env;
 
-        public AdminController(ILogger<AdminController> logger, SchoolContext context)
+        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext)
         {
             _logger = logger;
-            _context = context;
+            _schoolContext = context;
+            _userContext = userContext;
         }
 
         public IActionResult Index()
@@ -62,14 +64,14 @@ namespace IDGenWebsite.Controllers
                     reader.Read();
                     while (reader.Read())
                     {
-                        var student = await _context.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
+                        var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
                         if(student != null)
                         {
                             student.DisplayName = reader.GetValue(3).ToString();
                             student.QrCode = reader.GetValue(4).ToString();
                         }
                     }
-                    _context.SaveChanges();
+                    _schoolContext.SaveChanges();
                 }
             }
             return RedirectToAction("ViewStudents");
@@ -97,10 +99,10 @@ namespace IDGenWebsite.Controllers
                         student.Email = reader.GetValue(3).ToString();
                         student.GradeLevel = reader.GetValue(4).ToString();
 
-                        var dbEntry = await _context.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
+                        var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
                         if(dbEntry == null)
                         {
-                             _context.Add(student);
+                             _schoolContext.Add(student);
                         }
                         /*_context.Add(new StudentModel
                         {
@@ -111,7 +113,7 @@ namespace IDGenWebsite.Controllers
                             GradeLevel = reader.GetValue(4).ToString()
                         }); */
                     }
-                    _context.SaveChanges();
+                    _schoolContext.SaveChanges();
                 }
             }
             return RedirectToAction("ViewStudents");
@@ -202,7 +204,7 @@ namespace IDGenWebsite.Controllers
                 if(textArray.Length == 3)
                 {
                     string id = textArray[2];
-                    var student = await _context.Students.FirstOrDefaultAsync(s => s.StudentID == id);
+                    var student = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == id);
                     if(student != null)
                     {
                         //Save the page as their ID picture
@@ -226,7 +228,7 @@ namespace IDGenWebsite.Controllers
                             byte[] bytes = page.BinaryData;
                             student.IdPic = bytes;
                         }
-                        _context.SaveChanges();
+                        _schoolContext.SaveChanges();
                     }
                 }
             }
@@ -234,6 +236,11 @@ namespace IDGenWebsite.Controllers
             //string[] splitText = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             return RedirectToAction("ViewStudents");
         }
-        
+
+        public async Task<IActionResult> GetUsersPartial()
+        {
+            return PartialView("_ViewUsersPartial", await _userContext.EmployeeModel.ToListAsync());
+        }
+
     }
 }
