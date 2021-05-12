@@ -12,8 +12,8 @@ namespace IDGenWebsite.Models
         public int ID { get; set; }
         [Display(Name = "Student ID:")]
         public int StudentID { get; set; }
-        [Display(Name = "User ID:")]
-        public int UserID { get; set; }
+        [Display(Name = "Created By:")]
+        public string UserName { get; set; }
         [Display(Name = "Date Created:")]
         public DateTime DateCreated { get; set; }
         [Display(Name = "Date Printed:")]

@@ -242,5 +242,12 @@ namespace IDGenWebsite.Controllers
             return PartialView("_ViewUsersPartial", await _userContext.EmployeeModel.ToListAsync());
         }
 
+        public IActionResult GetUploadFilesPartial()
+        {
+            return PartialView("_UploadFilesPartial");
+        }
+
+
+
     }
 }
