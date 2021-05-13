@@ -36,25 +36,7 @@
 
         });
 
-        function SaveID(itemData) {
-            var id = $(itemData).data('assigned-id');
-            $.ajax({
-                "type": "POST",
-                "url": "/Student/SaveID",
-                "data": { "id": id },
-                "dataType": "json",
-                "success": SaveIDSuccess,
-                "error": SaveIDError
-            });
-        }
         
-        function SaveIDSuccess() {
-            console.log('ID save Success');
-        }
-
-        function SaveIDError() {
-            console.log('ID save Error');
-        }
     </script>
 
 }
