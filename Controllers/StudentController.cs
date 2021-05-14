@@ -36,7 +36,17 @@ namespace IDGenWebsite.Controllers
             var students = from s in _context.Students select s;
             if (!String.IsNullOrEmpty(searchString))
             {
-                students = students.Where(s => s.LastName.Contains(searchString) || s.FirstName.Contains(searchString));
+                var names = searchString.Split(" ");
+                if(names.Length == 2)
+                {
+                    students = students.Where(s => s.LastName.Contains(searchString) || s.FirstName.Contains(searchString) || s.FirstName.Contains(names[0]) && s.LastName.Contains(names[1]) 
+                    || s.LastName.Contains(names[0]) && s.FirstName.Contains(names[1]));
+                }
+                else
+                {
+                    students = students.Where(s => s.LastName.Contains(searchString) || s.FirstName.Contains(searchString));
+                }
+               
             }
             return PartialView("_ViewStudentsPartial", await students.ToListAsync());
         }

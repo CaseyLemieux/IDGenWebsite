@@ -26,7 +26,7 @@
                     </form>
                 </li>
             </ul>
-            
+
         </div>
     </div>
     <div class="col-9" id="panel">
@@ -36,13 +36,17 @@
 
 @section Scripts{
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script type="text/javascript">
 
-        /*$(document).ready(function () {
+        $(document).ready(function () {
             //This retrieved the data for the autocomplete on products
             $.ajax({
-                url: '/Student/GetStudentPartial',
+                url: '/IDOrder/GetIdOrdersPartial',
                 type: 'GET',
                 cache: false,
                 dataType: "html",
@@ -55,7 +59,7 @@
                 }
             });
 
-        }); */
+        });
 
         function ViewUsers() {
             $.ajax({
@@ -90,7 +94,19 @@
         }
 
         function ViewOrders() {
-
+            $.ajax({
+                url: '/IDOrder/GetIdOrdersPartial',
+                type: 'GET',
+                cache: false,
+                dataType: "html",
+                success: function (data) {
+                    var div = document.getElementById("panel");
+                    div.innerHTML = data;
+                },
+                error: function (data) {
+                    console.log('Error loading ');
+                }
+            });
         }
 
         function UploadFiles() {
@@ -114,6 +130,24 @@
 
         }
 
+        function CreateUserPartial() {
+            $.ajax({
+                url: '/Admin/GetCreateUserPartial',
+                type: 'GET',
+                cache: false,
+                dataType: "html",
+                success: function (data) {
+                    var div = document.getElementById("addUserModalBody");
+                    div.innerHTML = data;
+                    $('#addUserModal').modal('show');
+               
+                },
+                error: function (data) {
+                    console.log('Error getting file partial');
+                }
+            });
+        }
+
         function Logout() {
             $.ajax({
                 url: '/Identity/Account/Logout',
@@ -126,6 +160,25 @@
                 },
                 error: function (data) {
                     console.log('Error getting file partial');
+                }
+            });
+        }
+
+        function SearchStudent() {
+            var text = $(studentTextField).val();
+            console.log(text);
+            $.ajax({
+                url: '/Student/SearchStudents',
+                type: 'GET',
+                cache: false,
+                data: { "searchString": text },
+                dataType: "html",
+                success: function (data) {
+                    var div = document.getElementById("panel");
+                    div.innerHTML = data;
+                },
+                error: function (data) {
+                    console.log('Error getting users partial');
                 }
             });
         }

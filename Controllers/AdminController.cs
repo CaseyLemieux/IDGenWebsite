@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using IronPdf;
 using QRCoder;
 using System.Drawing;
+using Microsoft.AspNetCore.Identity;
 
 namespace IDGenWebsite.Controllers
 {
@@ -23,13 +24,15 @@ namespace IDGenWebsite.Controllers
         private readonly ILogger<AdminController> _logger;
         private readonly SchoolContext _schoolContext;
         private readonly IDGenWebsiteContext _userContext;
+        private readonly UserManager<EmployeeModel> _userManager;
         //private readonly IWebHostEnvironment _env;
 
-        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext)
+        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext, UserManager<EmployeeModel> userManager)
         {
             _logger = logger;
             _schoolContext = context;
             _userContext = userContext;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -246,6 +249,33 @@ namespace IDGenWebsite.Controllers
         {
             return PartialView("_UploadFilesPartial");
         }
+
+        public IActionResult GetCreateUserPartial()
+        {
+            return PartialView("_CreateUserPartial", new EmployeeModel());
+        }
+
+        public string CreateUser(EmployeeModel employee)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                if(_userManager.FindByEmailAsync(employee.Email).Result == null)
+                {
+                    IdentityResult result = _userManager.CreateAsync(employee, employee.Password).Result;
+                    if (result.Succeeded)
+                    {
+                        return "success";
+                    }
+                    else
+                    {
+                        return "failed";
+                    }
+                } 
+            }
+            //If we got this far something went wrong
+            return "failed";
+        } 
 
 
 

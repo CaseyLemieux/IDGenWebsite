@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<StudentModel>
-<div class="form-group row">
+<div class="row">
     <input type="text" class="form-control" placeholder="Search for Student" id="studentTextField" />
-    <input type="submit" value="Search" class="btn btn-primary" onclick="SearchStudent(this)" />
+    <button class="btn btn-primary" onclick="SearchStudent()">Search</button>
 </div>
 @if (Model.Count() > 0)
 {
@@ -72,21 +72,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
     <script type="text/javascript">
-        function SearchStudent() {
-            $.ajax({
-                url: '/Student/GetUsersPartial',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting users partial');
-                }
-            });
-        }
 
         function SaveID(itemData) {
             var id = $(itemData).data('assigned-id');
@@ -107,5 +92,7 @@
         function SaveIDError() {
             console.log('ID save Error');
         }
+
+       
     </script>
 }
