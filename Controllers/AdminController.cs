@@ -16,9 +16,12 @@ using IronPdf;
 using QRCoder;
 using System.Drawing;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace IDGenWebsite.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly ILogger<AdminController> _logger;
@@ -33,11 +36,6 @@ namespace IDGenWebsite.Controllers
             _schoolContext = context;
             _userContext = userContext;
             _userManager = userManager;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         public IActionResult Dashboard()
@@ -80,11 +78,11 @@ namespace IDGenWebsite.Controllers
             return RedirectToAction("ViewStudents");
         }
 
-        public async Task<IActionResult> TestExcel()
+        public async Task<IActionResult> TestExcel(string fileName)
         {
             //List<StudentModel> students = new List<StudentModel>();
 
-            var fileName = "./Focus Students May.xlsx";
+            //var fileName = "./Focus Students May.xlsx";
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -129,6 +127,7 @@ namespace IDGenWebsite.Controllers
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
             var folderName = "Uploads";
+            var fullPath = "";
 
             if (focusFiles != null)
             {
@@ -136,7 +135,7 @@ namespace IDGenWebsite.Controllers
                 {
                     var fileName = Path.GetFileName(formFile.FileName);
                     var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
-                    var fullPath = Path.Combine(pathToSave, fileName);
+                    fullPath = Path.Combine(pathToSave, fileName);
                     using(var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(fileStream);
@@ -146,7 +145,7 @@ namespace IDGenWebsite.Controllers
             // process uploaded files
             // Don't rely on or trust the FileName property without validation.
             //var fileName = filePaths.FirstOrDefault();
-            return RedirectToAction("TestExcel");
+            return RedirectToAction("TestExcel", new {fileName = fullPath });
         }
 
         [HttpPost("ClassLinkFileUpload")]
@@ -257,7 +256,8 @@ namespace IDGenWebsite.Controllers
 
         public string CreateUser(EmployeeModel employee)
         {
-            
+            employee.EmailConfirmed = true;
+            employee.UserName = employee.Email;
             if (ModelState.IsValid)
             {
                 if(_userManager.FindByEmailAsync(employee.Email).Result == null)
@@ -265,16 +265,17 @@ namespace IDGenWebsite.Controllers
                     IdentityResult result = _userManager.CreateAsync(employee, employee.Password).Result;
                     if (result.Succeeded)
                     {
-                        return "success";
+                        _userManager.AddToRoleAsync(employee, employee.SelectedRole).Wait();
+                        return JsonConvert.SerializeObject("Success");
                     }
                     else
                     {
-                        return "failed";
+                        return JsonConvert.SerializeObject("Failure");
                     }
                 } 
             }
             //If we got this far something went wrong
-            return "failed";
+            return JsonConvert.SerializeObject("Failuer");
         } 
 
 

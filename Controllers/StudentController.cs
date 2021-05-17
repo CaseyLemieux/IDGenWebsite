@@ -1,4 +1,5 @@
 ﻿using IDGenWebsite.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -19,11 +20,6 @@ namespace IDGenWebsite.Controllers
         {
             _logger = logger;
             _context = context;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         public async Task<IActionResult> GetStudentPartial()
@@ -51,6 +47,7 @@ namespace IDGenWebsite.Controllers
             return PartialView("_ViewStudentsPartial", await students.ToListAsync());
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> SaveID(int id)
         {

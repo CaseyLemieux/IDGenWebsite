@@ -11,17 +11,21 @@ namespace IDGenWebsite.Models
 {
     public class EmployeeModel : IdentityUser
     {
+        [Required]
         [Display(Name = "First Name:")]
         public string FirstName { get; set; }
+        [Required]
         [Display(Name = "Last Name:")]
         public string LastName { get; set; }
         [Display(Name = "Active Status:")]
         public bool IsActive { get; set; }
         [Display(Name = "Delet Status:")]
         public bool IsDeleted { get; set; }
+        [Required]
         [NotMapped]
         [Display(Name = "Password: ")]
         public string Password { get; set; }
+        [Required]
         [NotMapped]
         [Display(Name = "Role:")]
         public List<SelectListItem> Roles { get; set; } = new List<SelectListItem>

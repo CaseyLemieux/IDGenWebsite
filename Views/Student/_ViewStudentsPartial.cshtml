@@ -52,11 +52,23 @@
                         @Html.DisplayFor(modelItem => item.GradeLevel)
                     </td>
                     <td>
-                        @using (Html.BeginForm("SaveID", "Student", FormMethod.Post))
+                        @if (User.IsInRole("Admin"))
                         {
-                            <div>
-                                <button type="submit" class="btn btn-success" name="id" value="@item.ID"><i class='fa fa-file'>Download</i></button>
-                            </div>
+                            @using (Html.BeginForm("SaveID", "Student", FormMethod.Post))
+                            {
+                                <div>
+                                    <button type="submit" class="btn btn-success" name="id" value="@item.ID"><i class='fa fa-file'>Download</i></button>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            @using (Html.BeginForm("SaveID", "Student", FormMethod.Post))
+                            {
+                                <div>
+                                    <button type="submit" class="btn btn-success" name="id" value="@item.ID"><i class='fa fa-file'>Download</i></button>
+                                </div>
+                            }
                         }
                     </td>
                 </tr>
