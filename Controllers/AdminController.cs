@@ -253,7 +253,7 @@ namespace IDGenWebsite.Controllers
         {
             return PartialView("_CreateUserPartial", new EmployeeModel());
         }
-
+        [HttpPost]
         public string CreateUser(EmployeeModel employee)
         {
             employee.EmailConfirmed = true;
