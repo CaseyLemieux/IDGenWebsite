@@ -59,8 +59,32 @@
                 }
             });
 
+            
+
            
         });
+
+        // The function takes Form and the event object as parameter
+        function SubmitForm(frm, caller) {
+            caller.preventDefault();
+            console.log("Ajax 1");
+            var form = document.getElementById('CreateUserForm');
+            var fdata = new FormData(form);
+            console.log("Ajax 2");
+            $.ajax({
+                type: frm.method,
+                url: frm.action,
+                data: fdata,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (data) {
+                    alert(data);
+                }
+            });
+        }
 
         function ViewUsers() {
             $.ajax({
