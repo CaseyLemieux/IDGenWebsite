@@ -32,7 +32,7 @@ namespace IDGenWebsite.Controllers
             var student = await _schoolContext.Students.FirstOrDefaultAsync(s => s.ID == id);
             var idOrder = new IDRequestModel()
             {
-                StudentID = student.ID,
+                StudentID = student.StudentID,
                 UserName = User.Identity.Name,
                 DateCreated = DateTime.Now,
                 Cost = 1.50

@@ -92,6 +92,25 @@
             });
         }
 
+        function SubmitFocusIds(formId) {
+            var input = document.getElementById(formId);
+            var files = input.files;
+            var formData = new FormData();
+            for (var i = 0; i != files.length: i++) {
+                formData.append("files", files[i]);
+            }
+
+
+        }
+
+        function SubmitStudenForm(formId) {
+
+        }
+
+        function SubmitQrForm(formId) {
+
+        }
+
         function ViewUsers() {
             $.ajax({
                 url: '/Admin/GetUsersPartial',
