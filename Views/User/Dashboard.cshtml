@@ -110,6 +110,27 @@
             });
         }
 
+        function RequestIdPrint(id) {
+            console.log(id);
+            //var id = $(itemData).data('assigned-id');
+            $.ajax({
+                "type": "POST",
+                "url": "/IDOrder/RequestIdPrint",
+                "data": { "id": id },
+                "dataType": "json",
+                "success": RequestIdPrintSuccess(),
+                "error": RequestIdPrintError
+            });
+        }
+
+        function RequestIdPrintSuccess() {
+            alert("Request Submitted");
+        }
+
+        function RequestIdPrintError() {
+            alert("Error Submitting Request");
+        }
+
     </script>
 
 }

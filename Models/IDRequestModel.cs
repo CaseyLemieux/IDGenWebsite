@@ -10,8 +10,8 @@ namespace IDGenWebsite.Models
     {
         [Display(Name = "Print Request ID:" )]
         public int ID { get; set; }
-        [Display(Name = "Student ID:")]
-        public int StudentID { get; set; }
+        [Display(Name = "Student Database ID:")]
+        public string StudentID { get; set; }
         [Display(Name = "Created By:")]
         public string UserName { get; set; }
         [Display(Name = "Date Created:")]

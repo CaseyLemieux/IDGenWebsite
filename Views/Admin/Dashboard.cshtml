@@ -38,6 +38,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/print-js/print.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
@@ -82,7 +83,8 @@
                 processData: false,
                 //contentType: false,
                 success: function (data) {
-                    alert(data);
+                    $('#addUserModal').modal('hide');
+                    ViewUsers();
                 },
                 error: function (data) {
                     alert('failure');
