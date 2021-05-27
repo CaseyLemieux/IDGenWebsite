@@ -52,10 +52,10 @@ namespace IDGenWebsite.Controllers
         public IActionResult ViewStudents()
         {
             //var user = User.Identity.Name;
-            return PartialView();
+            return RedirectToAction("GetStudentsPartial", "Student");
         }
 
-        public async Task<IActionResult> ParseClasslinkFile(string fileName)
+        public async Task ParseClasslinkFile(string fileName)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             using (var stream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
@@ -75,10 +75,10 @@ namespace IDGenWebsite.Controllers
                     _schoolContext.SaveChanges();
                 }
             }
-            return RedirectToAction("ViewStudents");
+            //RedirectToAction("ViewStudents");
         }
 
-        public async Task<IActionResult> TestExcel(string fileName)
+        public async Task TestExcel(string fileName)
         {
             //List<StudentModel> students = new List<StudentModel>();
 
@@ -117,13 +117,13 @@ namespace IDGenWebsite.Controllers
                     _schoolContext.SaveChanges();
                 }
             }
-            return RedirectToAction("ViewStudents");
+            
         }
-        public IActionResult UploadStudents()
+        /*public IActionResult UploadStudents()
         {
             return View("UploadFiles");
-        }
-        [HttpPost("FocusFileUpload")]
+        } */
+        //[HttpPost("FocusFileUpload")]
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
             var folderName = "Uploads";
@@ -145,11 +145,12 @@ namespace IDGenWebsite.Controllers
             // process uploaded files
             // Don't rely on or trust the FileName property without validation.
             //var fileName = filePaths.FirstOrDefault();
-            return RedirectToAction("TestExcel", new {fileName = fullPath });
+            await TestExcel(fullPath);
+            return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
 
         [HttpPost("ClassLinkFileUpload")]
-        public async Task<IActionResult> UploadClassLink(List<IFormFile> classLinkFiles)
+        public async Task UploadClassLink(List<IFormFile> classLinkFiles)
         {
             var folderName = "Uploads";
             var fullPath = "";
@@ -169,10 +170,11 @@ namespace IDGenWebsite.Controllers
             // process uploaded files
             // Don't rely on or trust the FileName property without validation.
             //var fileName = filePaths.FirstOrDefault();
-            return await ParseClasslinkFile(fullPath);
+            await ParseClasslinkFile(fullPath);
+            ViewStudents();
         }
 
-        public async Task<IActionResult> UploadIDs(List<IFormFile> idPdfs)
+        public async Task UploadIDs(List<IFormFile> idPdfs)
         {
             var folderName = "Uploads";
             var fullPath = "";
@@ -189,10 +191,11 @@ namespace IDGenWebsite.Controllers
                     }
                 }
             }
-            return await ParseFocusPDF(fullPath);
+            await ParseFocusPDF(fullPath);
+            ViewStudents();
         }
 
-        public async Task<IActionResult> ParseFocusPDF(string path)
+        public async Task ParseFocusPDF(string path)
         {
           
             //Create the QrCode generator and get the pdf from the uploaded files
@@ -236,7 +239,7 @@ namespace IDGenWebsite.Controllers
             }
             //string text = pdf.ExtractAllText();
             //string[] splitText = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            return RedirectToAction("ViewStudents");
+            //RedirectToAction("ViewStudents");
         }
 
         public async Task<IActionResult> GetUsersPartial()

@@ -92,8 +92,9 @@
             });
         }
 
-        function SubmitFocusIds(formId) {
-            var input = document.getElementById(formId);
+        function SubmitFocusIds(inputId, caller) {
+            caller.preventDefault;
+            var input = document.getElementById(inputId);
             var files = input.files;
             var formData = new FormData();
             for (var i = 0; i != files.length; i++) {
@@ -121,9 +122,11 @@
 
         }
 
-        function SubmitStudentForm(formId) {
-            var input = document.getElementById(formId);
+        function SubmitStudentForm(inputId, caller) {
+            caller.preventDefault;
+            var input = document.getElementById(inputId);
             var files = input.files;
+            console.log(files);
             var formData = new FormData();
             for (var i = 0; i != files.length; i++) {
                 formData.append("files", files[i]);
@@ -149,8 +152,9 @@
             );
         }
 
-        function SubmitQrForm(formId) {
-            var input = document.getElementById(formId);
+        function SubmitQrForm(inputId, caller) {
+            caller.preventDefault;
+            var input = document.getElementById(inputId);
             var files = input.files;
             var formData = new FormData();
             for (var i = 0; i != files.length; i++) {

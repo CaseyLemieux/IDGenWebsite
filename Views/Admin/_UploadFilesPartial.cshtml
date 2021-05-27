@@ -1,5 +1,5 @@
 ﻿<div>
-    <form method="post" enctype="multipart/form-data" asp-controller="Admin" asp-action="UploadFocus" id="UploadFocusForm">
+    <form method="post" enctype="multipart/form-data" id="UploadFocusForm" action="">
         <div class="form-group">
             <div class="col-md-10">
                 <p>Upload Students:</p>
@@ -8,13 +8,13 @@
         </div>
         <div class="form-group">
             <div class="col-md-10">
-                <input type="submit" value="Upload" onclick="SubmitStudentForm('UploadFocusForm')"/>
+                <input type="submit" value="Upload" onclick="SubmitStudentForm('focusFiles', event)"/>
             </div>
         </div>
     </form>
 </div>
 <div>
-    <form method="post" enctype="multipart/form-data" asp-controller="Admin" asp-action="UploadClassLink" id="UploadClassLinkForm">
+    <form method="post" enctype="multipart/form-data" id="UploadClassLinkForm">
         <div class="form-group">
             <div class="col-md-10">
                 <p>Upload ClassLink QR File:</p>
@@ -23,13 +23,13 @@
         </div>
         <div class="form-group">
             <div class="col-md-10">
-                <input type="submit" value="Upload" onclick="SubmitQrForm('UploadClassLinkForm')"/>
+                <input type="submit" value="Upload" onclick="SubmitQrForm('classLinkFiles', event)"/>
             </div>
         </div>
     </form>
 </div>
 <div>
-    <form method="post" enctype="multipart/form-data" asp-controller="Admin" asp-action="UploadIDs" id="UploadIdsForm">
+    <form method="post" enctype="multipart/form-data" id="UploadIdsForm">
         <div class="form-group">
             <div class="col-md-10">
                 <p>Upload Focus Ids:</p>
@@ -38,7 +38,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-10">
-                <input type="submit" value="Upload" onclick="SubmitFocusIds('UploadIdsForm')"/>
+                <input type="submit" value="Upload" onclick="SubmitFocusIds('idPdfs', event)"/>
             </div>
         </div>
     </form>
