@@ -52,7 +52,7 @@ namespace IDGenWebsite.Controllers
         public IActionResult ViewStudents()
         {
             //var user = User.Identity.Name;
-            return RedirectToAction("Index", "Student");
+            return PartialView();
         }
 
         public async Task<IActionResult> ParseClasslinkFile(string fileName)

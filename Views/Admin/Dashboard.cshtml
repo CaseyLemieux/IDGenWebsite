@@ -96,19 +96,85 @@
             var input = document.getElementById(formId);
             var files = input.files;
             var formData = new FormData();
-            for (var i = 0; i != files.length: i++) {
+            for (var i = 0; i != files.length; i++) {
                 formData.append("files", files[i]);
             }
 
+            $.ajax(
+                {
+                    url: "/Admin/UploadIds",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: "html",
+                    type: "POST",
+                    success: function (data) {
+                        console.log("Focus Ids Uploaded!");
+                        var div = document.getElementById("panel");
+                        div.innerHTML = data;
+                    },
+                    error: function (data) {
+                        console.log("Error Uploading Ids!")
+                    }
+                }
+            );
 
         }
 
-        function SubmitStudenForm(formId) {
+        function SubmitStudentForm(formId) {
+            var input = document.getElementById(formId);
+            var files = input.files;
+            var formData = new FormData();
+            for (var i = 0; i != files.length; i++) {
+                formData.append("files", files[i]);
+            }
 
+            $.ajax(
+                {
+                    url: "/Admin/UploadFocus",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: "html",
+                    type: "POST",
+                    success: function (data) {
+                        console.log("Focus Students Uploaded!");
+                        var div = document.getElementById("panel");
+                        div.innerHTML = data;
+                    },
+                    error: function (data) {
+                        console.log("Error Uploading Students!")
+                    }
+                }
+            );
         }
 
         function SubmitQrForm(formId) {
+            var input = document.getElementById(formId);
+            var files = input.files;
+            var formData = new FormData();
+            for (var i = 0; i != files.length; i++) {
+                formData.append("files", files[i]);
+            }
 
+            $.ajax(
+                {
+                    url: "/Admin/UploadClassLink",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: "html",
+                    type: "POST",
+                    success: function (data) {
+                        console.log("Focus ClassLink Uploaded!");
+                        var div = document.getElementById("panel");
+                        div.innerHTML = data;
+                    },
+                    error: function (data) {
+                        console.log("Error Uploading ClassLink!")
+                    }
+                }
+            );
         }
 
         function ViewUsers() {
