@@ -3,12 +3,12 @@
         <div class="form-group">
             <div class="col-md-10">
                 <p>Upload Students:</p>
-                <input type="file" name="focusFiles" multiple />
+                <input type="file" name="focusFiles" multiple id="focusStudentInput"/>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-10">
-                <input type="submit" value="Upload" onclick="SubmitStudentForm('focusFiles', event)"/>
+                <input type="button" value="Upload" onclick="SubmitStudentForm('focusStudentInput', event)"/>
             </div>
         </div>
     </form>
@@ -18,12 +18,12 @@
         <div class="form-group">
             <div class="col-md-10">
                 <p>Upload ClassLink QR File:</p>
-                <input type="file" name="classLinkFiles" multiple />
+                <input type="file" name="classLinkFiles" multiple id="classLinkInput"/>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-10">
-                <input type="submit" value="Upload" onclick="SubmitQrForm('classLinkFiles', event)"/>
+                <input type="button" value="Upload" onclick="SubmitQrForm('classLinkInput', event)"/>
             </div>
         </div>
     </form>
@@ -33,12 +33,12 @@
         <div class="form-group">
             <div class="col-md-10">
                 <p>Upload Focus Ids:</p>
-                <input type="file" name="idPdfs" multiple />
+                <input type="file" name="idPdfs" multiple id="idsInput"/>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-10">
-                <input type="submit" value="Upload" onclick="SubmitFocusIds('idPdfs', event)"/>
+                <input type="button" value="Upload" onclick="SubmitFocusIds('idsInput', event)"/>
             </div>
         </div>
     </form>

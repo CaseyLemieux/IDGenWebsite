@@ -12,12 +12,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using IronPdf;
+//using IronPdf;
+using UglyToad.PdfPig;
 using QRCoder;
 using System.Drawing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
+using UglyToad.PdfPig.Content;
+using UglyToad.PdfPig.Writer;
 
 namespace IDGenWebsite.Controllers
 {
@@ -48,14 +51,8 @@ namespace IDGenWebsite.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        //[HttpGet]
-        public IActionResult ViewStudents()
-        {
-            //var user = User.Identity.Name;
-            return RedirectToAction("GetStudentsPartial", "Student");
-        }
-
-        public async Task ParseClasslinkFile(string fileName)
+        
+        private async Task ParseClasslinkFile(string fileName)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             using (var stream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
@@ -78,7 +75,7 @@ namespace IDGenWebsite.Controllers
             //RedirectToAction("ViewStudents");
         }
 
-        public async Task TestExcel(string fileName)
+        private async Task TestExcel(string fileName)
         {
             //List<StudentModel> students = new List<StudentModel>();
 
@@ -123,13 +120,13 @@ namespace IDGenWebsite.Controllers
         {
             return View("UploadFiles");
         } */
-        //[HttpPost("FocusFileUpload")]
-        public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
+        [HttpPost]
+        public async Task<IActionResult> UploadFocus(ICollection<IFormFile> focusFiles)
         {
             var folderName = "Uploads";
             var fullPath = "";
 
-            if (focusFiles != null)
+            if (focusFiles != null && focusFiles.Count != 0)
             {
                 foreach (var formFile in focusFiles)
                 {
@@ -149,8 +146,8 @@ namespace IDGenWebsite.Controllers
             return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
 
-        [HttpPost("ClassLinkFileUpload")]
-        public async Task UploadClassLink(List<IFormFile> classLinkFiles)
+        [HttpPost]
+        public async Task<IActionResult> UploadClassLink(List<IFormFile> classLinkFiles)
         {
             var folderName = "Uploads";
             var fullPath = "";
@@ -171,10 +168,10 @@ namespace IDGenWebsite.Controllers
             // Don't rely on or trust the FileName property without validation.
             //var fileName = filePaths.FirstOrDefault();
             await ParseClasslinkFile(fullPath);
-            ViewStudents();
+            return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
-
-        public async Task UploadIDs(List<IFormFile> idPdfs)
+        [HttpPost]
+        public async Task<IActionResult> UploadIDs(List<IFormFile> idPdfs)
         {
             var folderName = "Uploads";
             var fullPath = "";
@@ -192,12 +189,12 @@ namespace IDGenWebsite.Controllers
                 }
             }
             await ParseFocusPDF(fullPath);
-            ViewStudents();
+            return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
 
-        public async Task ParseFocusPDF(string path)
+        private async Task ParseFocusPDF(string path)
         {
-          
+            /*
             //Create the QrCode generator and get the pdf from the uploaded files
             QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
             PdfDocument pdf = PdfDocument.FromFile(path);
@@ -224,7 +221,16 @@ namespace IDGenWebsite.Controllers
                             QRCode qRCode = new QRCode(qRCodeData);
                             Bitmap qrCodeImage = qRCode.GetGraphic(15);
                             PdfDocument qrDoc = ImageToPdfConverter.ImageToPdf(qrCodeImage);
+                            HtmlHeaderFooter footer = new HtmlHeaderFooter();
+                            footer.DrawDividerLine = true;
+                            footer.Height = 25;
+                            footer.FontSize = 250;
+                            footer.HtmlFragment = "<p>National Crisis/Suicide Prevention Hotline 800-273-8255:</p>" +
+                                "<p>Crisis Text Line: Text HOME to 741741</p>";
+
+                            qrDoc.AddHTMLFooters(footer);
                             page.AppendPdf(qrDoc);
+                            
                             byte[] bytes = page.BinaryData;
                             student.IdPic = bytes;
                         }
@@ -240,6 +246,23 @@ namespace IDGenWebsite.Controllers
             //string text = pdf.ExtractAllText();
             //string[] splitText = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             //RedirectToAction("ViewStudents");
+            */
+            QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+            using (PdfDocument document = PdfDocument.Open(path))
+            {
+                
+                foreach (Page page in document.GetPages())
+                {
+                    
+                    //string pageText = page.Text;
+                    //_logger.LogInformation(pageText);
+                    var words = page.GetWords();
+                    _logger.LogInformation("Name:" + words.ElementAt(6));
+                    _logger.LogInformation("ID:" + words.ElementAt(8));
+                    PdfDocumentBuilder builder = new PdfDocumentBuilder();
+                    builder.
+                }
+            }
         }
 
         public async Task<IActionResult> GetUsersPartial()

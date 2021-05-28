@@ -98,12 +98,12 @@
             var files = input.files;
             var formData = new FormData();
             for (var i = 0; i != files.length; i++) {
-                formData.append("files", files[i]);
+                formData.append("idPdfs", files[i]);
             }
 
             $.ajax(
                 {
-                    url: "/Admin/UploadIds",
+                    url: '/Admin/UploadIds',
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -129,12 +129,13 @@
             console.log(files);
             var formData = new FormData();
             for (var i = 0; i != files.length; i++) {
-                formData.append("files", files[i]);
+                console.log(files[i]);
+                formData.append("focusFiles", files[i]);
             }
-
+          
             $.ajax(
                 {
-                    url: "/Admin/UploadFocus",
+                    url: '/Admin/UploadFocus',
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -146,6 +147,7 @@
                         div.innerHTML = data;
                     },
                     error: function (data) {
+                        console.log(data);
                         console.log("Error Uploading Students!")
                     }
                 }
@@ -158,12 +160,12 @@
             var files = input.files;
             var formData = new FormData();
             for (var i = 0; i != files.length; i++) {
-                formData.append("files", files[i]);
+                formData.append("classLinkFiles", files[i]);
             }
 
             $.ajax(
                 {
-                    url: "/Admin/UploadClassLink",
+                    url: '/Admin/UploadClassLink',
                     data: formData,
                     processData: false,
                     contentType: false,
