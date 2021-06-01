@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Writer;
+using UglyToad.PdfPig.Core;
 
 namespace IDGenWebsite.Controllers
 {
@@ -260,7 +261,10 @@ namespace IDGenWebsite.Controllers
                     _logger.LogInformation("Name:" + words.ElementAt(6));
                     _logger.LogInformation("ID:" + words.ElementAt(8));
                     PdfDocumentBuilder builder = new PdfDocumentBuilder();
-                    builder.
+                    var firstPage = builder.AddPage(PageSize.A7);
+                    
+                    
+
                 }
             }
         }
