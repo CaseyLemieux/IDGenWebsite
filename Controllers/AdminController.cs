@@ -117,14 +117,11 @@ namespace IDGenWebsite.Controllers
             }
             
         }
-        /*public IActionResult UploadStudents()
-        {
-            return View("UploadFiles");
-        } */
+
         [HttpPost]
         public async Task<IActionResult> UploadFocus(ICollection<IFormFile> focusFiles)
         {
-            var folderName = "Uploads";
+            
             var fullPath = "";
 
             if (focusFiles != null && focusFiles.Count != 0)
@@ -133,7 +130,7 @@ namespace IDGenWebsite.Controllers
                 {
                     var fileName = Path.GetFileName(formFile.FileName);
                     var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
-                    fullPath = Path.Combine(pathToSave, fileName);
+                    fullPath = Path.Combine("C:/IDGenWebsite/Uploads/Student Imports/", fileName);
                     using(var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(fileStream);
@@ -150,7 +147,7 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadClassLink(List<IFormFile> classLinkFiles)
         {
-            var folderName = "Uploads";
+            
             var fullPath = "";
             if (classLinkFiles != null)
             {
@@ -158,7 +155,7 @@ namespace IDGenWebsite.Controllers
                 {
                     var fileName = Path.GetFileName(formFile.FileName);
                     var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
-                    fullPath = Path.Combine(pathToSave, fileName);
+                    fullPath = Path.Combine("C:/IDGenWebsite/Uploads/Qr Code Imports/", fileName);
                     using (var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(fileStream);
@@ -174,7 +171,6 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadIDs(List<IFormFile> idPdfs)
         {
-            var folderName = "Uploads";
             var fullPath = "";
             if(idPdfs != null)
             {
@@ -182,7 +178,7 @@ namespace IDGenWebsite.Controllers
                 {
                     var fileName = Path.GetFileName(formFile.FileName);
                     var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
-                    fullPath = Path.Combine(pathToSave, fileName);
+                    fullPath = Path.Combine("C:/IDGenWebsite/Uploads/Id Pictures/", fileName);
                     using (var fileStream = new FileStream(fullPath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(fileStream);
