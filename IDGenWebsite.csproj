@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="BarcodeLib" Version="2.4.0" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="Haukcode.WkHtmlToPdfDotNet" Version="1.5.8" />
     <PackageReference Include="Iron.Assets.Rendering.Universal" Version="20.0.0" />
     <PackageReference Include="IronOcr" Version="2021.2.1" />
     <PackageReference Include="IronPdf" Version="2021.3.1" />

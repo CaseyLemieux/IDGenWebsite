@@ -49,14 +49,6 @@ namespace IDGenWebsite.Controllers
             return PartialView("_ViewStudentsPartial", await students.ToListAsync());
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        public async Task<IActionResult> SaveID(int id)
-        {
-
-           // return File(student.IdPicPath, "application/pdf", string.Concat(student.Email, ".pdf"));
-
-            return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
-        }
+        
     }
 }

@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using IDGenWebsite.Data;
 using Microsoft.AspNetCore.Identity;
 using IDGenWebsite.Models;
+using WkHtmlToPdfDotNet;
+using WkHtmlToPdfDotNet.Contracts;
 
 namespace IDGenWebsite
 {
@@ -30,7 +32,7 @@ namespace IDGenWebsite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SchoolContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllersWithViews();
             services.AddRazorPages();

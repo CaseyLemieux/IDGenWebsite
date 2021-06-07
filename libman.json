@@ -5,6 +5,10 @@
     {
       "library": "print-js@1.6.0",
       "destination": "wwwroot/print-js/"
+    },
+    {
+      "library": "jspdf@2.3.1",
+      "destination": "wwwroot/jspdf/"
     }
   ]
 }

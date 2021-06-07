@@ -23,6 +23,7 @@ using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Writer;
 using UglyToad.PdfPig.Core;
 using IDGenWebsite.Utilities;
+using WkHtmlToPdfDotNet.Contracts;
 
 namespace IDGenWebsite.Controllers
 {
@@ -34,16 +35,17 @@ namespace IDGenWebsite.Controllers
         private readonly IDGenWebsiteContext _userContext;
         private readonly UserManager<EmployeeModel> _userManager;
         private readonly FileHelper fileHelper;
+        private readonly IConverter _converter;
         //private readonly IWebHostEnvironment _env;
 
-        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext, UserManager<EmployeeModel> userManager)
+        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext, UserManager<EmployeeModel> userManager, IConverter converter)
         {
             _logger = logger;
             _schoolContext = context;
             _userContext = userContext;
             _userManager = userManager;
-            
-            fileHelper = new FileHelper(_schoolContext);
+            _converter = converter;
+            fileHelper = new FileHelper(_schoolContext, _converter);
         }
 
         public IActionResult Dashboard()
@@ -118,10 +120,18 @@ namespace IDGenWebsite.Controllers
                 } 
             }
             //If we got this far something went wrong
-            return JsonConvert.SerializeObject("Failuer");
-        } 
+            return JsonConvert.SerializeObject("Failure");
+        }
 
+        
+        [HttpPost]
+        public async Task<IActionResult> SaveID(int id)
+        {
 
+            return;
+            //File(, "application/pdf", string.Concat(student.Email, ".pdf"))
+            //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
+        }
 
     }
 }

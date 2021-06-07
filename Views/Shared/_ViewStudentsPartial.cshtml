@@ -54,7 +54,7 @@
                     <td>
                         @if (User.IsInRole("Admin"))
                         {
-                            @using (Html.BeginForm("SaveID", "Student", FormMethod.Post))
+                            @using (Html.BeginForm("SaveID", "Admin", FormMethod.Post))
                             {
                                 <div>
                                     <button type="submit" class="btn btn-success" name="id" value="@item.ID"><i class='fa fa-file'>Download</i></button>

@@ -14,16 +14,20 @@ using System.Threading.Tasks;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Writer;
+using WkHtmlToPdfDotNet;
+using WkHtmlToPdfDotNet.Contracts;
 
 namespace IDGenWebsite.Utilities
 {
     public class FileHelper
     {
         private readonly SchoolContext _schoolContext;
+        private readonly IConverter _converter;
         //private readonly Iconverter _converter;
-        public FileHelper(SchoolContext schoolContext)
+        public FileHelper(SchoolContext schoolContext, IConverter converter)
         {
             _schoolContext = schoolContext;
+            _converter = converter;
         }
         public async Task UploadIdsAsync(List<IFormFile> idFiles)
         {
@@ -141,20 +145,18 @@ namespace IDGenWebsite.Utilities
             }
         }
 
-        public async Task GenerateId(int id, string templateRootPath)
+        public async Task<File> GenerateId(int id, string templateRootPath)
         {
             var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.ID == id);
-            if (student != null || student.IdPicPath != null)
+            if (student != null && student.IdPicPath != null && student.QrCode != null)
             {
+                //Generate QrCode BitMap
                 Bitmap qrCodeImage = null;
-                if(student.QrCode != null)
-                {
-                    //Generate QrCode BitMap
-                    QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-                    QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
-                    QRCode qRCode = new QRCode(qRCodeData);
-                    qrCodeImage = qRCode.GetGraphic(15);
-                }
+                QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
+                QRCode qRCode = new QRCode(qRCodeData);
+                qrCodeImage = qRCode.GetGraphic(15);
+
                 //Convert the bitmap to a byte array
                 ImageConverter converter = new ImageConverter();
                 byte[] qrCodeBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
@@ -179,8 +181,33 @@ namespace IDGenWebsite.Utilities
                     .Replace("[BARCODE]", barcodeBase64);
                 //Replace the place holder strings on the back template
                 backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64);
+
+                var doc = new HtmlToPdfDocument()
+                {
+                    GlobalSettings = {
+                    PaperSize = PaperKind.A8,
+                    Orientation = Orientation.Portrait,
+                },
+
+                    Objects = {
+                    new ObjectSettings()
+                    {
+                        Page = "http://google.com/",
+                    },
+                     new ObjectSettings()
+                    {
+                        Page = "https://github.com/",
+
+                    }
+                }
+                };
+
+                byte[] pdf = converter.Convert(doc);
+
+                return File(pdf, "application/pdf", "Test.pdf");
             }
         }
+
 
     }
 }
