@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BarcodeLib" Version="2.4.0" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="Iron.Assets.Rendering.Universal" Version="20.0.0" />
     <PackageReference Include="IronOcr" Version="2021.2.1" />
@@ -29,10 +30,6 @@
     <PackageReference Include="QRCoder" Version="1.4.1" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Utilities\" />
   </ItemGroup>
 
 </Project>

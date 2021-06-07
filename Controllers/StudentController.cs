@@ -1,5 +1,6 @@
 ﻿using IDGenWebsite.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,12 +15,13 @@ namespace IDGenWebsite.Controllers
     {
         private readonly ILogger<StudentController> _logger;
         private readonly SchoolContext _context;
-        //private readonly IWebHostEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
-        public StudentController(ILogger<StudentController> logger, SchoolContext context)
+        public StudentController(ILogger<StudentController> logger, SchoolContext context, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _context = context;
+            _env = webHostEnvironment;
         }
 
         public async Task<IActionResult> GetStudentPartial()
@@ -52,11 +54,7 @@ namespace IDGenWebsite.Controllers
         public async Task<IActionResult> SaveID(int id)
         {
 
-            var student = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
-            if (student != null && student.IdPic != null)
-            {
-                return File(student.IdPic, "application/pdf", string.Concat(student.Email, ".pdf"));
-            }
+           // return File(student.IdPicPath, "application/pdf", string.Concat(student.Email, ".pdf"));
 
             return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }

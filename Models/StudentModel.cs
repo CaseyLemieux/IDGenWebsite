@@ -24,10 +24,10 @@ namespace IDGenWebsite.Models
         [Display(Name ="Grade Level:")]
         public string GradeLevel { get; set; }
         [Display(Name ="ID Picture:")]
-        public byte[] IdPic { get; set; }
-        [Display(Name = "Generated QR Code:")]
-        public byte[] GeneratedQrCode { get; set; }
+        public string IdPicPath { get; set; }
+        [Display(Name = "Active Status")]
         public bool IsActive { get; set; }
+        [Display(Name = "Delete Status")]
         public bool IsDeleted { get; set; }
     }
 }

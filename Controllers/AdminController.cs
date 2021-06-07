@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Writer;
 using UglyToad.PdfPig.Core;
+using IDGenWebsite.Utilities;
 
 namespace IDGenWebsite.Controllers
 {
@@ -32,6 +33,7 @@ namespace IDGenWebsite.Controllers
         private readonly SchoolContext _schoolContext;
         private readonly IDGenWebsiteContext _userContext;
         private readonly UserManager<EmployeeModel> _userManager;
+        private readonly FileHelper fileHelper;
         //private readonly IWebHostEnvironment _env;
 
         public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext, UserManager<EmployeeModel> userManager)
@@ -40,6 +42,8 @@ namespace IDGenWebsite.Controllers
             _schoolContext = context;
             _userContext = userContext;
             _userManager = userManager;
+            
+            fileHelper = new FileHelper(_schoolContext);
         }
 
         public IActionResult Dashboard()
@@ -53,217 +57,30 @@ namespace IDGenWebsite.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         
-        private async Task ParseClasslinkFile(string fileName)
-        {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            using (var stream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-            {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
-                {
-                    reader.Read();
-                    while (reader.Read())
-                    {
-                        var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
-                        if(student != null)
-                        {
-                            student.DisplayName = reader.GetValue(3).ToString();
-                            student.QrCode = reader.GetValue(4).ToString();
-                        }
-                    }
-                    _schoolContext.SaveChanges();
-                }
-            }
-            //RedirectToAction("ViewStudents");
-        }
+        
 
-        private async Task TestExcel(string fileName)
-        {
-            //List<StudentModel> students = new List<StudentModel>();
-
-            //var fileName = "./Focus Students May.xlsx";
-
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-            using (var stream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-            {
-                using(var reader = ExcelReaderFactory.CreateReader(stream))
-                {
-                    reader.Read();
-                    while (reader.Read())
-                    {
-                        StudentModel student = new StudentModel();
-                        student.StudentID = reader.GetValue(0).ToString();
-                        student.LastName = reader.GetValue(1).ToString();
-                        student.FirstName = reader.GetValue(2).ToString();
-                        student.Email = reader.GetValue(3).ToString();
-                        student.GradeLevel = reader.GetValue(4).ToString();
-
-                        var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
-                        if(dbEntry == null)
-                        {
-                             _schoolContext.Add(student);
-                        }
-                        /*_context.Add(new StudentModel
-                        {
-                            StudentID = reader.GetValue(0).ToString(),
-                            LastName = reader.GetValue(1).ToString(),
-                            FirstName = reader.GetValue(2).ToString(),
-                            Email = reader.GetValue(3).ToString(),
-                            GradeLevel = reader.GetValue(4).ToString()
-                        }); */
-                    }
-                    _schoolContext.SaveChanges();
-                }
-            }
-            
-        }
-
+        
         [HttpPost]
-        public async Task<IActionResult> UploadFocus(ICollection<IFormFile> focusFiles)
+        public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
-            
-            var fullPath = "";
-
-            if (focusFiles != null && focusFiles.Count != 0)
-            {
-                foreach (var formFile in focusFiles)
-                {
-                    var fileName = Path.GetFileName(formFile.FileName);
-                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
-                    fullPath = Path.Combine("C:/IDGenWebsite/Uploads/Student Imports/", fileName);
-                    using(var fileStream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        await formFile.CopyToAsync(fileStream);
-                    }
-                }
-            }
-            // process uploaded files
-            // Don't rely on or trust the FileName property without validation.
-            //var fileName = filePaths.FirstOrDefault();
-            await TestExcel(fullPath);
+            await fileHelper.UploadStudentsAsync(focusFiles);
             return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
 
         [HttpPost]
         public async Task<IActionResult> UploadClassLink(List<IFormFile> classLinkFiles)
         {
-            
-            var fullPath = "";
-            if (classLinkFiles != null)
-            {
-                foreach (var formFile in classLinkFiles)
-                {
-                    var fileName = Path.GetFileName(formFile.FileName);
-                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
-                    fullPath = Path.Combine("C:/IDGenWebsite/Uploads/Qr Code Imports/", fileName);
-                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        await formFile.CopyToAsync(fileStream);
-                    }
-                }
-            }
-            // process uploaded files
-            // Don't rely on or trust the FileName property without validation.
-            //var fileName = filePaths.FirstOrDefault();
-            await ParseClasslinkFile(fullPath);
+            await fileHelper.UploadQrCodesAsync(classLinkFiles);
             return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
         [HttpPost]
         public async Task<IActionResult> UploadIDs(List<IFormFile> idPdfs)
         {
-            var fullPath = "";
-            if(idPdfs != null)
-            {
-                foreach(var formFile in idPdfs)
-                {
-                    var fileName = Path.GetFileName(formFile.FileName);
-                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory());
-                    fullPath = Path.Combine("C:/IDGenWebsite/Uploads/Id Pictures/", fileName);
-                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        await formFile.CopyToAsync(fileStream);
-                    }
-                }
-            }
-            await ParseFocusPDF(fullPath);
+            await fileHelper.UploadIdsAsync(idPdfs);
             return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
 
-        private async Task ParseFocusPDF(string path)
-        {
-            /*
-            //Create the QrCode generator and get the pdf from the uploaded files
-            QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-            PdfDocument pdf = PdfDocument.FromFile(path);
-            //Loop through the pages and extract the text to match id pages with students
-            for(int i = 0; i < pdf.PageCount; i++)
-            {
-                string text = pdf.ExtractTextFromPage(i);
-                string[] textArray = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                if(textArray.Length == 3)
-                {
-                    string id = textArray[2];
-                    var student = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == id);
-                    if(student != null)
-                    {
-                        //Save the page as their ID picture
-                        PdfDocument page = pdf.CopyPage(i);
-                        
-
-                        //Generate their QR Code if their QR Code field isnt null
-                        //TODO Redo this later to a seperate method that can be called on demand. 
-                        if (student.QrCode != null)
-                        {
-                            QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
-                            QRCode qRCode = new QRCode(qRCodeData);
-                            Bitmap qrCodeImage = qRCode.GetGraphic(15);
-                            PdfDocument qrDoc = ImageToPdfConverter.ImageToPdf(qrCodeImage);
-                            HtmlHeaderFooter footer = new HtmlHeaderFooter();
-                            footer.DrawDividerLine = true;
-                            footer.Height = 25;
-                            footer.FontSize = 250;
-                            footer.HtmlFragment = "<p>National Crisis/Suicide Prevention Hotline 800-273-8255:</p>" +
-                                "<p>Crisis Text Line: Text HOME to 741741</p>";
-
-                            qrDoc.AddHTMLFooters(footer);
-                            page.AppendPdf(qrDoc);
-                            
-                            byte[] bytes = page.BinaryData;
-                            student.IdPic = bytes;
-                        }
-                        else
-                        {
-                            byte[] bytes = page.BinaryData;
-                            student.IdPic = bytes;
-                        }
-                        _schoolContext.SaveChanges();
-                    }
-                }
-            }
-            //string text = pdf.ExtractAllText();
-            //string[] splitText = text.Split(new string[] { ",", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            //RedirectToAction("ViewStudents");
-            */
-            QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-            using (PdfDocument document = PdfDocument.Open(path))
-            {
-                
-                foreach (Page page in document.GetPages())
-                {
-                    
-                    //string pageText = page.Text;
-                    //_logger.LogInformation(pageText);
-                    var words = page.GetWords();
-                    _logger.LogInformation("Name:" + words.ElementAt(6));
-                    _logger.LogInformation("ID:" + words.ElementAt(8));
-                    PdfDocumentBuilder builder = new PdfDocumentBuilder();
-                    var firstPage = builder.AddPage(PageSize.A7);
-                    
-                    
-
-                }
-            }
-        }
+        
 
         public async Task<IActionResult> GetUsersPartial()
         {
