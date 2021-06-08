@@ -15,13 +15,13 @@ namespace IDGenWebsite.Controllers
     {
         private readonly ILogger<StudentController> _logger;
         private readonly SchoolContext _context;
-        private readonly IWebHostEnvironment _env;
+        //private readonly IWebHostEnvironment _env;
 
-        public StudentController(ILogger<StudentController> logger, SchoolContext context, IWebHostEnvironment webHostEnvironment)
+        public StudentController(ILogger<StudentController> logger, SchoolContext context)
         {
             _logger = logger;
             _context = context;
-            _env = webHostEnvironment;
+            
         }
 
         public async Task<IActionResult> GetStudentPartial()

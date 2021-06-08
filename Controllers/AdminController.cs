@@ -34,18 +34,20 @@ namespace IDGenWebsite.Controllers
         private readonly SchoolContext _schoolContext;
         private readonly IDGenWebsiteContext _userContext;
         private readonly UserManager<EmployeeModel> _userManager;
-        private readonly FileHelper fileHelper;
+        private readonly FileHelper _fileHelper;
         private readonly IConverter _converter;
-        //private readonly IWebHostEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
-        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext, UserManager<EmployeeModel> userManager, IConverter converter)
+        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext, UserManager<EmployeeModel> userManager, IConverter converter
+            , IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _schoolContext = context;
             _userContext = userContext;
             _userManager = userManager;
             _converter = converter;
-            fileHelper = new FileHelper(_schoolContext, _converter);
+            _fileHelper = new FileHelper(_schoolContext, _converter);
+            _env = webHostEnvironment;
         }
 
         public IActionResult Dashboard()
@@ -65,20 +67,20 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
-            await fileHelper.UploadStudentsAsync(focusFiles);
+            await _fileHelper.UploadStudentsAsync(focusFiles);
             return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
 
         [HttpPost]
         public async Task<IActionResult> UploadClassLink(List<IFormFile> classLinkFiles)
         {
-            await fileHelper.UploadQrCodesAsync(classLinkFiles);
+            await _fileHelper.UploadQrCodesAsync(classLinkFiles);
             return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
         [HttpPost]
         public async Task<IActionResult> UploadIDs(List<IFormFile> idPdfs)
         {
-            await fileHelper.UploadIdsAsync(idPdfs);
+            await _fileHelper.UploadIdsAsync(idPdfs);
             return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
 
@@ -127,8 +129,8 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveID(int id)
         {
-
-            return;
+            var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.ID == id);
+            return File(_fileHelper.GenerateId(student, _env.WebRootPath), "application/pdf",  string.Concat(student.Email, ".pdf"));
             //File(, "application/pdf", string.Concat(student.Email, ".pdf"))
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }

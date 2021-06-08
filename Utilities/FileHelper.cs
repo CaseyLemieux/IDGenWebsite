@@ -145,9 +145,9 @@ namespace IDGenWebsite.Utilities
             }
         }
 
-        public async Task<File> GenerateId(int id, string templateRootPath)
+        public byte[] GenerateId(StudentModel student, string templateRootPath)
         {
-            var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.ID == id);
+            
             if (student != null && student.IdPicPath != null && student.QrCode != null)
             {
                 //Generate QrCode BitMap
@@ -162,12 +162,18 @@ namespace IDGenWebsite.Utilities
                 byte[] qrCodeBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
 
                 //Generate the Front Barcode
-                Barcode barcode = new Barcode(student.StudentID, TYPE.CODE128);
-                byte[] barcodeBytes = barcode.GetImageData(SaveTypes.JPG);
+                Barcode barcode = new Barcode();
+                Image img = barcode.Encode(BarcodeLib.TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 20);
+                Bitmap barcodeBitmap = (Bitmap)img;
+                byte[] barcodeBytes = (byte[])converter.ConvertTo(barcodeBitmap, typeof(byte[]));
 
                 //Convert the Barcode and QrCode to Base64 strings
                 string qrCodeBase64 = Convert.ToBase64String(qrCodeBytes);
                 string barcodeBase64 = Convert.ToBase64String(barcodeBytes);
+
+                //Convert Logo and Pic To Base64
+                string idPhotoBase64 = Convert.ToBase64String(System.IO.File.ReadAllBytes(student.IdPicPath));
+                string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
 
                 //Get the front and back templates
                 string frontTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateFront.html"));
@@ -175,8 +181,9 @@ namespace IDGenWebsite.Utilities
 
                 //Replace the place holder strings on the front template
                 frontTemplate = frontTemplate.Replace("[PATH]", templateRootPath)
+                    .Replace("[LOGO]", logoPhotoBase64)
                     .Replace("[SCHOOL]", "Elementary")
-                    .Replace("[IDPHOTO]", student.IdPicPath)
+                    .Replace("[IDPHOTO]", idPhotoBase64)
                     .Replace("[NAME]", student.DisplayName)
                     .Replace("[BARCODE]", barcodeBase64);
                 //Replace the place holder strings on the back template
@@ -184,28 +191,34 @@ namespace IDGenWebsite.Utilities
 
                 var doc = new HtmlToPdfDocument()
                 {
+                    
                     GlobalSettings = {
-                    PaperSize = PaperKind.A8,
+                    PaperSize = new PechkinPaperSize("66", "100"),
                     Orientation = Orientation.Portrait,
                 },
 
                     Objects = {
                     new ObjectSettings()
                     {
-                        Page = "http://google.com/",
+                        HtmlContent = frontTemplate,
+                         WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
                     },
                      new ObjectSettings()
                     {
-                        Page = "https://github.com/",
+                        HtmlContent = backTemplate,
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
 
                     }
                 }
                 };
 
-                byte[] pdf = converter.Convert(doc);
+                byte[] pdf = _converter.Convert(doc);
 
-                return File(pdf, "application/pdf", "Test.pdf");
+                return pdf;
             }
+
+            //for now return null
+            return null;
         }
 
 
