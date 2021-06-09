@@ -10,29 +10,71 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #e6ebe0;
+    background-color: black;
     flex-direction: row;
     flex-flow: wrap;
 
 }
 
-.front{
-    height:380px;
+.front {
+    height: 380px;
     width: 250px;
-    position: relative;
     border-radius: 10px;
+    position: relative;
+   
+}
+
+.back {
+    height: 380px;
+    width: 250px;
+    border-radius: 10px;
+    position: relative;
+    background-color: white;
 }
 
 .top{
     height: 25%;
-    width: 100%;
+    width: 250px;
     background-color: #c20606;
     position: relative;
     z-index: 5;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
+.bottom{
+    height: 25%;
+    width: 250px;
+    background-color: white;
+    position: absolute;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
 
+.bottom p{
+    position: relative;
+    
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 5px;
+    text-emphasis: spacing;
+}
+.bottom .desi{
+    font-size:12px;
+    color: grey;
+    font-weight: normal;
+}
+.bottom .no{
+    font-size: 15px;
+    font-weight: normal;
+}
+
+.bottom .barcode{
+    width: 100%;
+    padding-left: 20px;
+    padding-top: 10px;
+}
 .top img{
     height: 60px;
     width: 60px;
@@ -55,7 +97,7 @@
 
 .middle{
     height: 50%;
-    width: 100%;
+    width: 250px;
     background-color: white;
     position: relative;
 }
@@ -69,25 +111,6 @@
     position: absolute;
 }
 
-.bottom{
-    height: 25%;
-    width: 100%;
-    background-color: white;
-    position: absolute;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-}
-
-.bottom p{
-    position: relative;
-    
-    text-align: center;
-    text-transform: capitalize;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 5px;
-    text-emphasis: spacing;
-}
 
 .details-info{
     color: white;
@@ -99,21 +122,7 @@
     margin-top: 20px;
     line-height: 22px;
 }
-.bottom .desi{
-    font-size:12px;
-    color: grey;
-    font-weight: normal;
-}
-.bottom .no{
-    font-size: 15px;
-    font-weight: normal;
-}
 
-.bottom .barcode{
-    width: 100%;
-    padding-left: 20px;
-    padding-top: 10px;
-}
 /*.barcode img
 {
     height: 65px;
@@ -127,15 +136,7 @@
     top: 70px;
 } */
 
-.back
-{
-    height: 380px;
-    width: 250px;
-    border-radius: 10px;
-    position: relative;
-    background-color: white;
 
-}
 .back-middle{
     height: 50%;
     width: 100%;
@@ -160,7 +161,6 @@
     padding: 5px;
     font-size: 25px;
 }
-
 
 
 
@@ -198,4 +198,8 @@
 }
 
 @media print{
+    .container {
+        height: 380px;
+        width: 250px;
+    }
 }

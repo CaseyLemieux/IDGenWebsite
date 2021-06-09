@@ -195,7 +195,7 @@ namespace IDGenWebsite.Utilities
                 {
                     
                     GlobalSettings = {
-                    PaperSize = new PechkinPaperSize("66mm", "81mm"),
+                    PaperSize = new PechkinPaperSize("53mm", "81mm"),
                     ImageDPI = 300,
                     Margins = new MarginSettings(0, 0, 0, 0),
                     Orientation = Orientation.Portrait,
@@ -204,7 +204,7 @@ namespace IDGenWebsite.Utilities
                     Objects = {
                     new ObjectSettings()
                     {
-                        HtmlContent = frontTemplate,
+                         HtmlContent = frontTemplate,
                          WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
                     },
                      new ObjectSettings()
