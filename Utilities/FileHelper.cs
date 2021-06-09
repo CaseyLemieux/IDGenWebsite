@@ -2,6 +2,7 @@
 using ExcelDataReader;
 using IDGenWebsite.Data;
 using IDGenWebsite.Models;
+using IronPdf;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using QRCoder;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
@@ -163,7 +165,7 @@ namespace IDGenWebsite.Utilities
 
                 //Generate the Front Barcode
                 Barcode barcode = new Barcode();
-                Image img = barcode.Encode(BarcodeLib.TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 20);
+                Image img = barcode.Encode(TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 20);
                 Bitmap barcodeBitmap = (Bitmap)img;
                 byte[] barcodeBytes = (byte[])converter.ConvertTo(barcodeBitmap, typeof(byte[]));
 
@@ -172,7 +174,7 @@ namespace IDGenWebsite.Utilities
                 string barcodeBase64 = Convert.ToBase64String(barcodeBytes);
 
                 //Convert Logo and Pic To Base64
-                string idPhotoBase64 = Convert.ToBase64String(System.IO.File.ReadAllBytes(student.IdPicPath));
+                string idPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(student.IdPicPath));
                 string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
 
                 //Get the front and back templates
@@ -193,7 +195,9 @@ namespace IDGenWebsite.Utilities
                 {
                     
                     GlobalSettings = {
-                    PaperSize = new PechkinPaperSize("66", "100"),
+                    PaperSize = new PechkinPaperSize("66mm", "81mm"),
+                    ImageDPI = 300,
+                    Margins = new MarginSettings(0, 0, 0, 0),
                     Orientation = Orientation.Portrait,
                 },
 
@@ -210,7 +214,22 @@ namespace IDGenWebsite.Utilities
 
                     }
                 }
-                };
+                }; 
+                /*HtmlToPdf htmlToPdf = new HtmlToPdf();
+                htmlToPdf.PrintOptions.CssMediaType = PdfPrintOptions.PdfCssMediaType.Screen;
+                htmlToPdf.PrintOptions.DPI = 300;
+                htmlToPdf.PrintOptions.FitToPaperWidth = true;
+                htmlToPdf.PrintOptions.InputEncoding = Encoding.UTF8;
+                htmlToPdf.PrintOptions.PaperOrientation = PdfPrintOptions.PdfPaperOrientation.Portrait;
+                htmlToPdf.PrintOptions.MarginTop = 0;
+                htmlToPdf.PrintOptions.MarginLeft = 0;
+                htmlToPdf.PrintOptions.MarginRight = 0;
+                htmlToPdf.PrintOptions.MarginBottom = 0;
+                //htmlToPdf.PrintOptions.CustomCssUrl = templateRootPath + "IdTemplateStyleSheet.css";
+                //htmlToPdf.PrintOptions.SetCustomPaperSizeInInches(2.13, 3.38);
+                IronPdf.PdfDocument frontPage = htmlToPdf.RenderHtmlAsPdf(frontTemplate);
+                IronPdf.PdfDocument backPage = htmlToPdf.RenderHtmlAsPdf(backTemplate);
+                frontPage.InsertPdf(backPage); */
 
                 byte[] pdf = _converter.Convert(doc);
 
