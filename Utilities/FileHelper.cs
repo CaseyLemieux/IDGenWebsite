@@ -2,7 +2,6 @@
 using ExcelDataReader;
 using IDGenWebsite.Data;
 using IDGenWebsite.Models;
-using IronPdf;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using QRCoder;
@@ -13,9 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UglyToad.PdfPig;
-using UglyToad.PdfPig.Content;
-using UglyToad.PdfPig.Writer;
 using WkHtmlToPdfDotNet;
 using WkHtmlToPdfDotNet.Contracts;
 
@@ -89,9 +85,9 @@ namespace IDGenWebsite.Utilities
 
             //var fileName = "./Focus Students May.xlsx";
 
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            using (var stream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
@@ -104,6 +100,9 @@ namespace IDGenWebsite.Utilities
                         student.FirstName = reader.GetValue(2).ToString();
                         student.Email = reader.GetValue(3).ToString();
                         student.GradeLevel = reader.GetValue(4).ToString();
+                        student.EnrollmentStartDate = DateTime.Parse(reader.GetValue(5).ToString());
+                        student.HomeRoomTeacher = reader.GetValue(6).ToString();
+                        student.HomeRoomTeacherEmail = reader.GetValue(7).ToString();
 
                         var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
                         if (dbEntry == null)
@@ -127,8 +126,8 @@ namespace IDGenWebsite.Utilities
 
         private async Task ParseQrCodeFilesAsync(string fileName)
         {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            using (var stream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
@@ -187,6 +186,7 @@ namespace IDGenWebsite.Utilities
                     .Replace("[SCHOOL]", "Elementary")
                     .Replace("[IDPHOTO]", idPhotoBase64)
                     .Replace("[NAME]", student.DisplayName)
+                    .Replace("[GRADE]", student.GradeLevel)
                     .Replace("[BARCODE]", barcodeBase64);
                 //Replace the place holder strings on the back template
                 backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64);
@@ -195,7 +195,7 @@ namespace IDGenWebsite.Utilities
                 {
                     
                     GlobalSettings = {
-                    PaperSize = new PechkinPaperSize("53mm", "81mm"),
+                    PaperSize = new PechkinPaperSize("53mm", "84mm"),
                     ImageDPI = 300,
                     Margins = new MarginSettings(0, 0, 0, 0),
                     Orientation = Orientation.Portrait,
@@ -214,22 +214,7 @@ namespace IDGenWebsite.Utilities
 
                     }
                 }
-                }; 
-                /*HtmlToPdf htmlToPdf = new HtmlToPdf();
-                htmlToPdf.PrintOptions.CssMediaType = PdfPrintOptions.PdfCssMediaType.Screen;
-                htmlToPdf.PrintOptions.DPI = 300;
-                htmlToPdf.PrintOptions.FitToPaperWidth = true;
-                htmlToPdf.PrintOptions.InputEncoding = Encoding.UTF8;
-                htmlToPdf.PrintOptions.PaperOrientation = PdfPrintOptions.PdfPaperOrientation.Portrait;
-                htmlToPdf.PrintOptions.MarginTop = 0;
-                htmlToPdf.PrintOptions.MarginLeft = 0;
-                htmlToPdf.PrintOptions.MarginRight = 0;
-                htmlToPdf.PrintOptions.MarginBottom = 0;
-                //htmlToPdf.PrintOptions.CustomCssUrl = templateRootPath + "IdTemplateStyleSheet.css";
-                //htmlToPdf.PrintOptions.SetCustomPaperSizeInInches(2.13, 3.38);
-                IronPdf.PdfDocument frontPage = htmlToPdf.RenderHtmlAsPdf(frontTemplate);
-                IronPdf.PdfDocument backPage = htmlToPdf.RenderHtmlAsPdf(backTemplate);
-                frontPage.InsertPdf(backPage); */
+                };
 
                 byte[] pdf = _converter.Convert(doc);
 

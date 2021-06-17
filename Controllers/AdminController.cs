@@ -12,16 +12,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-//using IronPdf;
-using UglyToad.PdfPig;
-using QRCoder;
-using System.Drawing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
-using UglyToad.PdfPig.Content;
-using UglyToad.PdfPig.Writer;
-using UglyToad.PdfPig.Core;
 using IDGenWebsite.Utilities;
 using WkHtmlToPdfDotNet.Contracts;
 

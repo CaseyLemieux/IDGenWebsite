@@ -25,9 +25,15 @@ namespace IDGenWebsite.Models
         public string GradeLevel { get; set; }
         [Display(Name ="ID Picture:")]
         public string IdPicPath { get; set; }
-        [Display(Name = "Active Status")]
+        [Display(Name = "Active Status:")]
         public bool IsActive { get; set; }
-        [Display(Name = "Delete Status")]
+        [Display(Name = "Delete Status:")]
         public bool IsDeleted { get; set; }
+        [Display(Name = "Enrollment Start Date:")]
+        public DateTime EnrollmentStartDate { get; set; }
+        [Display(Name = "Home Room Teacher:")]
+        public string HomeRoomTeacher { get; set; }
+        [Display(Name = "Home Room Teacher Email:")]
+        public string HomeRoomTeacherEmail { get; set; }
     }
 }
