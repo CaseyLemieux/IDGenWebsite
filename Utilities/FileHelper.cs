@@ -69,7 +69,7 @@ namespace IDGenWebsite.Utilities
             //throw new Exception(name);
             foreach (var path in paths)
             {
-                var id = Path.GetFileNameWithoutExtension(paths.ElementAt(0));
+                var id = Path.GetFileNameWithoutExtension(path);
                 var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.StudentID == id);
                 if(student != null)
                 {

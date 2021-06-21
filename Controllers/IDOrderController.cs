@@ -1,6 +1,7 @@
 ﻿using IDGenWebsite.Data;
 using IDGenWebsite.Models;
 using IDGenWebsite.Utilities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -15,9 +16,11 @@ namespace IDGenWebsite.Controllers
     {
         private readonly SchoolContext _schoolContext;
         private readonly EmailHelper _emailHelper;
-        public IDOrderController(SchoolContext context)
+        private readonly UserManager<EmployeeModel> _userManager;
+        public IDOrderController(SchoolContext context, UserManager<EmployeeModel> userManager)
         {
             _schoolContext = context;
+            _userManager = userManager;
             //Need to move this API Key to the database
             _emailHelper = new EmailHelper("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");
         }
@@ -43,7 +46,8 @@ namespace IDGenWebsite.Controllers
             };
             _schoolContext.IDRequests.Add(idOrder);
             _schoolContext.SaveChanges();
-            await _emailHelper.Send();
+            List<EmployeeModel> admins = (List<EmployeeModel>)await _userManager.GetUsersInRoleAsync("Admin");
+            await _emailHelper.SendNewOrderRequestEmail(admins);
             return JsonConvert.SerializeObject("Success");
         }
     }
