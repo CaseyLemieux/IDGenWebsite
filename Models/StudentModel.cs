@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,5 +36,7 @@ namespace IDGenWebsite.Models
         public string HomeRoomTeacher { get; set; }
         [Display(Name = "Home Room Teacher Email:")]
         public string HomeRoomTeacherEmail { get; set; }
+        [NotMapped]
+        public bool IdRequestPrinted { get; set; } = true;
     }
 }

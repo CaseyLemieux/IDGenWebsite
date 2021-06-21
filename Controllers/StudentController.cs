@@ -26,7 +26,19 @@ namespace IDGenWebsite.Controllers
 
         public async Task<IActionResult> GetStudentPartial()
         {
-            return PartialView("_ViewStudentsPartial", await _context.Students.OrderBy(s => s.LastName).ToListAsync());
+            var students = await _context.Students.OrderBy(s => s.LastName).ToListAsync();
+            var idOrders = await _context.IDRequests.ToListAsync();
+            foreach(var order in idOrders)
+            {
+                foreach(var student in students)
+                {
+                    if (order.StudentID.Equals(student.StudentID))
+                    {
+                        student.IdRequestPrinted = order.HasBeenPrinted;
+                    }
+                }
+            }
+            return PartialView("_ViewStudentsPartial", students);
         }
 
         public async Task<IActionResult> SearchStudents(string searchString)

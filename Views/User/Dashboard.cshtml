@@ -110,7 +110,7 @@
             });
         }
 
-        function RequestIdPrint(id) {
+        function RequestIdPrint(id, button) {
             console.log(id);
             //var id = $(itemData).data('assigned-id');
             $.ajax({
@@ -118,17 +118,19 @@
                 "url": "/IDOrder/RequestIdPrint",
                 "data": { "id": id },
                 "dataType": "json",
-                "success": RequestIdPrintSuccess(),
+                "success": RequestIdPrintSuccess(button),
                 "error": RequestIdPrintError
             });
         }
 
-        function RequestIdPrintSuccess() {
-            alert("Request Submitted");
+        function RequestIdPrintSuccess(buttonRef) {
+            $(buttonRef).removeClass('btn btn-success');
+            $(buttonRef).addClass("btn btn-danger");
+            $(buttonRef).prop("disabled", true);
         }
 
         function RequestIdPrintError() {
-            alert("Error Submitting Request");
+            console.log("Error Submitting Request");
         }
 
     </script>

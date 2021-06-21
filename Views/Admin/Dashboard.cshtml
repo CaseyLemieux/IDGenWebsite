@@ -18,7 +18,10 @@
                     <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#" onclick="ViewUsers()" role="tab" aria-controls="v-pills-settings" aria-selected="false">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#" onclick="ViewTemplates()" role="tab" aria-controls="v-pills-settings" aria-selected="false">Templates</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#" onclick="ViewSettings()" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
                 </li>
                 <li class="nav-item">
                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -67,7 +70,7 @@
         });
 
         // The function takes Form and the event object as parameter
-        function SubmitForm(frm, caller) {
+        function SubmitNewUser(frm, caller) {
             caller.preventDefault();
             var form = document.getElementById('CreateUserForm');
             //var fdata = new FormData(form);
@@ -249,7 +252,37 @@
 
         }
 
-        function Settings() {
+        function ViewSettings() {
+            $.ajax({
+                url: '/Admin/GetSettingsPartial',
+                type: 'GET',
+                cache: false,
+                dataType: "html",
+                success: function (data) {
+                    var div = document.getElementById("panel");
+                    div.innerHTML = data;
+                },
+                error: function (data) {
+                    console.log('Error getting settings partial');
+                }
+            });
+
+        }
+
+        function ViewTemplates() {
+            $.ajax({
+                url: '/Admin/GetIdTemplateSettings',
+                type: 'GET',
+                cache: false,
+                dataType: "html",
+                success: function (data) {
+                    var div = document.getElementById("panel");
+                    div.innerHTML = data;
+                },
+                error: function (data) {
+                    console.log('Error getting template partial');
+                }
+            });
 
         }
 
@@ -269,10 +302,6 @@
                     console.log('Error getting file partial');
                 }
             });
-        }
-
-        function SubmitNewUser() {
-
         }
 
         function Logout() {

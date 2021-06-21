@@ -53,10 +53,10 @@ namespace IDGenWebsite.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        
-        
 
-        
+
+
+
         [HttpPost]
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
@@ -77,7 +77,7 @@ namespace IDGenWebsite.Controllers
             return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
         }
 
-        
+
 
         public async Task<IActionResult> GetUsersPartial()
         {
@@ -93,6 +93,17 @@ namespace IDGenWebsite.Controllers
         {
             return PartialView("_CreateUserPartial", new EmployeeModel());
         }
+
+        public async Task<IActionResult> GetSettingsPartial()
+        {
+            return PartialView("_SettingsPartial", await _schoolContext.Settings.ToListAsync());
+        }
+
+        public async Task<IActionResult> GetIdTemplateSettings()
+        {
+            return PartialView("_TemplatePartial", await _schoolContext.IdTemplates.ToListAsync());
+        }
+
         [HttpPost]
         public string CreateUser(EmployeeModel employee)
         {

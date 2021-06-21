@@ -38,8 +38,11 @@ namespace IDGenWebsite
                 var services = scope.ServiceProvider;
                 try
                 {
+                    //Create the Student Database if it does not already exsist.
+                    //After creating the Database seed default settings and Id Template.
                     var context = services.GetRequiredService<SchoolContext>();
                     DbInitializer.Initialize(context);
+
                 }
                 catch (Exception ex)
                 {

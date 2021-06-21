@@ -63,9 +63,18 @@
                         }
                         else
                         {
-                            <div>
-                                <button type="submit" class="btn btn-success" name="id" onclick="RequestIdPrint(@item.ID)"><i class='fa fa-file'>Request Print</i></button>
-                            </div>
+                            @if (item.IdRequestPrinted)
+                            {
+                                <div>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="RequestIdPrint(@item.ID, this)"><i class='fa fa-file'>Request Print</i></button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <button type="submit" class="btn btn-danger" disabled name="id" onclick="RequestIdPrint(@item.ID, this)"><i class='fa fa-file'>Request Print</i></button>
+                                </div>
+                            }
                         }
                     </td>
                 </tr>
