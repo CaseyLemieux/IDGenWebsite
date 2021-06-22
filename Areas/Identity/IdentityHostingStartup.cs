@@ -18,7 +18,7 @@ namespace IDGenWebsite.Areas.Identity
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<IDGenWebsiteContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("IDGenWebsiteContextConnection")));
+                        context.Configuration.GetConnectionString("IdGenWebsiteIdentityProd")));
 
                 /*services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<IDGenWebsiteContext>(); */
