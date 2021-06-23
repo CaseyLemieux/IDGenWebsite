@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/idgenwebsitedb/databases/idgenIdentitydb",
+      "type": "mssql.azure",
+      "connectionId": "IdGenWebsiteIdentityProd",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql3": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/idgenwebsitedb/databases/IdGenWebsiteDB",
+      "type": "mssql.azure",
+      "connectionId": "IdGenWebsiteDBProd",
+      "secretStore": "AzureAppSettings"
+    },
+    "storage1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/idgenblob",
+      "type": "storage.azure",
+      "connectionId": "idgenblobstorage",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

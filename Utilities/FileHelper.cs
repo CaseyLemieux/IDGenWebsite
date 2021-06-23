@@ -1,4 +1,5 @@
-﻿using BarcodeLib;
+﻿using Azure.Storage.Blobs;
+using BarcodeLib;
 using ExcelDataReader;
 using IDGenWebsite.Data;
 using IDGenWebsite.Models;
@@ -21,6 +22,7 @@ namespace IDGenWebsite.Utilities
     {
         private readonly SchoolContext _schoolContext;
         private readonly IConverter _converter;
+        private readonly string connectionString = "DefaultEndpointsProtocol=https;AccountName=idgenblob;AccountKey=JZ2erPcBSYeVbYB6DBnOWoy9MKt1WU0ENFKeFdE/OmsFnJFVY8Aq1rJDQfxg87GBdZY/qnZG8AjC3oF74v0uZg==;EndpointSuffix=core.windows.net";
         //private readonly Iconverter _converter;
         public FileHelper(SchoolContext schoolContext, IConverter converter)
         {
@@ -29,24 +31,72 @@ namespace IDGenWebsite.Utilities
         }
         public async Task UploadIdsAsync(List<IFormFile> idFiles)
         {
-            var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Id Pictures/", idFiles);
+            //var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Id Pictures/", idFiles);
+            var filePaths = await SaveIdFilesToBlob(idFiles);
             await ParseIdFilesAsync(filePaths);
             
         }
 
         public async Task UploadStudentsAsync(List<IFormFile> studentFiles)
         {
-            var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Student Imports/", studentFiles);
+            //var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Student Imports/", studentFiles);
+            var filePaths = await SaveFilesToBlob(studentFiles);
             await ParseStudentFilesAsync(filePaths.ElementAt(0));
         }
 
         public async Task UploadQrCodesAsync(List<IFormFile> qrCodeFiles)
         {
-            var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Qr Code Imports/", qrCodeFiles);
+            //var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Qr Code Imports/", qrCodeFiles);
+            var filePaths = await SaveFilesToBlob(qrCodeFiles);
             await ParseQrCodeFilesAsync(filePaths.ElementAt(0));
         }
 
-        private async Task<List<string>> SaveFiles(string directoryPath, List<IFormFile> files)
+        private async Task<List<string>> SaveFilesToBlob(List<IFormFile> files)
+        {
+            List<string> paths = new List<string>();
+
+            BlobServiceClient blobClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "studentimports");
+            foreach (var formFile in files)
+            {
+                try
+                {
+                    StreamReader stream = new StreamReader(formFile.OpenReadStream());
+                    string fileName = Path.GetFileName(formFile.FileName);
+                    await containerClient.UploadBlobAsync(fileName, stream.BaseStream);
+                    paths.Add(fileName);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            return paths;
+        }
+
+        private async Task<List<string>> SaveIdFilesToBlob(List<IFormFile> files)
+        {
+            List<string> paths = new List<string>();
+            
+            BlobServiceClient blobClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "idpictures");
+            foreach(var formFile in files)
+            {
+                try
+                {
+                    StreamReader stream = new StreamReader(formFile.OpenReadStream());
+                    string fileName = Path.GetFileName(formFile.FileName);
+                    await containerClient.UploadBlobAsync(fileName, stream.BaseStream);
+                    paths.Add(fileName);
+                } catch(Exception ex)
+                {
+                    throw;
+                }
+            }
+            return paths;
+        }
+
+        /*private async Task<List<string>> SaveFiles(string directoryPath, List<IFormFile> files)
         {
             List<string> paths = new List<string>();
             //TODO: Need to save a refrence to the file in the Database
@@ -62,7 +112,7 @@ namespace IDGenWebsite.Utilities
                 paths.Add(fullPath);
             }
             return paths;
-        }
+        } */
 
         private async Task ParseIdFilesAsync(List<string> paths)
         {
@@ -87,68 +137,77 @@ namespace IDGenWebsite.Utilities
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
-            {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
-                {
-                    reader.Read();
-                    while (reader.Read())
-                    {
-                        StudentModel student = new StudentModel();
-                        student.StudentID = reader.GetValue(0).ToString();
-                        student.LastName = reader.GetValue(1).ToString();
-                        student.FirstName = reader.GetValue(2).ToString();
-                        student.Email = reader.GetValue(3).ToString();
-                        student.GradeLevel = reader.GetValue(4).ToString();
-                        student.EnrollmentStartDate = DateTime.Parse(reader.GetValue(5).ToString());
-                        student.HomeRoomTeacher = reader.GetValue(6).ToString();
-                        student.HomeRoomTeacherEmail = reader.GetValue(7).ToString();
+            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "studentimports");
+            var blob = containerClient.GetBlobClient(fileName);
+            var blobDownload = await blob.DownloadContentAsync();
+            
 
-                        var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
-                        if (dbEntry == null)
-                        {
-                            _schoolContext.Add(student);
-                        }
-                        /*_context.Add(new StudentModel
-                        {
-                            StudentID = reader.GetValue(0).ToString(),
-                            LastName = reader.GetValue(1).ToString(),
-                            FirstName = reader.GetValue(2).ToString(),
-                            Email = reader.GetValue(3).ToString(),
-                            GradeLevel = reader.GetValue(4).ToString()
-                        }); */
+            /*using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
+            {
+                
+            } */
+            using (var reader = ExcelReaderFactory.CreateReader(blobDownload.Value.Content.ToStream()))
+            {
+                reader.Read();
+                while (reader.Read())
+                {
+                    StudentModel student = new StudentModel();
+                    student.StudentID = reader.GetValue(0).ToString();
+                    student.LastName = reader.GetValue(1).ToString();
+                    student.FirstName = reader.GetValue(2).ToString();
+                    student.Email = reader.GetValue(3).ToString();
+                    student.GradeLevel = reader.GetValue(4).ToString();
+                    student.EnrollmentStartDate = DateTime.Parse(reader.GetValue(5).ToString());
+                    student.HomeRoomTeacher = reader.GetValue(6).ToString();
+                    student.HomeRoomTeacherEmail = reader.GetValue(7).ToString();
+
+                    var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
+                    if (dbEntry == null)
+                    {
+                        _schoolContext.Add(student);
                     }
-                    _schoolContext.SaveChanges();
+                    /*_context.Add(new StudentModel
+                    {
+                        StudentID = reader.GetValue(0).ToString(),
+                        LastName = reader.GetValue(1).ToString(),
+                        FirstName = reader.GetValue(2).ToString(),
+                        Email = reader.GetValue(3).ToString(),
+                        GradeLevel = reader.GetValue(4).ToString()
+                    }); */
                 }
+                _schoolContext.SaveChanges();
             }
 
         }
 
         private async Task ParseQrCodeFilesAsync(string fileName)
         {
+            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "studentimports");
+            var blob = containerClient.GetBlobClient(fileName);
+            var blobDownload = await blob.DownloadContentAsync();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
+            using (var reader = ExcelReaderFactory.CreateReader(blobDownload.Value.Content.ToStream()))
             {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                reader.Read();
+                while (reader.Read())
                 {
-                    reader.Read();
-                    while (reader.Read())
+                    var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
+                    if (student != null)
                     {
-                        var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
-                        if (student != null)
-                        {
-                            student.DisplayName = reader.GetValue(3).ToString();
-                            student.QrCode = reader.GetValue(4).ToString();
-                        }
+                        student.DisplayName = reader.GetValue(3).ToString();
+                        student.QrCode = reader.GetValue(4).ToString();
                     }
-                    _schoolContext.SaveChanges();
                 }
+                _schoolContext.SaveChanges();
             }
         }
 
         public byte[] GenerateId(StudentModel student, string templateRootPath)
         {
+
+            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "idpictures");
             
+
             if (student != null && student.IdPicPath != null && student.QrCode != null)
             {
                 //Generate QrCode BitMap
@@ -173,7 +232,10 @@ namespace IDGenWebsite.Utilities
                 string barcodeBase64 = Convert.ToBase64String(barcodeBytes);
 
                 //Convert Logo and Pic To Base64
-                string idPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(student.IdPicPath));
+                //Get Student ID from blob
+                var blob = containerClient.GetBlobClient(student.IdPicPath);
+                var blobDownload = blob.DownloadContent();
+                string idPhotoBase64 = Convert.ToBase64String(blobDownload.Value.Content.ToArray());
                 string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
 
                 //Get the front and back templates

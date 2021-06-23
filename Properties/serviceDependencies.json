@@ -3,6 +3,18 @@
     "mssql1": {
       "type": "mssql",
       "connectionId": "IDGenWebsiteContextConnection"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "IdGenWebsiteIdentityProd"
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "IdGenWebsiteDBProd"
+    },
+    "storage1": {
+      "type": "storage",
+      "connectionId": "idgenblobstorage"
     }
   }
 }
