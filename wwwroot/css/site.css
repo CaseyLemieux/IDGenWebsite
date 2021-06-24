@@ -6,6 +6,9 @@ a.navbar-brand {
   text-align: center;
   word-break: break-all;
 }
+.navbar {
+    background: #222D32;
+}
 
 /* Provide sufficient contrast against white background */
 a {
@@ -61,6 +64,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  background: #222D32;
 }
 .footer {
   position: absolute;
@@ -68,4 +72,5 @@ body {
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+  background: #222D32;
 }
