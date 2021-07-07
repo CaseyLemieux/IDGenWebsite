@@ -22,7 +22,7 @@ namespace IDGenWebsite.Controllers
             _schoolContext = context;
             _userManager = userManager;
             //Need to move this API Key to the database
-            _emailHelper = new EmailHelper("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");
+            
         }
         public IActionResult Index()
         {
