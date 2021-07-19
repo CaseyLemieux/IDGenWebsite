@@ -9,6 +9,10 @@
     {
       "library": "jspdf@2.3.1",
       "destination": "wwwroot/jspdf/"
+    },
+    {
+      "library": "popper.js@2.9.2",
+      "destination": "wwwroot/lib/popper.js/"
     }
   ]
 }

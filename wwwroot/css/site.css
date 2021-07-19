@@ -19,6 +19,8 @@ a {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
