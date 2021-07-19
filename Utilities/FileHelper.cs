@@ -31,72 +31,24 @@ namespace IDGenWebsite.Utilities
         }
         public async Task UploadIdsAsync(List<IFormFile> idFiles)
         {
-            //var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Id Pictures/", idFiles);
-            var filePaths = await SaveIdFilesToBlob(idFiles);
+            var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Id Pictures/", idFiles);
             await ParseIdFilesAsync(filePaths);
             
         }
 
         public async Task UploadStudentsAsync(List<IFormFile> studentFiles)
         {
-            //var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Student Imports/", studentFiles);
-            var filePaths = await SaveFilesToBlob(studentFiles);
+            var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Student Imports/", studentFiles);
             await ParseStudentFilesAsync(filePaths.ElementAt(0));
         }
 
         public async Task UploadQrCodesAsync(List<IFormFile> qrCodeFiles)
         {
-            //var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Qr Code Imports/", qrCodeFiles);
-            var filePaths = await SaveFilesToBlob(qrCodeFiles);
+            var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Qr Code Imports/", qrCodeFiles);
             await ParseQrCodeFilesAsync(filePaths.ElementAt(0));
         }
 
-        private async Task<List<string>> SaveFilesToBlob(List<IFormFile> files)
-        {
-            List<string> paths = new List<string>();
-
-            BlobServiceClient blobClient = new BlobServiceClient(connectionString);
-            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "studentimports");
-            foreach (var formFile in files)
-            {
-                try
-                {
-                    StreamReader stream = new StreamReader(formFile.OpenReadStream());
-                    string fileName = Path.GetFileName(formFile.FileName);
-                    await containerClient.UploadBlobAsync(fileName, stream.BaseStream);
-                    paths.Add(fileName);
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-            }
-            return paths;
-        }
-
-        private async Task<List<string>> SaveIdFilesToBlob(List<IFormFile> files)
-        {
-            List<string> paths = new List<string>();
-            
-            BlobServiceClient blobClient = new BlobServiceClient(connectionString);
-            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "idpictures");
-            foreach(var formFile in files)
-            {
-                try
-                {
-                    StreamReader stream = new StreamReader(formFile.OpenReadStream());
-                    string fileName = Path.GetFileName(formFile.FileName);
-                    await containerClient.UploadBlobAsync(fileName, stream.BaseStream);
-                    paths.Add(fileName);
-                } catch(Exception ex)
-                {
-                    throw;
-                }
-            }
-            return paths;
-        }
-
-        /*private async Task<List<string>> SaveFiles(string directoryPath, List<IFormFile> files)
+        private async Task<List<string>> SaveFiles(string directoryPath, List<IFormFile> files)
         {
             List<string> paths = new List<string>();
             //TODO: Need to save a refrence to the file in the Database
@@ -112,7 +64,7 @@ namespace IDGenWebsite.Utilities
                 paths.Add(fullPath);
             }
             return paths;
-        } */
+        } 
 
         private async Task ParseIdFilesAsync(List<string> paths)
         {
@@ -136,11 +88,6 @@ namespace IDGenWebsite.Utilities
             //var fileName = "./Focus Students May.xlsx";
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "studentimports");
-            var blob = containerClient.GetBlobClient(fileName);
-            var blobDownload = await blob.DownloadContentAsync();
-            
 
             /*using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
@@ -201,6 +148,8 @@ namespace IDGenWebsite.Utilities
                 _schoolContext.SaveChanges();
             }
         }
+
+        public byte[]
 
         public byte[] GenerateId(StudentModel student, string templateRootPath)
         {

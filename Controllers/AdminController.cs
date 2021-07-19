@@ -139,5 +139,8 @@ namespace IDGenWebsite.Controllers
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }
 
+        public async Task<IActionResult> DownloadGradeLevel(int id) { 
+        }
+
     }
 }

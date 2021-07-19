@@ -340,6 +340,28 @@
             });
         }
 
+        function PrintGradeLevel(grade) {
+            console.log(grade);
+            $.ajax({
+                url: '/Student/SearchStudents',
+                type: 'GET',
+                cache: false,
+                data: { "searchString": text },
+                dataType: "html",
+                success: function (data) {
+                    var div = document.getElementById("panel");
+                    div.innerHTML = data;
+                },
+                error: function (data) {
+                    console.log('Error getting users partial');
+                }
+            });
+        }
+
+        function DownloadGradeLevel(grade) {
+
+        }
+
     </script>
 
 }
