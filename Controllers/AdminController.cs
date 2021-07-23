@@ -139,7 +139,10 @@ namespace IDGenWebsite.Controllers
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }
 
-        public async Task<IActionResult> DownloadGradeLevel(int id) { 
+        public async Task<IActionResult> DownloadGradeLevel(string grade) {
+
+            var students = await _schoolContext.Students.Where(s => s.GradeLevel == grade).ToListAsync();
+            return File(_fileHelper.GenerateGradeLevel(students, _env.WebRootPath), "application/pdf", string.Concat(grade, ".pdf"));
         }
 
     }

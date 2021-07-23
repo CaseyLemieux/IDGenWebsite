@@ -22,7 +22,6 @@ namespace IDGenWebsite.Utilities
     {
         private readonly SchoolContext _schoolContext;
         private readonly IConverter _converter;
-        private readonly string connectionString = "DefaultEndpointsProtocol=https;AccountName=idgenblob;AccountKey=JZ2erPcBSYeVbYB6DBnOWoy9MKt1WU0ENFKeFdE/OmsFnJFVY8Aq1rJDQfxg87GBdZY/qnZG8AjC3oF74v0uZg==;EndpointSuffix=core.windows.net";
         //private readonly Iconverter _converter;
         public FileHelper(SchoolContext schoolContext, IConverter converter)
         {
@@ -33,7 +32,7 @@ namespace IDGenWebsite.Utilities
         {
             var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Id Pictures/", idFiles);
             await ParseIdFilesAsync(filePaths);
-            
+
         }
 
         public async Task UploadStudentsAsync(List<IFormFile> studentFiles)
@@ -64,7 +63,7 @@ namespace IDGenWebsite.Utilities
                 paths.Add(fullPath);
             }
             return paths;
-        } 
+        }
 
         private async Task ParseIdFilesAsync(List<string> paths)
         {
@@ -73,7 +72,7 @@ namespace IDGenWebsite.Utilities
             {
                 var id = Path.GetFileNameWithoutExtension(path);
                 var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.StudentID == id);
-                if(student != null)
+                if (student != null)
                 {
                     student.IdPicPath = path;
                 }
@@ -89,73 +88,67 @@ namespace IDGenWebsite.Utilities
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            /*using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
+            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
-                
-            } */
-            using (var reader = ExcelReaderFactory.CreateReader(blobDownload.Value.Content.ToStream()))
-            {
-                reader.Read();
-                while (reader.Read())
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
-                    StudentModel student = new StudentModel();
-                    student.StudentID = reader.GetValue(0).ToString();
-                    student.LastName = reader.GetValue(1).ToString();
-                    student.FirstName = reader.GetValue(2).ToString();
-                    student.Email = reader.GetValue(3).ToString();
-                    student.GradeLevel = reader.GetValue(4).ToString();
-                    student.EnrollmentStartDate = DateTime.Parse(reader.GetValue(5).ToString());
-                    student.HomeRoomTeacher = reader.GetValue(6).ToString();
-                    student.HomeRoomTeacherEmail = reader.GetValue(7).ToString();
+                    reader.Read();
+                    while (reader.Read())
+                    {
+                        StudentModel student = new StudentModel();
+                        student.StudentID = reader.GetValue(0).ToString();
+                        student.LastName = reader.GetValue(1).ToString();
+                        student.FirstName = reader.GetValue(2).ToString();
+                        student.Email = reader.GetValue(3).ToString();
+                        student.GradeLevel = reader.GetValue(4).ToString();
+                        student.EnrollmentStartDate = DateTime.Parse(reader.GetValue(5).ToString());
+                        student.HomeRoomTeacher = reader.GetValue(6).ToString();
+                        student.HomeRoomTeacherEmail = reader.GetValue(7).ToString();
 
-                    var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
-                    if (dbEntry == null)
-                    {
-                        _schoolContext.Add(student);
+                        var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
+                        if (dbEntry == null)
+                        {
+                            _schoolContext.Add(student);
+                        }
+                        /*_context.Add(new StudentModel
+                        {
+                            StudentID = reader.GetValue(0).ToString(),
+                            LastName = reader.GetValue(1).ToString(),
+                            FirstName = reader.GetValue(2).ToString(),
+                            Email = reader.GetValue(3).ToString(),
+                            GradeLevel = reader.GetValue(4).ToString()
+                        }); */
                     }
-                    /*_context.Add(new StudentModel
-                    {
-                        StudentID = reader.GetValue(0).ToString(),
-                        LastName = reader.GetValue(1).ToString(),
-                        FirstName = reader.GetValue(2).ToString(),
-                        Email = reader.GetValue(3).ToString(),
-                        GradeLevel = reader.GetValue(4).ToString()
-                    }); */
+                    _schoolContext.SaveChanges();
                 }
-                _schoolContext.SaveChanges();
             }
 
         }
 
         private async Task ParseQrCodeFilesAsync(string fileName)
         {
-            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "studentimports");
-            var blob = containerClient.GetBlobClient(fileName);
-            var blobDownload = await blob.DownloadContentAsync();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var reader = ExcelReaderFactory.CreateReader(blobDownload.Value.Content.ToStream()))
+            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
-                reader.Read();
-                while (reader.Read())
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
-                    var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
-                    if (student != null)
+                    reader.Read();
+                    while (reader.Read())
                     {
-                        student.DisplayName = reader.GetValue(3).ToString();
-                        student.QrCode = reader.GetValue(4).ToString();
+                        var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
+                        if (student != null)
+                        {
+                            student.DisplayName = reader.GetValue(3).ToString();
+                            student.QrCode = reader.GetValue(4).ToString();
+                        }
                     }
+                    _schoolContext.SaveChanges();
                 }
-                _schoolContext.SaveChanges();
             }
         }
 
-        public byte[]
-
         public byte[] GenerateId(StudentModel student, string templateRootPath)
         {
-
-            BlobContainerClient containerClient = new BlobContainerClient(connectionString, "idpictures");
-            
 
             if (student != null && student.IdPicPath != null && student.QrCode != null)
             {
@@ -181,10 +174,7 @@ namespace IDGenWebsite.Utilities
                 string barcodeBase64 = Convert.ToBase64String(barcodeBytes);
 
                 //Convert Logo and Pic To Base64
-                //Get Student ID from blob
-                var blob = containerClient.GetBlobClient(student.IdPicPath);
-                var blobDownload = blob.DownloadContent();
-                string idPhotoBase64 = Convert.ToBase64String(blobDownload.Value.Content.ToArray());
+                string idPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(student.IdPicPath));
                 string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
 
                 //Get the front and back templates
@@ -204,7 +194,7 @@ namespace IDGenWebsite.Utilities
 
                 var doc = new HtmlToPdfDocument()
                 {
-                    
+
                     GlobalSettings = {
                     PaperSize = new PechkinPaperSize("53mm", "84mm"),
                     ImageDPI = 300,
@@ -227,6 +217,8 @@ namespace IDGenWebsite.Utilities
                 }
                 };
 
+                
+                
                 byte[] pdf = _converter.Convert(doc);
 
                 return pdf;
@@ -236,6 +228,80 @@ namespace IDGenWebsite.Utilities
             return null;
         }
 
+        public byte[] GenerateGradeLevel(List<StudentModel> students, string templateRootPath)
+        {
+            List<ObjectSettings> studentIds = new List<ObjectSettings>();
+            foreach(StudentModel student in students)
+            {
+                if (student != null && student.IdPicPath != null && student.QrCode != null)
+                {
+                    //Generate QrCode BitMap
+                    Bitmap qrCodeImage = null;
+                    QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                    QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qRCode = new QRCode(qRCodeData);
+                    qrCodeImage = qRCode.GetGraphic(15);
 
+                    //Convert the bitmap to a byte array
+                    ImageConverter converter = new ImageConverter();
+                    byte[] qrCodeBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                    //Generate the Front Barcode
+                    Barcode barcode = new Barcode();
+                    Image img = barcode.Encode(TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 20);
+                    Bitmap barcodeBitmap = (Bitmap)img;
+                    byte[] barcodeBytes = (byte[])converter.ConvertTo(barcodeBitmap, typeof(byte[]));
+
+                    //Convert the Barcode and QrCode to Base64 strings
+                    string qrCodeBase64 = Convert.ToBase64String(qrCodeBytes);
+                    string barcodeBase64 = Convert.ToBase64String(barcodeBytes);
+
+                    //Convert Logo and Pic To Base64
+                    string idPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(student.IdPicPath));
+                    string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
+
+                    //Get the front and back templates
+                    string frontTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateFront.html"));
+                    string backTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateBack.html"));
+
+                    //Replace the place holder strings on the front template
+                    frontTemplate = frontTemplate.Replace("[PATH]", templateRootPath)
+                        .Replace("[LOGO]", logoPhotoBase64)
+                        .Replace("[SCHOOL]", "Elementary")
+                        .Replace("[IDPHOTO]", idPhotoBase64)
+                        .Replace("[NAME]", student.DisplayName)
+                        .Replace("[GRADE]", student.GradeLevel)
+                        .Replace("[BARCODE]", barcodeBase64);
+                    //Replace the place holder strings on the back template
+                    backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64);
+
+                    ObjectSettings frontID = new ObjectSettings
+                    {
+                        HtmlContent = frontTemplate,
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
+                    };
+
+                    ObjectSettings backID = new ObjectSettings
+                    {
+                        HtmlContent = backTemplate,
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
+                    };
+                    studentIds.Add(frontID);
+                    studentIds.Add(backID);
+                }
+            }
+
+            var doc = new HtmlToPdfDocument()
+            {
+
+                GlobalSettings =
+                {
+                    PaperSize = new PechkinPaperSize("53mm", "84mm"),
+                    ImageDPI = 300,
+                    Margins = new MarginSettings(0, 0, 0, 0),
+                    Orientation = Orientation.Portrait,
+                },
+                Objects.ad
+            };
     }
 }
