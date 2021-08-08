@@ -231,7 +231,7 @@ namespace IDGenWebsite.Utilities
         public byte[] GenerateGradeLevel(List<StudentModel> students, string templateRootPath)
         {
             List<ObjectSettings> studentIds = new List<ObjectSettings>();
-            foreach(StudentModel student in students)
+            foreach (StudentModel student in students)
             {
                 if (student != null && student.IdPicPath != null && student.QrCode != null)
                 {
@@ -301,7 +301,11 @@ namespace IDGenWebsite.Utilities
                     Margins = new MarginSettings(0, 0, 0, 0),
                     Orientation = Orientation.Portrait,
                 },
-                Objects.ad
+                Objects = studentIds
             };
+            byte[] pdf = _converter.Convert(doc);
+
+            return pdf;
+        }
     }
 }

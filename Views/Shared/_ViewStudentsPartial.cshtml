@@ -13,20 +13,20 @@
                     Print Grade
                 </button>
                 <div class="dropdown-menu" aria-labelledby="printdropdownmenu">
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('Pre-K')">Pre-K</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('Kindergarden')">Kindergarden</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('1st')">1st</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('2nd')">2nd</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('3rd')">3rd</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('4th')">4th</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('5th')">5th</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('6th')">6th</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('7th')">7th</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('7th')">8th</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('9th')">9th</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('10th')">10th</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('11th')">11th</button>
-                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('12th')">12th</button>
+                    <button class="dropdown-item" type="button" name="grade" value="PK">Pre-K</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('KG')">Kindergarden</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('01')">1st</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('02')">2nd</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('03')">3rd</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('04')">4th</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('05')">5th</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('06')">6th</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('07')">7th</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('08')">8th</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('09')">9th</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('10')">10th</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('11')">11th</button>
+                    <button class="dropdown-item" type="button" onclick="PrintGradeLevel('12')">12th</button>
                 </div>
             </div>
             <div class="dropdown">
@@ -34,20 +34,23 @@
                     Download Grade
                 </button>
                 <div class="dropdown-menu" aria-labelledby="downloaddropdownmeny">
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('Pre-K')">Pre-K</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('Kindergarden')">Kindergarden</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('1st')">1st</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('2nd')">2nd</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('3rd')">3rd</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('4th')">4th</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('5th')">5th</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('6th')">6th</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('7th')">7th</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('8th')">8th</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('9th')">9th</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('10th')">10th</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('11th')">11th</button>
-                    <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('12th')">12th</button>
+                    @using (Html.BeginForm("DownloadGradeLevel", "Admin", FormMethod.Post))
+                    {
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('PK')">Pre-K</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('KG')">Kindergarden</button>
+                        <button class="dropdown-item" type="submit" name="grade" value="01">1st</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('02')">2nd</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('03')">3rd</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('04')">4th</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('05')">5th</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('06')">6th</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('07')">7th</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('08')">8th</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('09')">9th</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('10')">10th</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('11')">11th</button>
+                        <button class="dropdown-item" type="button" onclick="DownloadGradeLevel('12')">12th</button>
+                    }
                 </div>
             </div>
         </div>

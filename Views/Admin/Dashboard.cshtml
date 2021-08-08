@@ -359,7 +359,13 @@
         }
 
         function DownloadGradeLevel(grade) {
-
+            console.log(grade);
+            $.ajax({
+                url: '/Admin/DownloadGradeLevel',
+                type: 'POST',
+                cache: false,
+                data: { "grade": grade }
+            });
         }
 
     </script>

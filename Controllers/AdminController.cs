@@ -138,7 +138,7 @@ namespace IDGenWebsite.Controllers
             //File(, "application/pdf", string.Concat(student.Email, ".pdf"))
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }
-
+        [HttpPost]
         public async Task<IActionResult> DownloadGradeLevel(string grade) {
 
             var students = await _schoolContext.Students.Where(s => s.GradeLevel == grade).ToListAsync();
