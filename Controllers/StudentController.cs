@@ -1,4 +1,5 @@
 ﻿using IDGenWebsite.Data;
+using IDGenWebsite.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,21 +25,11 @@ namespace IDGenWebsite.Controllers
             
         }
 
-        public async Task<IActionResult> GetStudentPartial()
+        public async Task<IActionResult> GetStudentPartial(int? pageNumber)
         {
-            var students = await _context.Students.OrderBy(s => s.LastName).ToListAsync();
-            var idOrders = await _context.IDRequests.ToListAsync();
-            foreach(var order in idOrders)
-            {
-                foreach(var student in students)
-                {
-                    if (order.StudentID.Equals(student.StudentID))
-                    {
-                        student.IdRequestPrinted = order.HasBeenPrinted;
-                    }
-                }
-            }
-            return PartialView("_ViewStudentsPartial", students);
+            var students = from s in _context.Students select s;
+            int pageSize = 50;
+            return PartialView("_ViewStudentsPartial", await PaginatedList<StudentModel>.CreateAsync(students, pageNumber ?? 1, pageSize));
         }
 
         public async Task<IActionResult> SearchStudents(string searchString)

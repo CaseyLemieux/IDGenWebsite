@@ -1,4 +1,5 @@
-﻿@model IEnumerable<StudentModel>
+﻿
+@model PaginatedList<IDGenWebsite.Models.StudentModel>
 <div class="row">
     <div class="col-3">
         <div class="input-group">
@@ -55,10 +56,7 @@
             </div>
         </div>
     </div>
-    <div class="col-3">
-        
-    </div>
-    
+
 </div>
 @if (Model.Count() > 0)
 {
@@ -66,22 +64,25 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.StudentID)
+                    Student ID:
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.LastName)
+                    Last Name:
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
+                    First Name:
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Email)
+                    Email:
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.QrCode)
+                    QR Code:
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.GradeLevel)
+                    Homeroom Teacher:
+                </th>
+                <th>
+                    Grade Level:
                     <i class="bi bi-sort-up"></i>
                 </th>
                 <th>
@@ -107,6 +108,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.QrCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HomeRoomTeacher)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.GradeLevel)
@@ -142,3 +146,4 @@
         </tbody>
     </table>
 }
+@Html.PagedListPager
