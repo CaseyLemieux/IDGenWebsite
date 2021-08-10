@@ -165,7 +165,7 @@ namespace IDGenWebsite.Utilities
 
                 //Generate the Front Barcode
                 Barcode barcode = new Barcode();
-                Image img = barcode.Encode(TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 20);
+                Image img = barcode.Encode(TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 35);
                 Bitmap barcodeBitmap = (Bitmap)img;
                 byte[] barcodeBytes = (byte[])converter.ConvertTo(barcodeBitmap, typeof(byte[]));
 
@@ -176,7 +176,52 @@ namespace IDGenWebsite.Utilities
                 //Convert Logo and Pic To Base64
                 string idPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(student.IdPicPath));
                 string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
-
+                string template = null;
+                switch (student.GradeLevel)
+                {
+                    case "PK":
+                        template = "ElementaryStyleSheet.css";
+                        break;
+                    case "KG":
+                        template = "ElementaryStyleSheet.css";
+                        break;
+                    case "01":
+                        template = "ElementaryStyleSheet.css";
+                        break;
+                    case "02":
+                        template = "ElementaryStyleSheet.css";
+                        break;
+                    case "03":
+                        template = "ElementaryStyleSheet.css";
+                        break;
+                    case "04":
+                        template = "ElementaryStyleSheet.css";
+                        break;
+                    case "05":
+                        template = "ElementaryStyleSheet.css";
+                        break;
+                    case "06":
+                        template = "MiddleStyleSheet.css";
+                        break;
+                    case "07":
+                        template = "MiddleStyleSheet.css";
+                        break;
+                    case "08":
+                        template = "MiddleStyleSheet.css";
+                        break;
+                    case "09":
+                        template = "HighStyleSheet.css";
+                        break;
+                    case "10":
+                        template = "HighStyleSheet.css";
+                        break;
+                    case "11":
+                        template = "HighStyleSheet.css";
+                        break;
+                    case "12":
+                        template = "HighStyleSheet.css";
+                        break;
+                }
                 //Get the front and back templates
                 string frontTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateFront.html"));
                 string backTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateBack.html"));
@@ -206,12 +251,12 @@ namespace IDGenWebsite.Utilities
                     new ObjectSettings()
                     {
                          HtmlContent = frontTemplate,
-                         WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
+                         WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", template) }
                     },
                      new ObjectSettings()
                     {
                         HtmlContent = backTemplate,
-                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", template) }
 
                     }
                 }

@@ -25,49 +25,82 @@
 }
 
 .back {
-    height: 396px;
+    height: 366px;
     width: 250px;
     border-radius: 10px;
     position: relative;
     background-color: white;
+    top: 30px;
 }
 
 .top {
     height: 25%;
     width: 250px;
-    background-color: #c20606;
+    background-color: grey;
     position: relative;
-    /*z-index: 5;*/
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
-.bottom{
+
+.middle {
+    height: 40%;
+    width: 250px;
+    background-color: white;
+    position: relative;
+}
+
+.middle img{
+    object-fit: contain;
+    top: 10px;
+    bottom: 10px;
+    height: 85%;
+    
+    left: 70px;
+    position: absolute;
+}
+
+.bottom {
     height: 25%;
     width: 250px;
     background-color: white;
-    position: absolute;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    position: relative;
+    /*border-bottom-left-radius: 15px;*/
+    /*border-bottom-right-radius: 15px;*/
+}
+.id-number{
+    height: 10%;
+    width: 250px;
+    position: relative;
+    background-color: white;
 }
 
-.bottom p{
+.bottom p {
     position: relative;
-    
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 24px;
+    /*padding: 5px;*/
+}
+
+.bottom-back p {
+    position: relative;
     text-align: center;
     text-transform: capitalize;
     font-weight: bold;
     font-size: 16px;
-    padding: 5px;
-    text-emphasis: spacing;
+    /*padding: 5px;*/
 }
 .bottom .desi{
     font-size:12px;
     color: grey;
     font-weight: normal;
 }
-.bottom .no{
-    font-size: 15px;
-    font-weight: normal;
+.id-number .no p{
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    position: relative;
 }
 
 .bottom .barcode{
@@ -87,28 +120,12 @@
 
 .top p{
     position: relative;
-    color: #e6ebe0;
+    color: red;
     text-align: center;
     text-transform: capitalize;
     font-weight: bold;
     font-size: 20px;
     text-emphasis: spacing;
-}
-
-.middle{
-    height: 50%;
-    width: 250px;
-    background-color: white;
-    position: relative;
-}
-
-.middle img{
-    object-fit: scale-down;
-    height: 85%;
-    width: 60%;
-    top: 10px;
-    left: 50px;
-    position: absolute;
 }
 
 
