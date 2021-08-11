@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -85,7 +86,7 @@ namespace IDGenWebsite.Utilities
             //List<StudentModel> students = new List<StudentModel>();
 
             //var fileName = "./Focus Students May.xlsx";
-
+            HashSet<string> homerooms = new HashSet<string>();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
@@ -93,6 +94,7 @@ namespace IDGenWebsite.Utilities
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
                     reader.Read();
+                  
                     while (reader.Read())
                     {
                         StudentModel student = new StudentModel();
@@ -102,8 +104,12 @@ namespace IDGenWebsite.Utilities
                         student.Email = reader.GetValue(3).ToString();
                         student.GradeLevel = reader.GetValue(4).ToString();
                         student.EnrollmentStartDate = DateTime.Parse(reader.GetValue(5).ToString());
-                        student.HomeRoomTeacher = reader.GetValue(6).ToString();
+                        student.HomeRoomTeacher = reader.GetValue(6).ToString().Trim();
                         student.HomeRoomTeacherEmail = reader.GetValue(7).ToString();
+
+                        homerooms.Add(reader.GetValue(6).ToString().Trim());
+                      
+                       
 
                         var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
                         if (dbEntry == null)
@@ -118,11 +124,20 @@ namespace IDGenWebsite.Utilities
                             Email = reader.GetValue(3).ToString(),
                             GradeLevel = reader.GetValue(4).ToString()
                         }); */
+                      
                     }
                     _schoolContext.SaveChanges();
                 }
             }
-
+            foreach(string room in homerooms)
+            {
+                HomeroomsModel homeroomsModel = new HomeroomsModel()
+                {
+                    Teacher = room
+                };
+                _schoolContext.Homerooms.Add(homeroomsModel);
+            }
+            _schoolContext.SaveChanges();
         }
 
         private async Task ParseQrCodeFilesAsync(string fileName)
@@ -135,12 +150,21 @@ namespace IDGenWebsite.Utilities
                     reader.Read();
                     while (reader.Read())
                     {
-                        var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
-                        if (student != null)
+                        try
                         {
-                            student.DisplayName = reader.GetValue(3).ToString();
-                            student.QrCode = reader.GetValue(4).ToString();
+                            var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
+                            if (student != null)
+                            {
+                                student.DisplayName = reader.GetValue(3).ToString();
+                                student.QrCode = reader.GetValue(4).ToString();
+                            }
                         }
+                        catch(InvalidOperationException ex)
+                        {
+                            Debug.WriteLine(ex);
+                            Debug.WriteLine("Student Email:" + reader.GetValue(2).ToString());
+                        }
+                        
                     }
                     _schoolContext.SaveChanges();
                 }
@@ -177,49 +201,64 @@ namespace IDGenWebsite.Utilities
                 string idPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(student.IdPicPath));
                 string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
                 string template = null;
+                string school = null;
                 switch (student.GradeLevel)
                 {
                     case "PK":
                         template = "ElementaryStyleSheet.css";
+                        school = "Learning Center";
                         break;
                     case "KG":
                         template = "ElementaryStyleSheet.css";
+                        school = "Elementary";
                         break;
                     case "01":
                         template = "ElementaryStyleSheet.css";
+                        school = "Elementary";
                         break;
                     case "02":
                         template = "ElementaryStyleSheet.css";
+                        school = "Elementary";
                         break;
                     case "03":
                         template = "ElementaryStyleSheet.css";
+                        school = "Elementary";
                         break;
                     case "04":
                         template = "ElementaryStyleSheet.css";
+                        school = "Elementary";
                         break;
                     case "05":
                         template = "ElementaryStyleSheet.css";
+                        school = "Elementary";
                         break;
                     case "06":
                         template = "MiddleStyleSheet.css";
+                        school = "Middle";
                         break;
                     case "07":
                         template = "MiddleStyleSheet.css";
+                        school = "Middle";
                         break;
                     case "08":
                         template = "MiddleStyleSheet.css";
+                        school = "Middle";
                         break;
                     case "09":
                         template = "HighStyleSheet.css";
+                        school = "High";
                         break;
                     case "10":
                         template = "HighStyleSheet.css";
+                        school = "High";
                         break;
                     case "11":
                         template = "HighStyleSheet.css";
+                        school = "High";
                         break;
                     case "12":
                         template = "HighStyleSheet.css";
+                        school = "High";
                         break;
                 }
                 //Get the front and back templates
@@ -229,9 +268,9 @@ namespace IDGenWebsite.Utilities
                 //Replace the place holder strings on the front template
                 frontTemplate = frontTemplate.Replace("[PATH]", templateRootPath)
                     .Replace("[LOGO]", logoPhotoBase64)
-                    .Replace("[SCHOOL]", "Elementary")
+                    .Replace("[SCHOOL]", school)
                     .Replace("[IDPHOTO]", idPhotoBase64)
-                    .Replace("[NAME]", student.DisplayName)
+                    .Replace("[NAME]", student.FirstName + " " +student.LastName)
                     .Replace("[GRADE]", student.GradeLevel)
                     .Replace("[BARCODE]", barcodeBase64);
                 //Replace the place holder strings on the back template
@@ -293,7 +332,7 @@ namespace IDGenWebsite.Utilities
 
                     //Generate the Front Barcode
                     Barcode barcode = new Barcode();
-                    Image img = barcode.Encode(TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 20);
+                    Image img = barcode.Encode(TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 35);
                     Bitmap barcodeBitmap = (Bitmap)img;
                     byte[] barcodeBytes = (byte[])converter.ConvertTo(barcodeBitmap, typeof(byte[]));
 
@@ -304,7 +343,67 @@ namespace IDGenWebsite.Utilities
                     //Convert Logo and Pic To Base64
                     string idPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(student.IdPicPath));
                     string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
-
+                    string template = null;
+                    string school = null;
+                    switch (student.GradeLevel)
+                    {
+                        case "PK":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Learning Center";
+                            break;
+                        case "KG":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "01":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "02":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "03":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "04":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "05":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "06":
+                            template = "MiddleStyleSheet.css";
+                            school = "Middle";
+                            break;
+                        case "07":
+                            template = "MiddleStyleSheet.css";
+                            school = "Middle";
+                            break;
+                        case "08":
+                            template = "MiddleStyleSheet.css";
+                            school = "Middle";
+                            break;
+                        case "09":
+                            template = "HighStyleSheet.css";
+                            school = "High";
+                            break;
+                        case "10":
+                            template = "HighStyleSheet.css";
+                            school = "High";
+                            break;
+                        case "11":
+                            template = "HighStyleSheet.css";
+                            school = "High";
+                            break;
+                        case "12":
+                            template = "HighStyleSheet.css";
+                            school = "High";
+                            break;
+                    }
                     //Get the front and back templates
                     string frontTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateFront.html"));
                     string backTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateBack.html"));
@@ -312,9 +411,9 @@ namespace IDGenWebsite.Utilities
                     //Replace the place holder strings on the front template
                     frontTemplate = frontTemplate.Replace("[PATH]", templateRootPath)
                         .Replace("[LOGO]", logoPhotoBase64)
-                        .Replace("[SCHOOL]", "Elementary")
+                        .Replace("[SCHOOL]", school)
                         .Replace("[IDPHOTO]", idPhotoBase64)
-                        .Replace("[NAME]", student.DisplayName)
+                        .Replace("[NAME]", student.FirstName + " " + student.LastName)
                         .Replace("[GRADE]", student.GradeLevel)
                         .Replace("[BARCODE]", barcodeBase64);
                     //Replace the place holder strings on the back template
@@ -323,34 +422,182 @@ namespace IDGenWebsite.Utilities
                     ObjectSettings frontID = new ObjectSettings
                     {
                         HtmlContent = frontTemplate,
-                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", template) }
                     };
 
                     ObjectSettings backID = new ObjectSettings
                     {
                         HtmlContent = backTemplate,
-                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", "IdTemplateStyleSheet.css") }
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", template) }
                     };
                     studentIds.Add(frontID);
                     studentIds.Add(backID);
                 }
             }
 
-            var doc = new HtmlToPdfDocument()
+            if(studentIds.Count > 0)
             {
+                var doc = new HtmlToPdfDocument()
+                {
 
-                GlobalSettings =
+                    GlobalSettings =
                 {
                     PaperSize = new PechkinPaperSize("53mm", "84mm"),
                     ImageDPI = 300,
                     Margins = new MarginSettings(0, 0, 0, 0),
                     Orientation = Orientation.Portrait,
                 },
-                Objects = studentIds
-            };
-            byte[] pdf = _converter.Convert(doc);
+                    Objects = studentIds
+                };
+                byte[] pdf = _converter.Convert(doc);
 
-            return pdf;
+                return pdf;
+            }
+            return null;
+        }
+
+        public byte[] GenerateHomeroom(List<StudentModel> students, string templateRootPath)
+        {
+            List<ObjectSettings> studentIds = new List<ObjectSettings>();
+            foreach (StudentModel student in students)
+            {
+                if (student != null && student.IdPicPath != null && student.QrCode != null)
+                {
+                    //Generate QrCode BitMap
+                    Bitmap qrCodeImage = null;
+                    QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                    QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qRCode = new QRCode(qRCodeData);
+                    qrCodeImage = qRCode.GetGraphic(15);
+
+                    //Convert the bitmap to a byte array
+                    ImageConverter converter = new ImageConverter();
+                    byte[] qrCodeBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                    //Generate the Front Barcode
+                    Barcode barcode = new Barcode();
+                    Image img = barcode.Encode(TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 35);
+                    Bitmap barcodeBitmap = (Bitmap)img;
+                    byte[] barcodeBytes = (byte[])converter.ConvertTo(barcodeBitmap, typeof(byte[]));
+
+                    //Convert the Barcode and QrCode to Base64 strings
+                    string qrCodeBase64 = Convert.ToBase64String(qrCodeBytes);
+                    string barcodeBase64 = Convert.ToBase64String(barcodeBytes);
+
+                    //Convert Logo and Pic To Base64
+                    string idPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(student.IdPicPath));
+                    string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(templateRootPath + "/Images/FCSD_Hawk.png"));
+                    string template = null;
+                    string school = null;
+                    switch (student.GradeLevel)
+                    {
+                        case "PK":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Learning Center";
+                            break;
+                        case "KG":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "01":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "02":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "03":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "04":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "05":
+                            template = "ElementaryStyleSheet.css";
+                            school = "Elementary";
+                            break;
+                        case "06":
+                            template = "MiddleStyleSheet.css";
+                            school = "Middle";
+                            break;
+                        case "07":
+                            template = "MiddleStyleSheet.css";
+                            school = "Middle";
+                            break;
+                        case "08":
+                            template = "MiddleStyleSheet.css";
+                            school = "Middle";
+                            break;
+                        case "09":
+                            template = "HighStyleSheet.css";
+                            school = "High";
+                            break;
+                        case "10":
+                            template = "HighStyleSheet.css";
+                            school = "High";
+                            break;
+                        case "11":
+                            template = "HighStyleSheet.css";
+                            school = "High";
+                            break;
+                        case "12":
+                            template = "HighStyleSheet.css";
+                            school = "High";
+                            break;
+                    }
+                    //Get the front and back templates
+                    string frontTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateFront.html"));
+                    string backTemplate = File.ReadAllText(Path.Combine(templateRootPath, "IdTemplateBack.html"));
+
+                    //Replace the place holder strings on the front template
+                    frontTemplate = frontTemplate.Replace("[PATH]", templateRootPath)
+                        .Replace("[LOGO]", logoPhotoBase64)
+                        .Replace("[SCHOOL]", school)
+                        .Replace("[IDPHOTO]", idPhotoBase64)
+                        .Replace("[NAME]", student.FirstName + " " + student.LastName)
+                        .Replace("[GRADE]", student.GradeLevel)
+                        .Replace("[BARCODE]", barcodeBase64);
+                    //Replace the place holder strings on the back template
+                    backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64);
+
+                    ObjectSettings frontID = new ObjectSettings
+                    {
+                        HtmlContent = frontTemplate,
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", template) }
+                    };
+
+                    ObjectSettings backID = new ObjectSettings
+                    {
+                        HtmlContent = backTemplate,
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", template) }
+                    };
+                    studentIds.Add(frontID);
+                    studentIds.Add(backID);
+                }
+            }
+
+            if(studentIds.Count > 0)
+            {
+                var doc = new HtmlToPdfDocument()
+                {
+
+                    GlobalSettings =
+                {
+                    PaperSize = new PechkinPaperSize("53mm", "84mm"),
+                    ImageDPI = 300,
+                    Margins = new MarginSettings(0, 0, 0, 0),
+                    Orientation = Orientation.Portrait,
+                },
+                    Objects = studentIds
+                };
+                byte[] pdf = _converter.Convert(doc);
+
+                return pdf;
+            }
+            return null;
         }
     }
 }

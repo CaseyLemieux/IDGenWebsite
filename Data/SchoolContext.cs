@@ -18,5 +18,6 @@ namespace IDGenWebsite.Data
         public DbSet<IDRequestModel> IDRequests { get; set; }
         public DbSet<SettingModel> Settings { get; set; }
         public DbSet<IdTemplate> IdTemplates { get; set; }
+        public DbSet<HomeroomsModel> Homerooms { get; set; }
     }
 }

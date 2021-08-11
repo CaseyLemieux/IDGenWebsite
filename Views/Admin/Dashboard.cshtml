@@ -204,6 +204,7 @@
             });
         }
 
+
         function ViewStudents() {
             $.ajax({
                 url: '/Student/GetStudentPartial',
@@ -365,6 +366,14 @@
                 type: 'POST',
                 cache: false,
                 data: { "grade": grade }
+            });
+        }
+
+        function DownloadByHomeroom() {
+            $.ajax({
+                url: '/Admin/DownloadByHomeroom',
+                type: 'POST',
+                cache: false,
             });
         }
 

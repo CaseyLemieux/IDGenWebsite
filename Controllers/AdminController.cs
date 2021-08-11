@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using IDGenWebsite.Utilities;
 using WkHtmlToPdfDotNet.Contracts;
+using System.IO.Compression;
 
 namespace IDGenWebsite.Controllers
 {
@@ -145,5 +146,37 @@ namespace IDGenWebsite.Controllers
             return File(_fileHelper.GenerateGradeLevel(students, _env.WebRootPath), "application/pdf", string.Concat(grade, ".pdf"));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DownloadByHomeroom()
+        {
+            var homerooms = _schoolContext.Homerooms.ToList();
+            List<ZipItem> zipItems = new List<ZipItem>();
+            foreach (HomeroomsModel homeroom in homerooms)
+            {
+                var students = await _schoolContext.Students.Where(s => s.HomeRoomTeacher == homeroom.Teacher).ToListAsync();
+                var classBytes = _fileHelper.GenerateHomeroom(students, _env.WebRootPath);
+                if(classBytes != null)
+                {
+                    ZipItem zipItem = new ZipItem(homeroom.Teacher, new MemoryStream(classBytes));
+                }
+                
+            }
+            var zipStream = new MemoryStream();
+            using(var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+            {
+                foreach(var zipItem in zipItems)
+                {
+                    var entry = zip.CreateEntry(zipItem.Name);
+                    using(var entryStream = entry.Open())
+                    {
+                        zipItem.Content.CopyTo(entryStream);
+                    }
+                }
+            }
+
+            zipStream.Position = 0;
+            
+            return File(zipStream, "application/octet-streamf", "students.zip");
+        }
     }
 }
