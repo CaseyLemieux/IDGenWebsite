@@ -275,7 +275,8 @@ namespace IDGenWebsite.Utilities
                     .Replace("[IDPHOTO]", idPhotoBase64)
                     .Replace("[NAME]", student.FirstName + " " +student.LastName)
                     .Replace("[GRADE]", student.GradeLevel)
-                    .Replace("[BARCODE]", barcodeBase64);
+                    .Replace("[BARCODE]", barcodeBase64)
+                    .Replace("[IDNUMBER]", student.StudentID);
                 //Replace the place holder strings on the back template
                 backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64);
 
@@ -418,7 +419,8 @@ namespace IDGenWebsite.Utilities
                         .Replace("[IDPHOTO]", idPhotoBase64)
                         .Replace("[NAME]", student.FirstName + " " + student.LastName)
                         .Replace("[GRADE]", student.GradeLevel)
-                        .Replace("[BARCODE]", barcodeBase64);
+                        .Replace("[BARCODE]", barcodeBase64)
+                        .Replace("[IDNUMBER]", student.StudentID);
                     //Replace the place holder strings on the back template
                     backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64);
 
@@ -562,7 +564,8 @@ namespace IDGenWebsite.Utilities
                         .Replace("[IDPHOTO]", idPhotoBase64)
                         .Replace("[NAME]", student.FirstName + " " + student.LastName)
                         .Replace("[GRADE]", student.GradeLevel)
-                        .Replace("[BARCODE]", barcodeBase64);
+                        .Replace("[BARCODE]", barcodeBase64)
+                        .Replace("[IDNUMBER]", student.StudentID);
                     //Replace the place holder strings on the back template
                     backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64);
 

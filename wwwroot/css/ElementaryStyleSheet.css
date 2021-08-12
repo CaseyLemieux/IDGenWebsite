@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
+    background: white;
     flex-direction: row;
     flex-flow: wrap;
 
@@ -51,8 +51,7 @@
 
 .middle img{
     object-fit: contain;
-    top: 10px;
-    bottom: 10px;
+    top: 5px;
     height: 85%;
     
     left: 70px;
@@ -79,7 +78,7 @@
     text-align: center;
     text-transform: capitalize;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 20px;
     /*padding: 5px;*/
 }
 
@@ -96,11 +95,12 @@
     color: grey;
     font-weight: normal;
 }
-.id-number .no p{
+.id-number .no p {
     font-size: 16px;
     font-weight: bold;
     text-align: center;
     position: relative;
+    background: white;
 }
 
 .bottom .barcode{

@@ -155,7 +155,7 @@ namespace IDGenWebsite.Controllers
             {
                 var students = await _schoolContext.Students.Where(s => s.HomeRoomTeacher == homeroom.Teacher).ToListAsync();
                 var classBytes = _fileHelper.GenerateHomeroom(students, _env.WebRootPath);
-                if(classBytes != null)
+                if(classBytes != null && classBytes.Length >0)
                 {
                     string fileName = homeroom.Teacher.Replace(",", "-");
                     ZipItem zipItem = new ZipItem(fileName, classBytes);
@@ -171,7 +171,7 @@ namespace IDGenWebsite.Controllers
                 {
                     foreach (var zipItem in zipItems)
                     {
-                        var entry = zip.CreateEntry(zipItem.Name + ".pdf", CompressionLevel.Fastest);
+                        var entry = zip.CreateEntry(zipItem.Name + ".pdf", CompressionLevel.Optimal);
                         using (var entryStream = entry.Open())
                         {
 
