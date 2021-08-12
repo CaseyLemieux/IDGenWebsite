@@ -45,7 +45,7 @@ namespace IDGenWebsite.Utilities
         public async Task UploadQrCodesAsync(List<IFormFile> qrCodeFiles)
         {
             var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Qr Code Imports/", qrCodeFiles);
-            await ParseQrCodeFilesAsync(filePaths.ElementAt(0));
+            await ParseQrCodeFilesAsync(filePaths);
         }
 
         private async Task<List<string>> SaveFiles(string directoryPath, List<IFormFile> files)
@@ -140,33 +140,36 @@ namespace IDGenWebsite.Utilities
             _schoolContext.SaveChanges();
         }
 
-        private async Task ParseQrCodeFilesAsync(string fileName)
+        private async Task ParseQrCodeFilesAsync(List<string> paths)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
+            foreach(string path in paths)
             {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
                 {
-                    reader.Read();
-                    while (reader.Read())
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
                     {
-                        try
+                        reader.Read();
+                        while (reader.Read())
                         {
-                            var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
-                            if (student != null)
+                            try
                             {
-                                student.DisplayName = reader.GetValue(3).ToString();
-                                student.QrCode = reader.GetValue(4).ToString();
+                                var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
+                                if (student != null)
+                                {
+                                    student.DisplayName = reader.GetValue(3).ToString();
+                                    student.QrCode = reader.GetValue(4).ToString();
+                                }
                             }
+                            catch (InvalidOperationException ex)
+                            {
+                                Debug.WriteLine(ex);
+                                Debug.WriteLine("Student Email:" + reader.GetValue(2).ToString());
+                            }
+
                         }
-                        catch(InvalidOperationException ex)
-                        {
-                            Debug.WriteLine(ex);
-                            Debug.WriteLine("Student Email:" + reader.GetValue(2).ToString());
-                        }
-                        
+                        _schoolContext.SaveChanges();
                     }
-                    _schoolContext.SaveChanges();
                 }
             }
         }

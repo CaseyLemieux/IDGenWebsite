@@ -56,7 +56,12 @@
                     }
                 </div>
             </div>
-            <button class="btn-primary" type="button" onclick="DownloadByHomeroom()">Download By Homeroom</button>
+            @using (Html.BeginForm("DownloadByHomeroom", "Admin", FormMethod.Post))
+            {
+                <div>
+                    <button type="submit" class="btn btn-success"><i class='fa fa-file'>Download</i></button>
+                </div>
+            }
         </div>
     </div>
 </div>

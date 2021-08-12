@@ -157,26 +157,32 @@ namespace IDGenWebsite.Controllers
                 var classBytes = _fileHelper.GenerateHomeroom(students, _env.WebRootPath);
                 if(classBytes != null)
                 {
-                    ZipItem zipItem = new ZipItem(homeroom.Teacher, new MemoryStream(classBytes));
+                    string fileName = homeroom.Teacher.Replace(",", "-");
+                    ZipItem zipItem = new ZipItem(fileName, classBytes);
+                    zipItems.Add(zipItem);
                 }
                 
             }
-            var zipStream = new MemoryStream();
-            using(var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+            //var zipStream = new MemoryStream();
+            byte[] bytes;
+            using (var zipStream = new MemoryStream())
             {
-                foreach(var zipItem in zipItems)
+                using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
                 {
-                    var entry = zip.CreateEntry(zipItem.Name);
-                    using(var entryStream = entry.Open())
+                    foreach (var zipItem in zipItems)
                     {
-                        zipItem.Content.CopyTo(entryStream);
+                        var entry = zip.CreateEntry(zipItem.Name + ".pdf", CompressionLevel.Fastest);
+                        using (var entryStream = entry.Open())
+                        {
+
+                            
+                            entryStream.Write(zipItem.Content, 0, zipItem.Content.Length);
+                        }
                     }
                 }
+                bytes = zipStream.ToArray();
             }
-
-            zipStream.Position = 0;
-            
-            return File(zipStream, "application/octet-streamf", "students.zip");
+            return File(bytes, "application/zip", "students.zip");
         }
     }
 }
