@@ -194,25 +194,7 @@
 
 }
 
-@media screen and (max-width:400px)
-{
-    .container{
-        height: 130vh;
-    }
-        .container .front {
-            /*margin-top: 50px;*/
-        }
-}
-@media screen and (max-width:600px)
-{
-    .container{
-        height: 130vh;
-    }
-        .container .front {
-            /*margin-top: 50px;*/
-        }
 
-}
 
 /*@media print{
     .container {

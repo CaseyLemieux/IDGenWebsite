@@ -40,11 +40,6 @@ namespace IDGenWebsite
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddAzureClients(builder =>
-            {
-                builder.AddBlobServiceClient(Configuration["ConnectionStrings:idgenblobstorage:blob"], preferMsi: true);
-                builder.AddQueueServiceClient(Configuration["ConnectionStrings:idgenblobstorage:queue"], preferMsi: true);
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

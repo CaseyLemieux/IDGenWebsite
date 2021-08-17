@@ -24,10 +24,15 @@ namespace IDGenWebsite.Utilities
         private readonly SchoolContext _schoolContext;
         private readonly IConverter _converter;
         //private readonly Iconverter _converter;
+        
         public FileHelper(SchoolContext schoolContext, IConverter converter)
         {
             _schoolContext = schoolContext;
             _converter = converter;
+        }
+        public FileHelper(SchoolContext schoolContext)
+        {
+            _schoolContext = schoolContext;
         }
         public async Task UploadIdsAsync(List<IFormFile> idFiles)
         {
@@ -176,7 +181,6 @@ namespace IDGenWebsite.Utilities
 
         public byte[] GenerateId(StudentModel student, string templateRootPath)
         {
-
             if (student != null && student.IdPicPath != null && student.QrCode != null)
             {
                 //Generate QrCode BitMap
@@ -270,6 +274,7 @@ namespace IDGenWebsite.Utilities
 
                 //Replace the place holder strings on the front template
                 frontTemplate = frontTemplate.Replace("[PATH]", templateRootPath)
+                    .Replace("[STYLESHEET]", template)
                     .Replace("[LOGO]", logoPhotoBase64)
                     .Replace("[SCHOOL]", school)
                     .Replace("[IDPHOTO]", idPhotoBase64)
@@ -278,7 +283,8 @@ namespace IDGenWebsite.Utilities
                     .Replace("[BARCODE]", barcodeBase64)
                     .Replace("[IDNUMBER]", student.StudentID);
                 //Replace the place holder strings on the back template
-                backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64);
+                backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64)
+                    .Replace("[STYLESHEET]", template);
 
                 var doc = new HtmlToPdfDocument()
                 {
@@ -305,10 +311,8 @@ namespace IDGenWebsite.Utilities
                 }
                 };
 
-                
-                
+               
                 byte[] pdf = _converter.Convert(doc);
-
                 return pdf;
             }
 
@@ -318,7 +322,18 @@ namespace IDGenWebsite.Utilities
 
         public byte[] GenerateGradeLevel(List<StudentModel> students, string templateRootPath)
         {
-            List<ObjectSettings> studentIds = new List<ObjectSettings>();
+            //List<ObjectSettings> studentIds = new List<ObjectSettings>();
+            var doc = new HtmlToPdfDocument()
+            {
+
+                GlobalSettings =
+                    {
+                        PaperSize = new PechkinPaperSize("53mm", "84mm"),
+                        ImageDPI = 300,
+                        Margins = new MarginSettings(0, 0, 0, 0),
+                        Orientation = Orientation.Portrait
+                    }
+            };
             foreach (StudentModel student in students)
             {
                 if (student != null && student.IdPicPath != null && student.QrCode != null)
@@ -435,32 +450,40 @@ namespace IDGenWebsite.Utilities
                         HtmlContent = backTemplate,
                         WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(templateRootPath, "css", template) }
                     };
-                    studentIds.Add(frontID);
-                    studentIds.Add(backID);
+                    doc.Objects.Add(frontID);
+                    doc.Objects.Add(backID);
                 }
             }
 
-            if(studentIds.Count > 0)
+            /*if(studentIds.Count > 0)
             {
                 var doc = new HtmlToPdfDocument()
                 {
 
                     GlobalSettings =
-                {
-                    PaperSize = new PechkinPaperSize("53mm", "84mm"),
-                    ImageDPI = 300,
-                    Margins = new MarginSettings(0, 0, 0, 0),
-                    Orientation = Orientation.Portrait,
-                },
-                    Objects = studentIds
+                    {
+                        PaperSize = new PechkinPaperSize("53mm", "84mm"),
+                        ImageDPI = 300,
+                        Margins = new MarginSettings(0, 0, 0, 0),
+                        Orientation = Orientation.Portrait,
+                    },   
                 };
+                foreach(ObjectSettings page in studentIds)
+                {
+                   if(page.HtmlContent != null)
+                    {
+                        doc.Objects.Add(page);
+                    }
+                }
                 byte[] pdf = _converter.Convert(doc);
 
                 return pdf;
-            }
-            return null;
-        }
-
+            } */
+            //return null;
+            byte[] pdf = _converter.Convert(doc);
+            return pdf;
+        } 
+        /*
         public byte[] GenerateHomeroom(List<StudentModel> students, string templateRootPath)
         {
             List<ObjectSettings> studentIds = new List<ObjectSettings>();
@@ -604,6 +627,6 @@ namespace IDGenWebsite.Utilities
                 return pdf;
             }
             return null;
-        }
+        } */
     }
 }

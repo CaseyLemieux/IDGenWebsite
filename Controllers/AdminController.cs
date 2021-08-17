@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using IDGenWebsite.Utilities;
 using WkHtmlToPdfDotNet.Contracts;
 using System.IO.Compression;
+using System.Threading;
 
 namespace IDGenWebsite.Controllers
 {
@@ -32,8 +33,7 @@ namespace IDGenWebsite.Controllers
         private readonly IConverter _converter;
         private readonly IWebHostEnvironment _env;
 
-        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext, UserManager<EmployeeModel> userManager, IConverter converter
-            , IWebHostEnvironment webHostEnvironment)
+        public AdminController(ILogger<AdminController> logger, SchoolContext context, IDGenWebsiteContext userContext, UserManager<EmployeeModel> userManager, IConverter converter, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _schoolContext = context;
@@ -139,13 +139,76 @@ namespace IDGenWebsite.Controllers
             //File(, "application/pdf", string.Concat(student.Email, ".pdf"))
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DownloadQrCode()
+        {
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> DownloadGradeLevel(string grade) {
 
             var students = await _schoolContext.Students.Where(s => s.GradeLevel == grade).ToListAsync();
-            return File(_fileHelper.GenerateGradeLevel(students, _env.WebRootPath), "application/pdf", string.Concat(grade, ".pdf"));
+            //int nummberOfSplits = students.Count() / 25;
+            List<ZipItem> zipItems = new List<ZipItem>();
+            //There are less then 25 students in the grade to print
+            /*if (nummberOfSplits == 0)
+            {
+                return File(_fileHelper.GenerateGradeLevel(students, _env.WebRootPath), "application/pdf", string.Concat(grade, ".pdf"));
+            }
+            else
+            {
+                for(int skip = 0, turn = 0; turn < nummberOfSplits; skip += 25, turn++)
+                {
+                    var bytes = _fileHelper.GenerateGradeLevel(students.Skip(skip).Take(25).ToList(), _env.WebRootPath);
+                    if (bytes != null && bytes.Length > 0)
+                    {
+                        string fileName = grade + turn.ToString();
+                        ZipItem zipItem = new ZipItem(fileName, bytes);
+                        zipItems.Add(zipItem);
+                    }
+                }
+                var zipFile = GenerateZipFile(zipItems);
+                return File(zipFile, "application/zip", "students.zip");
+            }*/
+            foreach(StudentModel student in students)
+            {
+                var bytes = _fileHelper.GenerateId(student, _env.WebRootPath);
+                if (bytes != null && bytes.Length > 0)
+                {
+                    string fileName = student.Email;
+                    ZipItem zipItem = new ZipItem(fileName, bytes);
+                    zipItems.Add(zipItem);
+                }
+            }
+            var zipFile = GenerateZipFile(zipItems);
+            return File(zipFile, "application/zip", "students.zip");
         }
 
+        private byte[] GenerateZipFile(List<ZipItem> zipItems)
+        {
+            byte[] bytes;
+            using (var zipStream = new MemoryStream())
+            {
+                using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (var zipItem in zipItems)
+                    {
+                        var entry = zip.CreateEntry(zipItem.Name + ".pdf", CompressionLevel.Optimal);
+                        using (var entryStream = entry.Open())
+                        {
+
+
+                            entryStream.Write(zipItem.Content, 0, zipItem.Content.Length);
+                        }
+                    }
+                }
+                bytes = zipStream.ToArray();
+            }
+            return bytes;
+        }
+        /*
         [HttpPost]
         public async Task<IActionResult> DownloadByHomeroom()
         {
@@ -183,6 +246,6 @@ namespace IDGenWebsite.Controllers
                 bytes = zipStream.ToArray();
             }
             return File(bytes, "application/zip", "students.zip");
-        }
+        } */
     }
 }
