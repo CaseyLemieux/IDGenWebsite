@@ -135,46 +135,38 @@ namespace IDGenWebsite.Controllers
         public async Task<IActionResult> SaveID(int id)
         {
             var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.ID == id);
-            return File(_fileHelper.GenerateId(student, _env.WebRootPath), "application/pdf",  string.Concat(student.Email, ".pdf"));
+            return File(_fileHelper.GenerateId(student), "application/pdf",  string.Concat(student.Email, ".pdf"));
             //File(, "application/pdf", string.Concat(student.Email, ".pdf"))
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }
 
         [HttpPost]
-        public async Task<IActionResult> DownloadQrCode()
+        public async Task<IActionResult> DownloadQrsByHomeroom()
         {
-
+            var homerooms = _schoolContext.Homerooms.ToList();
+            List<ZipItem> zipItems = new List<ZipItem>();
+            foreach (HomeroomsModel homeroom in homerooms)
+            {
+                var students = await _schoolContext.Students.Where(s => s.HomeRoomTeacher == homeroom.Teacher).ToListAsync();
+                string fileName = homeroom.Teacher.Replace(",", "-");
+                var classBytes = _fileHelper.GenerateQrCodes(students);
+                if (classBytes != null && classBytes.Length > 0)
+                {
+                    ZipItem zipItem = new ZipItem(fileName, classBytes);
+                    zipItems.Add(zipItem);
+                }
+            }
+            return File(_fileHelper.GenerateZipFile(zipItems), "application/zip", "IDsByHomeroom.zip");
         }
 
         [HttpPost]
-        public async Task<IActionResult> DownloadGradeLevel(string grade) {
+        public async Task<IActionResult> DownloadIdsByGradeLevel(string grade) {
 
             var students = await _schoolContext.Students.Where(s => s.GradeLevel == grade).ToListAsync();
-            //int nummberOfSplits = students.Count() / 25;
             List<ZipItem> zipItems = new List<ZipItem>();
-            //There are less then 25 students in the grade to print
-            /*if (nummberOfSplits == 0)
-            {
-                return File(_fileHelper.GenerateGradeLevel(students, _env.WebRootPath), "application/pdf", string.Concat(grade, ".pdf"));
-            }
-            else
-            {
-                for(int skip = 0, turn = 0; turn < nummberOfSplits; skip += 25, turn++)
-                {
-                    var bytes = _fileHelper.GenerateGradeLevel(students.Skip(skip).Take(25).ToList(), _env.WebRootPath);
-                    if (bytes != null && bytes.Length > 0)
-                    {
-                        string fileName = grade + turn.ToString();
-                        ZipItem zipItem = new ZipItem(fileName, bytes);
-                        zipItems.Add(zipItem);
-                    }
-                }
-                var zipFile = GenerateZipFile(zipItems);
-                return File(zipFile, "application/zip", "students.zip");
-            }*/
             foreach(StudentModel student in students)
             {
-                var bytes = _fileHelper.GenerateId(student, _env.WebRootPath);
+                var bytes = _fileHelper.GenerateId(student);
                 if (bytes != null && bytes.Length > 0)
                 {
                     string fileName = student.Email;
@@ -182,70 +174,32 @@ namespace IDGenWebsite.Controllers
                     zipItems.Add(zipItem);
                 }
             }
-            var zipFile = GenerateZipFile(zipItems);
-            return File(zipFile, "application/zip", "students.zip");
+            return File(_fileHelper.GenerateZipFile(zipItems), "application/zip", string.Concat("Grade",grade,"IDs", ".zip"));
         }
 
-        private byte[] GenerateZipFile(List<ZipItem> zipItems)
-        {
-            byte[] bytes;
-            using (var zipStream = new MemoryStream())
-            {
-                using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
-                {
-                    foreach (var zipItem in zipItems)
-                    {
-                        var entry = zip.CreateEntry(zipItem.Name + ".pdf", CompressionLevel.Optimal);
-                        using (var entryStream = entry.Open())
-                        {
-
-
-                            entryStream.Write(zipItem.Content, 0, zipItem.Content.Length);
-                        }
-                    }
-                }
-                bytes = zipStream.ToArray();
-            }
-            return bytes;
-        }
-        /*
+        
+        
         [HttpPost]
-        public async Task<IActionResult> DownloadByHomeroom()
+        public async Task<IActionResult> DownloadIdsByHomeroom()
         {
             var homerooms = _schoolContext.Homerooms.ToList();
-            List<ZipItem> zipItems = new List<ZipItem>();
+            Dictionary<string, List<ZipItem>> teacherList = new Dictionary<string, List<ZipItem>>();
             foreach (HomeroomsModel homeroom in homerooms)
             {
                 var students = await _schoolContext.Students.Where(s => s.HomeRoomTeacher == homeroom.Teacher).ToListAsync();
-                var classBytes = _fileHelper.GenerateHomeroom(students, _env.WebRootPath);
-                if(classBytes != null && classBytes.Length >0)
-                {
-                    string fileName = homeroom.Teacher.Replace(",", "-");
-                    ZipItem zipItem = new ZipItem(fileName, classBytes);
-                    zipItems.Add(zipItem);
-                }
-                
-            }
-            //var zipStream = new MemoryStream();
-            byte[] bytes;
-            using (var zipStream = new MemoryStream())
-            {
-                using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
-                {
-                    foreach (var zipItem in zipItems)
-                    {
-                        var entry = zip.CreateEntry(zipItem.Name + ".pdf", CompressionLevel.Optimal);
-                        using (var entryStream = entry.Open())
-                        {
-
-                            
-                            entryStream.Write(zipItem.Content, 0, zipItem.Content.Length);
-                        }
+                List<ZipItem> zipItems = new List<ZipItem>();
+                string fileName = homeroom.Teacher.Replace(",", "-");
+                foreach (StudentModel student in students){
+                    var classBytes = _fileHelper.GenerateId(student);
+                    if (classBytes != null && classBytes.Length > 0)
+                    { 
+                        ZipItem zipItem = new ZipItem(student.Email, classBytes);
+                        zipItems.Add(zipItem);
                     }
                 }
-                bytes = zipStream.ToArray();
+                teacherList.Add(fileName, zipItems);
             }
-            return File(bytes, "application/zip", "students.zip");
-        } */
+            return File(_fileHelper.GenerateZipFile(teacherList), "application/zip", "IDsByHomeroom.zip");
+        } 
     }
 }

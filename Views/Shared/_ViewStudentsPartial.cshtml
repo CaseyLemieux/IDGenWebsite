@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<StudentModel>
 
 
-
+<!--Change this button group row to a Navbar in future updates-->
 <div class="row">
     <div class="col-3">
         <div class="input-group">
@@ -13,7 +13,7 @@
         <div class="btn-group">
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="printdropdownmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Print Grade
+                    Print Grade Ids
                 </button>
                 <div class="dropdown-menu" aria-labelledby="printdropdownmenu">
                     <button class="dropdown-item" type="button" name="grade" value="PK">Pre-K</button>
@@ -34,10 +34,10 @@
             </div>
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="downloaddropdownmeny" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Download Grade
+                    Download Grade Ids
                 </button>
                 <div class="dropdown-menu" aria-labelledby="downloaddropdownmeny">
-                    @using (Html.BeginForm("DownloadGradeLevel", "Admin", FormMethod.Post))
+                    @using (Html.BeginForm("DownloadIdsByGradeLevel", "Admin", FormMethod.Post))
                     {
                         <button class="dropdown-item" type="submit" name="grade" value="PK">PK</button>
                         <button class="dropdown-item" type="submit" name="grade" value="KG">KG</button>
@@ -56,12 +56,22 @@
                     }
                 </div>
             </div>
-            @using (Html.BeginForm("DownloadByHomeroom", "Admin", FormMethod.Post))
-            {
-                <div>
-                    <button type="submit" class="btn btn-primary">Download Homerooms</button>
-                </div>
-            }
+            <div>
+                @using (Html.BeginForm("DownloadIdsByHomeroom", "Admin", FormMethod.Post))
+                {
+                    <div>
+                        <button type="submit" class="btn btn-primary">Download Ids By Homeroom</button>
+                    </div>
+                }
+            </div>
+            <div>
+                @using (Html.BeginForm("DownloadQrsByHomeroom", "Admin", FormMethod.Post))
+                {
+                    <div>
+                        <button type="submit" class="btn btn-primary">Download Qr ByHomerooms</button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
