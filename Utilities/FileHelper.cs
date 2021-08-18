@@ -349,37 +349,66 @@ namespace IDGenWebsite.Utilities
                     string qrCodeBase64 = Convert.ToBase64String(qrCodeBytes);
                     studentQrCodes.Add(student, qrCodeBase64);
                 }
-
-                //Get the Qr Code Template
-                string qrTemplate = File.ReadAllText(Path.Combine(webroot, "QrCodeTemplate.html"));
-
-                //Get the number of rows. If even division thats the number if not, add one to get the correct amount. 
-                int numberOfRows = students.Count / 3 + (students.Count % 3 > 0 ? 1 : 0);
-                int currentStudentNumber = 0;
-                string bodyHtml = "";
-                //Iterate through the rows
-                //Will currently thow erros because it does not take into account whether it has actually ran out of students on the last row when it rounds up. 
-                for (int i = 0; i < numberOfRows; i++)
-                {
-                    bodyHtml = string.Concat(bodyHtml, @"<div class=""row"">");
-                    //Iteratre through the three columns
-                    for (int j = 0; j < 3; j++)
-                    {   
-                        var currentStudent = studentQrCodes.ElementAt(currentStudentNumber);
-                        string html = qrHTML.Replace("[QRCODE]", currentStudent.Value)
-                            .Replace("[NAME]", currentStudent.Key.FirstName + " " + currentStudent.Key.LastName)
-                            .Replace("[IDNUMBER]", currentStudent.Key.StudentID)
-                            .Replace("[GRADE]", currentStudent.Key.GradeLevel);
-                        bodyHtml = string.Concat(bodyHtml, html);
-                        currentStudentNumber++;
-                    }
-                    bodyHtml = string.Concat(bodyHtml, @"</div>");
-                }
             }
 
+            //Get the Qr Code Template
+            string qrTemplate = File.ReadAllText(Path.Combine(webroot, "QrCodeTemplate.html"));
 
-            //If something goes wrong
-            return null;
+            //Get the number of rows. If even division thats the number if not, add one to get the correct amount. 
+            int numberOfRows = students.Count / 3 + (students.Count % 3 > 0 ? 1 : 0);
+            int currentStudentNumber = 0;
+            string bodyHtml = "";
+            List<string> rows = new List<string>();
+            //Iterate through the rows
+            //Will currently thow erros because it does not take into account whether it has actually ran out of students on the last row when it rounds up. 
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                bodyHtml = string.Concat(bodyHtml, @"<div class=""row"">");
+                //Iteratre through the three columns
+                for (int j = 0; j < 3 && currentStudentNumber < studentQrCodes.Count; j++)
+                {
+                    var currentStudent = studentQrCodes.ElementAt(currentStudentNumber);
+                    string html = qrHTML.Replace("[QRCODE]", currentStudent.Value)
+                        .Replace("[NAME]", currentStudent.Key.FirstName + " " + currentStudent.Key.LastName)
+                        .Replace("[IDNUMBER]", currentStudent.Key.StudentID)
+                        .Replace("[GRADE]", currentStudent.Key.GradeLevel);
+                    bodyHtml = string.Concat(bodyHtml, html);
+                    currentStudentNumber++;
+                }
+                bodyHtml = string.Concat(bodyHtml, @"</div>");
+                rows.Add(bodyHtml);
+            }
+
+            var doc = new HtmlToPdfDocument()
+            {
+                GlobalSettings =
+                {
+                    PaperSize = PaperKind.A4,
+                    ImageDPI = 300,
+                    Margins = new MarginSettings(0, 0, 0, 0),
+                    Orientation = Orientation.Portrait,
+                },
+            };
+
+            for(int i = 0, skip = 0; i < rows.Count; i++, skip +=4)
+            {
+                var pageRows = rows.Skip(skip).Take(4);
+                var htmlContent = "";
+                foreach(string row in pageRows)
+                {
+                    htmlContent = string.Concat(htmlContent, row);
+                }
+
+                ObjectSettings page = new ObjectSettings
+                {
+                    HtmlContent = htmlContent,
+                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "QrCodeTemplateStyleSheet.css")}
+                };
+                doc.Objects.Add(page);
+            }
+
+            byte[] pdf = _converter.Convert(doc);
+            return pdf;
         }
 
         public byte[] GenerateZipFile(List<ZipItem> zipItems)

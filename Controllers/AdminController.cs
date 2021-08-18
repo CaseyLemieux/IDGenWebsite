@@ -40,8 +40,8 @@ namespace IDGenWebsite.Controllers
             _userContext = userContext;
             _userManager = userManager;
             _converter = converter;
-            _fileHelper = new FileHelper(_schoolContext, _converter);
             _env = webHostEnvironment;
+            _fileHelper = new FileHelper(_schoolContext, _converter, _env.WebRootPath);
         }
 
         public IActionResult Dashboard()
@@ -143,7 +143,7 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> DownloadQrsByHomeroom()
         {
-            var homerooms = _schoolContext.Homerooms.ToList();
+            var homerooms = await _schoolContext.Homerooms.Where(s => s.Id == 16).ToListAsync();
             List<ZipItem> zipItems = new List<ZipItem>();
             foreach (HomeroomsModel homeroom in homerooms)
             {
