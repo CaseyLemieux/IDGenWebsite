@@ -35,7 +35,7 @@ namespace IDGenWebsite.Utilities
             this.webroot = webroot;
             qrHTML = 
                 @"<div class=""col - 3"">
-                  < div class=""back"">
+                  <div class=""back"">
                     <h1 class=""Details"">Classlink Qr Code</h1>
                     <div class=""back-middle"">
                         <img src = ""data:image/png;base64, [QRCODE]"">
@@ -339,7 +339,7 @@ namespace IDGenWebsite.Utilities
                     QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
                     QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
                     QRCode qRCode = new QRCode(qRCodeData);
-                    qrCodeImage = qRCode.GetGraphic(15);
+                    qrCodeImage = qRCode.GetGraphic(5);
 
                     //Convert the bitmap to a byte array
                     ImageConverter converter = new ImageConverter();
@@ -384,9 +384,9 @@ namespace IDGenWebsite.Utilities
                 GlobalSettings =
                 {
                     PaperSize = PaperKind.A4,
-                    ImageDPI = 300,
                     Margins = new MarginSettings(0, 0, 0, 0),
                     Orientation = Orientation.Portrait,
+                    
                 },
             };
 
@@ -398,11 +398,11 @@ namespace IDGenWebsite.Utilities
                 {
                     htmlContent = string.Concat(htmlContent, row);
                 }
-
+                htmlContent = qrTemplate.Replace("[PATH]", webroot).Replace("[BODY]", htmlContent);
                 ObjectSettings page = new ObjectSettings
                 {
                     HtmlContent = htmlContent,
-                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "QrCodeTemplateStyleSheet.css")}
+                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "/css/QrCodeTemplateStyleSheet.css"), EnableJavascript = true, enablePlugins=true}
                 };
                 doc.Objects.Add(page);
             }
