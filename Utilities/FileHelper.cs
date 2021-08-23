@@ -336,7 +336,7 @@ namespace IDGenWebsite.Utilities
             Dictionary<StudentModel, string> studentQrCodes = new Dictionary<StudentModel, string>();
             foreach(StudentModel student in students)
             {
-                if (student != null && student.IdPicPath != null && student.QrCode != null)
+                if (student != null && student.QrCode != null)
                 {
                     //Generate QrCode BitMap
                     Bitmap qrCodeImage;
