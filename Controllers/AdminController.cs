@@ -143,7 +143,7 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> DownloadQrsByHomeroom()
         {
-            var homerooms = await _schoolContext.Homerooms.Where(s => s.Id == 16).ToListAsync();
+            var homerooms = await _schoolContext.Homerooms.ToListAsync();
             List<ZipItem> zipItems = new List<ZipItem>();
             foreach (HomeroomsModel homeroom in homerooms)
             {

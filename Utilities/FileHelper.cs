@@ -27,6 +27,7 @@ namespace IDGenWebsite.Utilities
         //private readonly Iconverter _converter;
         private string qrHTML;
         private string webroot;
+        private string fillerHtml;
         
         public FileHelper(SchoolContext schoolContext, IConverter converter, string webroot)
         {
@@ -45,7 +46,10 @@ namespace IDGenWebsite.Utilities
                         <p>[IDNUMBER]</p>
                         <p>[GRADE]</p>
                     </div>
-                </div>
+                  </div>
+                </div>";
+            fillerHtml =
+                 @"<div class=""col - 3"">
                 </div>";
         }
         public FileHelper(SchoolContext schoolContext)
@@ -335,11 +339,11 @@ namespace IDGenWebsite.Utilities
                 if (student != null && student.IdPicPath != null && student.QrCode != null)
                 {
                     //Generate QrCode BitMap
-                    Bitmap qrCodeImage = null;
+                    Bitmap qrCodeImage;
                     QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
                     QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
                     QRCode qRCode = new QRCode(qRCodeData);
-                    qrCodeImage = qRCode.GetGraphic(5);
+                    qrCodeImage = qRCode.GetGraphic(1);
 
                     //Convert the bitmap to a byte array
                     ImageConverter converter = new ImageConverter();
@@ -351,64 +355,81 @@ namespace IDGenWebsite.Utilities
                 }
             }
 
-            //Get the Qr Code Template
-            string qrTemplate = File.ReadAllText(Path.Combine(webroot, "QrCodeTemplate.html"));
-
-            //Get the number of rows. If even division thats the number if not, add one to get the correct amount. 
-            int numberOfRows = students.Count / 3 + (students.Count % 3 > 0 ? 1 : 0);
-            int currentStudentNumber = 0;
-            string bodyHtml = "";
-            List<string> rows = new List<string>();
-            //Iterate through the rows
-            //Will currently thow erros because it does not take into account whether it has actually ran out of students on the last row when it rounds up. 
-            for (int i = 0; i < numberOfRows; i++)
+            if(studentQrCodes.Count > 0)
             {
-                bodyHtml = string.Concat(bodyHtml, @"<div class=""row"">");
-                //Iteratre through the three columns
-                for (int j = 0; j < 3 && currentStudentNumber < studentQrCodes.Count; j++)
+                //Get the Qr Code Template
+                string qrTemplate = File.ReadAllText(Path.Combine(webroot, "QrCodeTemplate.html"));
+
+                //Get the number of rows. If even division thats the number if not, add one to get the correct amount. 
+                int numberOfRows = studentQrCodes.Count / 3 + (studentQrCodes.Count % 3 > 0 ? 1 : 0);
+                int currentStudentNumber = 0;
+                string bodyHtml = "";
+                List<string> rows = new List<string>();
+                //Iterate through the rows
+                //Will currently thow erros because it does not take into account whether it has actually ran out of students on the last row when it rounds up. 
+                for (int i = 0; i < numberOfRows; i++)
                 {
-                    var currentStudent = studentQrCodes.ElementAt(currentStudentNumber);
-                    string html = qrHTML.Replace("[QRCODE]", currentStudent.Value)
-                        .Replace("[NAME]", currentStudent.Key.FirstName + " " + currentStudent.Key.LastName)
-                        .Replace("[IDNUMBER]", currentStudent.Key.StudentID)
-                        .Replace("[GRADE]", currentStudent.Key.GradeLevel);
-                    bodyHtml = string.Concat(bodyHtml, html);
-                    currentStudentNumber++;
+                    bodyHtml = string.Concat(bodyHtml, @"<div class=""row"">");
+                    //Iteratre through the three columns
+                    for (int j = 0; j < 3 && currentStudentNumber < studentQrCodes.Count; j++)
+                    {
+                        var currentStudent = studentQrCodes.ElementAt(currentStudentNumber);
+                        string html = qrHTML.Replace("[QRCODE]", currentStudent.Value)
+                            .Replace("[NAME]", currentStudent.Key.FirstName + " " + currentStudent.Key.LastName)
+                            .Replace("[IDNUMBER]", currentStudent.Key.StudentID)
+                            .Replace("[GRADE]", currentStudent.Key.GradeLevel);
+                        bodyHtml = string.Concat(bodyHtml, html);
+                        currentStudentNumber++;
+
+                    }
+                    if (i == numberOfRows - 1)
+                    {
+                        //Calculate how many filler columns to add based on whether there are left over spots
+                        int maxIDs = numberOfRows * 3;
+                        int leftOverSpots = maxIDs - studentQrCodes.Count;
+                        for (int k = 0; k < leftOverSpots; k++)
+                        {
+                            bodyHtml = string.Concat(bodyHtml, fillerHtml);
+                        }
+                    }
+                    bodyHtml = string.Concat(bodyHtml, @"</div>");
+                    rows.Add(bodyHtml);
+                    bodyHtml = "";
                 }
-                bodyHtml = string.Concat(bodyHtml, @"</div>");
-                rows.Add(bodyHtml);
-            }
 
-            var doc = new HtmlToPdfDocument()
-            {
-                GlobalSettings =
+                var doc = new HtmlToPdfDocument()
                 {
-                    PaperSize = PaperKind.A4,
-                    Margins = new MarginSettings(0, 0, 0, 0),
+                    GlobalSettings =
+                {
+                    PaperSize = PaperKind.Letter,
                     Orientation = Orientation.Portrait,
-                    
-                },
-            };
 
-            for(int i = 0, skip = 0; i < rows.Count; i++, skip +=4)
-            {
-                var pageRows = rows.Skip(skip).Take(4);
-                var htmlContent = "";
-                foreach(string row in pageRows)
-                {
-                    htmlContent = string.Concat(htmlContent, row);
-                }
-                htmlContent = qrTemplate.Replace("[PATH]", webroot).Replace("[BODY]", htmlContent);
-                ObjectSettings page = new ObjectSettings
-                {
-                    HtmlContent = htmlContent,
-                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "/css/QrCodeTemplateStyleSheet.css"), EnableJavascript = true, enablePlugins=true}
+                },
                 };
-                doc.Objects.Add(page);
+
+                for (int i = 0, skip = 0; i < rows.Count; i++, skip += 3)
+                {
+                    var pageRows = rows.Skip(skip).Take(3);
+                    var htmlContent = "";
+                    foreach (string row in pageRows)
+                    {
+                        htmlContent = string.Concat(htmlContent, row);
+                    }
+                    htmlContent = qrTemplate.Replace("[PATH]", webroot).Replace("[BODY]", htmlContent);
+                    ObjectSettings page = new ObjectSettings
+                    {
+                        HtmlContent = htmlContent,
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "/css/QrCodeTemplateStyleSheet.css"), EnableJavascript = true, enablePlugins = true, PrintMediaType = true },
+                        LoadSettings = { BlockLocalFileAccess = false }
+                    };
+                    doc.Objects.Add(page);
+                }
+
+                byte[] pdf = _converter.Convert(doc);
+                return pdf;
             }
 
-            byte[] pdf = _converter.Convert(doc);
-            return pdf;
+            return null;
         }
 
         public byte[] GenerateZipFile(List<ZipItem> zipItems)

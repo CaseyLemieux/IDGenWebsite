@@ -16,9 +16,7 @@ namespace IDGenWebsite.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                services.AddDbContext<IDGenWebsiteContext>(options =>
-                    options.UseSqlServer(
-                        context.Configuration.GetConnectionString("IdGenWebsiteIdentityProd")));
+                services.AddDbContext<IDGenWebsiteContext>(options => options.UseMySql(context.Configuration.GetConnectionString("IdGenWebsiteIdentityProd"), MariaDbServerVersion.AutoDetect(context.Configuration.GetConnectionString("IdGenWebsiteIdentityProd"))));
 
                 /*services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<IDGenWebsiteContext>(); */
