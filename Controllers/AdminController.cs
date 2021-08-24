@@ -140,6 +140,12 @@ namespace IDGenWebsite.Controllers
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }
 
+        public async Task<IActionResult> DownloadQrCode(int id)
+        {
+            var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.ID == id);
+            return File(_fileHelper.GenerateQrCode(student), "application/pdf", string.Concat(student.Email, ".pdf"));
+        }
+
         [HttpPost]
         public async Task<IActionResult> DownloadQrsByHomeroom()
         {
@@ -156,7 +162,7 @@ namespace IDGenWebsite.Controllers
                     zipItems.Add(zipItem);
                 }
             }
-            return File(_fileHelper.GenerateZipFile(zipItems), "application/zip", "IDsByHomeroom.zip");
+            return File(_fileHelper.GenerateZipFile(zipItems), "application/zip", "QrCodesByHomeroom.zip");
         }
 
         [HttpPost]
