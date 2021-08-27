@@ -28,48 +28,11 @@
     border-radius: 10px;
     position: relative;
     background-color: white;
+    outline-style: solid;
+    outline-color: black;
     top: 30px;
 }
 
-.top {
-    height: 25%;
-    width: 250px;
-    background-color: #c20606;
-    position: relative;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-}
-
-.middle {
-    height: 40%;
-    width: 250px;
-    background-color: white;
-    position: relative;
-}
-
-    .middle img {
-        object-fit: contain;
-        top: 5px;
-        height: 85%;
-        left: 70px;
-        position: absolute;
-    }
-
-.bottom {
-    height: 25%;
-    width: 250px;
-    background-color: white;
-    position: relative;
-    /*border-bottom-left-radius: 15px;*/
-    /*border-bottom-right-radius: 15px;*/
-}
-
-.id-number {
-    height: 10%;
-    width: 250px;
-    position: relative;
-    background-color: white;
-}
 
 .bottom p {
     position: relative;
@@ -85,7 +48,7 @@
     text-align: center;
     text-transform: capitalize;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 14px;
     /*padding: 5px;*/
 }
 
@@ -95,37 +58,6 @@
     font-weight: normal;
 }
 
-.id-number .no p {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    position: relative;
-    background: white;
-}
-
-.bottom .barcode {
-    position: absolute;
-    left: 25px;
-}
-
-.top img {
-    height: 60px;
-    width: 60px;
-    border-radius: 10px;
-    position: absolute;
-    top: 30px;
-    left: 95px;
-}
-
-.top p {
-    position: relative;
-    color: #e6ebe0;
-    text-align: center;
-    text-transform: capitalize;
-    font-weight: bold;
-    font-size: 20px;
-    text-emphasis: spacing;
-}
 
 
 .details-info {
@@ -139,18 +71,6 @@
     line-height: 22px;
 }
 
-/*.barcode img
-{
-    height: 65px;
-    width: 65px;
-    text-align: center;
-    margin: 5px;
-}
-.barcode{
-    text-align: center;
-    position: relative;
-    top: 70px;
-} */
 
 
 .back-middle {
@@ -182,23 +102,9 @@
 
 
 
-.logo {
-    height: 40px;
-    width: 150px;
-    padding: 40px;
-}
-
-    .logo img {
-        height: 100%;
-        width: 100%;
-        color: white;
-    }
-
-
-
-/*@media print{
+@media print{
     .container {
         height: 391px;
         width: 250px;
     }
-} */
+} 

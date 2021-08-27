@@ -341,7 +341,7 @@ namespace IDGenWebsite.Utilities
                 QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
                 QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
                 QRCode qRCode = new QRCode(qRCodeData);
-                qrCodeImage = qRCode.GetGraphic(5);
+                qrCodeImage = qRCode.GetGraphic(1);
 
                 //Convert the bitmap to a byte array
                 ImageConverter converter = new ImageConverter();
@@ -373,7 +373,8 @@ namespace IDGenWebsite.Utilities
                     new ObjectSettings()
                     {
                          HtmlContent = html,
-                         WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "/css/QrCodeTemplateStyleSheet.css") }
+                         WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "/css/QrCodeTemplateStyleSheet.css"), EnableJavascript = true, enablePlugins = true, PrintMediaType = true },
+                         LoadSettings = { BlockLocalFileAccess = false }
                     }
 
                     }

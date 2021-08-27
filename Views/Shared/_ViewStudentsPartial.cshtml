@@ -1,12 +1,11 @@
 ﻿@model IEnumerable<StudentModel>
 
-
 <!--Change this button group row to a Navbar in future updates-->
 <div class="row">
     <div class="col-3">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search for Student" id="studentTextField" />
-            <button class="btn btn-primary" onclick="SearchStudent()">Search</button>
+            <input type="text" class="form-control" placeholder="Search for Student" id="studentTextField" onkeypress="if (event.keyCode == 13) SearchStudent()"/>
+            <button class="btn btn-primary" onclick="SearchStudent()" id="studentSearchButton">Search</button>
         </div>
     </div>
     <div class="col-3">
@@ -211,5 +210,4 @@
     }
 </div>
 <div>
-
 </div>
