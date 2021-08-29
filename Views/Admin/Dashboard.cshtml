@@ -94,6 +94,52 @@
             });
         }
 
+        function SubmitStudentEdits(frm, caller) {
+            caller.preventDefault();
+            var form = document.getElementById('editStudentForm');
+            //var fdata = new FormData(form);
+            var fdata = $('#editStudentForm').serialize();
+            //var fdata = form.serialize();
+            console.log(fdata);
+            console.log(form.method);
+            console.log(form.action);
+            $.ajax({
+                type: form.method,
+                url: form.action,
+                dataType: 'json',
+                data: fdata,
+                processData: false,
+                //contentType: false,
+                success: function (data) {
+                    $('#editStudentModal').modal('hide');
+                    ViewStudents();
+                },
+                error: function (data) {
+                    alert('failure');
+                }
+            });
+        }
+
+        function EditStudent(id) {
+            console.log(id);
+            //var id = $(itemData).data('assigned-id');
+            $.ajax({
+                type: "POST",
+                url: "/Student/GetStudent",
+                data: { "id": id },
+                dataType: "html",
+                success: function (data) {
+                    var div = document.getElementById("editStudentModalBody");
+                    div.innerHTML = data;
+                    $('#editStudentModal').modal('show');
+                },
+                error: function (data) {
+                    alert('failure');
+                }
+            });
+        }
+
+
         function SubmitFocusIds(inputId, caller) {
             caller.preventDefault;
             var input = document.getElementById(inputId);

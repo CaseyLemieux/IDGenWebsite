@@ -9,6 +9,7 @@ namespace IDGenWebsite.Models
 {
     public class StudentModel
     {
+        [Display(Name ="Database Source ID:")]
         public int ID { get; set; }
         [Display(Name = "Student ID:")]
         public string StudentID { get; set; }

@@ -1,5 +1,32 @@
 ﻿@model IEnumerable<StudentModel>
 
+<!--Edit Student Modal-->
+<div class="modal fade" id="editStudentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="editStudentForm" method="post" asp-controller="Student" asp-action="SaveStudentEdits">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" id="editStudentModalBody">
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit" onclick="SubmitStudentEdits(this.parentElement, event)">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <!--Change this button group row to a Navbar in future updates-->
 <div class="row">
     <div class="col-3">
@@ -111,6 +138,12 @@
                     <th>
                         Download Qr:
                     </th>
+                    <th>
+                        Edit Student
+                    </th>
+                    <th>
+                        Take Photo
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -197,10 +230,38 @@
                                     else
                                     {
                                         <div>
-                                            <button type="submit" class="btn btn-success" name="id" value="@item.ID"><i class='fa fa-file'>Download QR</i></button>
+                                            <button type="submit" class="btn btn-success" name="id" value="@item.ID" disabled><i class='fa fa-file'>Download QR</i></button>
                                         </div>
                                     }
                                 }
+                            }
+                        </td>
+                        <td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="EditStudent(@item.ID)"><i class='fa fa-file'>Edit</i></button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="EditStudent(@item.ID)" disabled><i class='fa fa-file'>Edit</i></button>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="TakePhoto(@item.ID, this)"><i class='fa fa-file'>Take Photo</i></button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="TakePhoto(@item.ID, this)" disabled><i class='fa fa-file'>Take Photo</i></button>
+                                </div>
                             }
                         </td>
                     </tr>
@@ -211,3 +272,5 @@
 </div>
 <div>
 </div>
+
+
