@@ -39,6 +39,7 @@ namespace IDGenWebsite.Models
         public string HomeRoomTeacherEmail { get; set; }
         [NotMapped]
         public bool IdRequestPrinted { get; set; } = true;
+        [Display(Name ="Manual Edits Made To Student:")]
         public bool HasBeenManuallyEdited { get; set; } = false;
     }
 }

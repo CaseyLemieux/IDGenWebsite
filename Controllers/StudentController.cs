@@ -84,6 +84,7 @@ namespace IDGenWebsite.Controllers
             dbStudent.GradeLevel = student.GradeLevel;
             dbStudent.HomeRoomTeacher = student.HomeRoomTeacher;
             dbStudent.HomeRoomTeacherEmail = student.HomeRoomTeacherEmail;
+            dbStudent.HasBeenManuallyEdited = true;
             await _context.SaveChangesAsync();
             return JsonConvert.SerializeObject("Success"); ;
         } 

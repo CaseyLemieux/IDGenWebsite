@@ -52,3 +52,8 @@
     <input asp-for="HomeRoomTeacherEmail" class="form-control" />
     <span asp-validation-for="HomeRoomTeacherEmail" class="text-danger"></span>
 </div>
+<div class="form-group">
+    <label asp-for="HasBeenManuallyEdited" class="control-label"></label>
+    <input asp-for="HasBeenManuallyEdited" class="form-control" readonly/>
+    <span asp-validation-for="HasBeenManuallyEdited" class="text-danger"></span>
+</div>

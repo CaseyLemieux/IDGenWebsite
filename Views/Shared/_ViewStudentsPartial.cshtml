@@ -254,7 +254,7 @@
                             @if (User.IsInRole("Admin"))
                             {
                                 <div>
-                                    <button type="submit" class="btn btn-success" name="id" onclick="TakePhoto(@item.ID, this)"><i class='fa fa-file'>Take Photo</i></button>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="TakePhoto(@item.ID, this)" disabled><i class='fa fa-file'>Take Photo</i></button>
                                 </div>
                             }
                             else
