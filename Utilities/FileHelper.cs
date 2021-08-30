@@ -43,8 +43,8 @@ namespace IDGenWebsite.Utilities
                     </div>
                     <div class=""bottom-back"">               
                         <p>[NAME]</p>
+                        <p>[EMAIL]</p>
                         <p>[IDNUMBER]</p>
-                        <p>[GRADE]</p>
                     </div>
                   </div>
                 </div>";
@@ -331,6 +331,64 @@ namespace IDGenWebsite.Utilities
             return null;
         }
 
+        public byte[] GenerateQrCode(StudentModel student)
+        {
+            //IF the student and qr isnt null for somereason generate the qr code
+            if (student != null && student.QrCode != null)
+            {
+                //Generate QrCode BitMap
+                Bitmap qrCodeImage = null;
+                QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+                QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(student.QrCode, QRCodeGenerator.ECCLevel.Q);
+                QRCode qRCode = new QRCode(qRCodeData);
+                qrCodeImage = qRCode.GetGraphic(1);
+
+                //Convert the bitmap to a byte array
+                ImageConverter converter = new ImageConverter();
+                byte[] qrCodeBytes = (byte[])converter.ConvertTo(qrCodeImage, typeof(byte[]));
+
+                //Convert the QrCode to Base64 string
+                string qrCodeBase64 = Convert.ToBase64String(qrCodeBytes);
+
+                //Get the Qr Code Template
+                string qrTemplate = File.ReadAllText(Path.Combine(webroot, "QrCodeTemplate.html"));
+
+                string html = qrTemplate.Replace("[QRCODE]", qrCodeBase64)
+                           .Replace("[NAME]", student.FirstName + " " + student.LastName)
+                           .Replace("[EMAIL]", student.Email)
+                           .Replace("[IDNUMBER]", student.StudentID)
+                           .Replace("[PATH]", webroot);
+
+                var doc = new HtmlToPdfDocument()
+                {
+
+                    GlobalSettings = {
+                    PaperSize = new PechkinPaperSize("53mm", "84mm"),
+                    ImageDPI = 300,
+                    Margins = new MarginSettings(0, 0, 0, 0),
+                    Orientation = Orientation.Portrait,
+                },
+
+                    Objects = {
+                    new ObjectSettings()
+                    {
+                         HtmlContent = html,
+                         WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "/css/QrCodeTemplateStyleSheet.css"), EnableJavascript = true, enablePlugins = true, PrintMediaType = true },
+                         LoadSettings = { BlockLocalFileAccess = false }
+                    }
+
+                    }
+                };
+
+                byte[] pdf = _converter.Convert(doc);
+                return pdf;
+
+            }
+
+            //Return null if something goes wrong
+            return null;
+        }
+
         public byte[] GenerateQrCodes(List<StudentModel> students)
         {
             Dictionary<StudentModel, string> studentQrCodes = new Dictionary<StudentModel, string>();
@@ -358,7 +416,7 @@ namespace IDGenWebsite.Utilities
             if(studentQrCodes.Count > 0)
             {
                 //Get the Qr Code Template
-                string qrTemplate = File.ReadAllText(Path.Combine(webroot, "QrCodeTemplate.html"));
+                string qrTemplate = File.ReadAllText(Path.Combine(webroot, "QrCodeSheetTemplate.html"));
 
                 //Get the number of rows. If even division thats the number if not, add one to get the correct amount. 
                 int numberOfRows = studentQrCodes.Count / 3 + (studentQrCodes.Count % 3 > 0 ? 1 : 0);
@@ -376,8 +434,8 @@ namespace IDGenWebsite.Utilities
                         var currentStudent = studentQrCodes.ElementAt(currentStudentNumber);
                         string html = qrHTML.Replace("[QRCODE]", currentStudent.Value)
                             .Replace("[NAME]", currentStudent.Key.FirstName + " " + currentStudent.Key.LastName)
-                            .Replace("[IDNUMBER]", currentStudent.Key.StudentID)
-                            .Replace("[GRADE]", currentStudent.Key.GradeLevel);
+                            .Replace("[EMAIL]", currentStudent.Key.Email)
+                            .Replace("[IDNUMBER]", currentStudent.Key.StudentID);
                         bodyHtml = string.Concat(bodyHtml, html);
                         currentStudentNumber++;
 
@@ -419,7 +477,7 @@ namespace IDGenWebsite.Utilities
                     ObjectSettings page = new ObjectSettings
                     {
                         HtmlContent = htmlContent,
-                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "/css/QrCodeTemplateStyleSheet.css"), EnableJavascript = true, enablePlugins = true, PrintMediaType = true },
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(webroot, "css", "/css/QrCodeSheetTemplateStyleSheet.css"), EnableJavascript = true, enablePlugins = true, PrintMediaType = true },
                         LoadSettings = { BlockLocalFileAccess = false }
                     };
                     doc.Objects.Add(page);

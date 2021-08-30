@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,30 @@ namespace IDGenWebsite.Controllers
             return PartialView("_ViewStudentsPartial", await students.ToListAsync());
         }
 
-        
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> GetStudent(int id)
+        {
+            var student = await _context.Students.SingleOrDefaultAsync(s => s.ID == id);
+            return PartialView("~/Views/Admin/_EditStudentPartial.cshtml", student);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<string> SaveStudentEdits(StudentModel student)
+        {
+            var dbStudent = await _context.Students.SingleOrDefaultAsync(s => s.ID == student.ID);
+            dbStudent.FirstName = student.FirstName;
+            dbStudent.LastName = student.LastName;
+            dbStudent.QrCode = student.QrCode;
+            dbStudent.Email = student.Email;
+            dbStudent.DisplayName = student.DisplayName;
+            dbStudent.GradeLevel = student.GradeLevel;
+            dbStudent.HomeRoomTeacher = student.HomeRoomTeacher;
+            dbStudent.HomeRoomTeacherEmail = student.HomeRoomTeacherEmail;
+            dbStudent.HasBeenManuallyEdited = true;
+            await _context.SaveChangesAsync();
+            return JsonConvert.SerializeObject("Success"); ;
+        } 
     }
 }

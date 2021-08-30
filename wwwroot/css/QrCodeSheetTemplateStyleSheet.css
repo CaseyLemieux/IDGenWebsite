@@ -4,6 +4,10 @@
     box-sizing: content-box;
 }
 
+.row {
+    margin-left: 50px;
+}
+
 .container {
     height: 100vh;
     width: 100%;
@@ -15,12 +19,6 @@
     flex-flow: wrap;
 }
 
-.front {
-    height: 396px;
-    width: 250px;
-    border-radius: 10px;
-    position: relative;
-}
 
 .back {
     height: 366px;
@@ -28,50 +26,20 @@
     border-radius: 10px;
     position: relative;
     background-color: white;
+    top: 30px;
     outline-style: solid;
     outline-color: black;
-    top: 30px;
 }
 
-
-.bottom p {
-    position: relative;
-    text-align: center;
-    text-transform: capitalize;
-    font-weight: bold;
-    font-size: 20px;
-    /*padding: 5px;*/
-}
 
 .bottom-back p {
     position: relative;
     text-align: center;
     text-transform: capitalize;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     /*padding: 5px;*/
 }
-
-.bottom .desi {
-    font-size: 12px;
-    color: grey;
-    font-weight: normal;
-}
-
-
-
-.details-info {
-    color: white;
-    text-align: left;
-    padding: 5px;
-    line-height: 20px;
-    font-size: 16px;
-    text-align: center;
-    margin-top: 20px;
-    line-height: 22px;
-}
-
-
 
 .back-middle {
     height: 50%;
@@ -79,18 +47,17 @@
     position: relative;
 }
 
-    .back-middle img {
-        height: 100%;
-        width: 70%;
-        left: 35px;
-        position: absolute;
-    }
+.back-middle img {
+    height: 100%;
+    width: 70%;
+    left: 35px;
+    position: absolute;
+}
 
 .qr img {
     height: 80px;
     width: 100%;
     margin: 20px;
-    background-color: white;
 }
 
 .Details {
@@ -100,11 +67,13 @@
     font-size: 25px;
 }
 
-
-
-@media print{
+@media print {
     .container {
         height: 391px;
         width: 250px;
     }
-} 
+
+    .back {
+        margin-left: 50px;
+    }
+}

@@ -36,6 +36,7 @@ namespace IDGenWebsite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SchoolContext>(options => options.UseMySql(Configuration.GetConnectionString("IdGenWebsiteDBProd"), MariaDbServerVersion.AutoDetect(Configuration.GetConnectionString("IdGenWebsiteDBProd"))));
+            //services.AddDbContext<SchoolContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdGenWebsiteDBProd")));
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllersWithViews();

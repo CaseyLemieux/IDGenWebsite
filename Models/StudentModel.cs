@@ -9,6 +9,7 @@ namespace IDGenWebsite.Models
 {
     public class StudentModel
     {
+        [Display(Name ="Database Source ID:")]
         public int ID { get; set; }
         [Display(Name = "Student ID:")]
         public string StudentID { get; set; }
@@ -38,5 +39,7 @@ namespace IDGenWebsite.Models
         public string HomeRoomTeacherEmail { get; set; }
         [NotMapped]
         public bool IdRequestPrinted { get; set; } = true;
+        [Display(Name ="Manual Edits Made To Student:")]
+        public bool HasBeenManuallyEdited { get; set; } = false;
     }
 }
