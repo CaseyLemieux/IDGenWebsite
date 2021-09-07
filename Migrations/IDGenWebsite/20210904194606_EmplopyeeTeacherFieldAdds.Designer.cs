@@ -3,14 +3,16 @@ using System;
 using IDGenWebsite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IDGenWebsite.Migrations.IDGenWebsite
 {
     [DbContext(typeof(IDGenWebsiteContext))]
-    partial class IDGenWebsiteContextModelSnapshot : ModelSnapshot
+    [Migration("20210904194606_EmplopyeeTeacherFieldAdds")]
+    partial class EmplopyeeTeacherFieldAdds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

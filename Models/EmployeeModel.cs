@@ -17,9 +17,13 @@ namespace IDGenWebsite.Models
         [Required]
         [Display(Name = "Last Name:")]
         public string LastName { get; set; }
+        [Display(Name = "School ID:")]
+        public string SchoolID { get; set; }
+        [Display(Name = "Teacher ID:")]
+        public string TeacherID { get; set; }
         [Display(Name = "Active Status:")]
         public bool IsActive { get; set; }
-        [Display(Name = "Delet Status:")]
+        [Display(Name = "Delete Status:")]
         public bool IsDeleted { get; set; }
         [Required]
         [NotMapped]
@@ -31,7 +35,8 @@ namespace IDGenWebsite.Models
         public List<SelectListItem> Roles { get; set; } = new List<SelectListItem>
         {
             new SelectListItem{Value = "Admin", Text = "Admin"},
-            new SelectListItem{Value = "User", Text = "User"}
+            new SelectListItem{Value = "User", Text = "User"},
+            new SelectListItem{Value = "Teacher", Text = "Teacher"}
         };
         [NotMapped]
         public string SelectedRole { get; set; }

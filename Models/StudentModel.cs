@@ -9,10 +9,12 @@ namespace IDGenWebsite.Models
 {
     public class StudentModel
     {
-        [Display(Name ="Database Source ID:")]
+        [Display(Name ="Database ID:")]
         public int ID { get; set; }
         [Display(Name = "Student ID:")]
         public string StudentID { get; set; }
+        [Display(Name = "School ID:")]
+        public string SchoolID { get; set; }
         [Display(Name ="First Name:")]
         public string FirstName { get; set; }
         [Display(Name ="Last Name:")]
@@ -28,7 +30,7 @@ namespace IDGenWebsite.Models
         [Display(Name ="ID Picture:")]
         public string IdPicPath { get; set; }
         [Display(Name = "Active Status:")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         [Display(Name = "Delete Status:")]
         public bool IsDeleted { get; set; }
         [Display(Name = "Enrollment Start Date:")]

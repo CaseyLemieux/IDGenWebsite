@@ -64,6 +64,13 @@ namespace IDGenWebsite.Data
                 role.Name = "User";
                 IdentityResult roleResult = roleManager.CreateAsync(role).Result;
             }
+
+            if (!roleManager.RoleExistsAsync("Teacher").Result)
+            {
+                IdentityRole role = new IdentityRole();
+                role.Name = "Teacher";
+                IdentityResult roleResult = roleManager.CreateAsync(role).Result;
+            }
         }
 
         private static void SeedDefaultSettings(SchoolContext context)

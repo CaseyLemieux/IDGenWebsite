@@ -3,45 +3,21 @@ using System;
 using IDGenWebsite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IDGenWebsite.Migrations
 {
     [DbContext(typeof(SchoolContext))]
-    partial class SchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20210904194503_RosterDataMigration")]
+    partial class RosterDataMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.7");
-
-            modelBuilder.Entity("IDGenWebsite.Models.EnrollmentsModel", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("SchoolID")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SectionID")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("StudentID")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Enrollments");
-                });
 
             modelBuilder.Entity("IDGenWebsite.Models.HomeroomsModel", b =>
                 {
@@ -155,55 +131,6 @@ namespace IDGenWebsite.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("IdTemplates");
-                });
-
-            modelBuilder.Entity("IDGenWebsite.Models.SchoolsModel", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("SchoolID")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SchoolName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Schools");
-                });
-
-            modelBuilder.Entity("IDGenWebsite.Models.SectionsModel", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("SectionID")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("TeacherID")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.SettingModel", b =>
