@@ -18,6 +18,9 @@ using Microsoft.Extensions.Azure;
 using Azure.Storage.Queues;
 using Azure.Storage.Blobs;
 using Azure.Core.Extensions;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication;
 
 namespace IDGenWebsite
 {
@@ -35,12 +38,15 @@ namespace IDGenWebsite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SchoolContext>(options => options.UseMySql(Configuration.GetConnectionString("IdGenWebsiteDBProd"), MariaDbServerVersion.AutoDetect(Configuration.GetConnectionString("IdGenWebsiteDBProd"))));
-            //services.AddDbContext<SchoolContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdGenWebsiteDBProd")));
+            //services.AddDbContext<SchoolContext>(options => options.UseMySql(Configuration.GetConnectionString("IdGenWebsiteDBProd"), MariaDbServerVersion.AutoDetect(Configuration.GetConnectionString("IdGenWebsiteDBProd"))));
+            services.AddDbContext<SchoolContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdGenWebsiteDBProd")));
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
+            .AddAzureAD(options => Configuration.Bind("AzureAd", options));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
