@@ -96,7 +96,7 @@ namespace IDGenWebsite.Areas.Identity.Pages.Account
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
+                /*// If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 ProviderDisplayName = info.ProviderDisplayName;
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
@@ -106,7 +106,27 @@ namespace IDGenWebsite.Areas.Identity.Pages.Account
                         Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
                 }
-                return Page();
+                return Page(); */
+
+                var email = info.Principal.FindFirstValue(ClaimTypes.Name);
+                if(email != null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if(user != null)
+                    {
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToPage("./AccessDenied");
+                    }
+                }
+                else
+                {
+                    return RedirectToPage("./AccessDenied");
+                }
             }
         }
 

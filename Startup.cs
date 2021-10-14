@@ -47,6 +47,11 @@ namespace IDGenWebsite
 
             services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
             .AddAzureAD(options => Configuration.Bind("AzureAd", options));
+            services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options => {
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+
+                //other config
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
