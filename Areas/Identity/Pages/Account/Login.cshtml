@@ -6,91 +6,84 @@
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
-<div class="row">
-    <!--<div class="form-group">
-        <form id="account" method="post">
-            <input asp-for="Input.Email" class="input-field" placeholder="username" />
-            <span asp-validation-for="Input.Email" class="text-danger"></span>
-            <input asp-for="Input.Password" class="input-field"placeholder="password" />
-            <span asp-validation-for="Input.Password" class="text-danger"></span>
-            <input type="submit" style="" value="login" />
-        </form>
-        
-    </div> -->
-        <div class="col-md-4">
-         <section>
-             <form id="account" method="post">
-                 <h4>Use a local account to log in.</h4>
-                 <hr />
-                 <div asp-validation-summary="All" class="text-danger"></div>
-                 <div class="form-group">
-                     <label asp-for="Input.Email"></label>
-                     <input asp-for="Input.Email" class="form-control" />
-                     <span asp-validation-for="Input.Email" class="text-danger"></span>
-                 </div>
-                 <div class="form-group">
-                     <label asp-for="Input.Password"></label>
-                     <input asp-for="Input.Password" class="form-control" />
-                     <span asp-validation-for="Input.Password" class="text-danger"></span>
-                 </div>
-                 <div class="form-group">
-                     <div class="checkbox">
-                         <label asp-for="Input.RememberMe">
-                             <input asp-for="Input.RememberMe" />
-                             @Html.DisplayNameFor(m => m.Input.RememberMe)
-                         </label>
-                     </div>
-                 </div>
-                 <div class="form-group">
-                     <button type="submit" class="btn btn-primary">Log in</button>
-                 </div>
-                 <div class="form-group">
-                     <p>
-                         <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                     </p>
-                 </div>
-             </form>
-         </section>
-     </div>
-     <div class="col-md-6 col-md-offset-2">
-             <section>
-                 <h4>Use another service to log in.</h4>
-                 <hr />
-                 @{
-                     if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                     {
-                         <div>
-                             <p>
-                                 There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                                 for details on setting up this ASP.NET application to support logging in via external services.
-                             </p>
-                         </div>
-                     }
-                     else
-                     {
-                         <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                             <div>
-                                 <p>
-                                     @foreach (var provider in Model.ExternalLogins)
-                                     {
-                                         <button type="submit"  name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><img src="~/Images/ms-symbollockup_signin_dark.png" /></button>
-                                     }
-                                 </p>
-                             </div>
-                         </form>
-                     }
-                 }
-             </section>
-         </div>
-    
+<div class="row d-flex justify-content-center">
+    <div class="card">
+        <div class="card-header text-center">
+            Franklin County IDGen
+        </div>
+        <div class="card-body text-center">
+            <section>
+                <h4>Local Account Login:</h4>
+                <form id="account" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Input.Email"></label>
+                        <input asp-for="Input.Email" class="form-control" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Password"></label>
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label asp-for="Input.RememberMe">
+                                <input asp-for="Input.RememberMe" />
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                        </p>
+                    </div>
+                </form>
+            </section>
+            <section>
+                <h4>External Login:</h4>
+                @{
+                    if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                    {
+                        <div>
+                            <p>
+                                There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+                                for details on setting up this ASP.NET application to support logging in via external services.
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            <div>
+                                <p>
+                                    @foreach (var provider in Model.ExternalLogins)
+                                    {
+                                        <!--<button type="submit" class="azurebutton" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><img src="~/Images/ms-symbollockup_signin_dark.png" /></button>-->
+                                        <input type="image" src="~/Images/ms-symbollockup_signin_dark.png" name="provider" value="@provider.Name"/>
+                                    }
+                                </p>
+                            </div>
+                        </form>
+                    }
+                }
+            </section>
+        </div>
+        <div class="card-footer text-center">
+            <p>Powered By:</p>
+            <img src="~/Images/eagletree.png" class="eagletree" />
+        </div>
     </div>
+</div>
 
-    @section Scripts {
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
-        
-        <partial name="_ValidationScriptsPartial" />
-    }
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/login.css" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
