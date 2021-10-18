@@ -11,14 +11,14 @@ namespace IDGenWebsite.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
-        public Guid SourcedID { get; set; }
+        public Guid SourcedId { get; set; }
         public string Status { get; set; }
         public DateTime DateLastModified { get; set; }
         public string Title { get; set; }
         public string Type { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public Guid ParentSourcedID { get; set; }
+        public AcademicSessions Parent { get; set; }
         public int SchoolYear { get; set; }
     }
 }

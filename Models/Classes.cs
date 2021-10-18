@@ -10,7 +10,7 @@ namespace IDGenWebsite.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [System.ComponentModel.DataAnnotations.Key]
-        public Guid SourcedID { get; set; }
+        public Guid SourcedId { get; set; }
         public string Status { get; set; }
         public DateTime DateLastModified { get; set; }
         public string Metadata { get; set; }
