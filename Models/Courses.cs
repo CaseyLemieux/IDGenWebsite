@@ -14,9 +14,16 @@ namespace IDGenWebsite.Models
         public Guid SourcedId { get; set; }
         public string Status { get; set; }
         public DateTime DateLastModified { get; set; }
+        public string Metadata { get; set; }
         public string Title { get; set; }
         public AcademicSessions SchoolYear { get; set; }
         public string CourseCode { get; set; }
+        public List<Grades> Grades { get; set; }
+        public List<Subjects> Subjects { get; set; }
         public Organizations Organization { get; set; }
+        public List<SubjectCodes> SubjectCodes { get; set; }
+        public List<Resources> Resources { get; set; }
+
+
     }
 }
