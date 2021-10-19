@@ -26,6 +26,11 @@ namespace IDGenWebsite.Data
         public DbSet<Courses> Courses { get; set; }
         public DbSet<Classes> Classes { get; set; }
         public DbSet<Enrollments> Enrollments { get; set; }
+        public DbSet<Grades> Grades { get; set; }
+        public DbSet<Periods> Periods { get; set; }
+        public DbSet<Resources> Resources { get; set; }
+        public DbSet<Subjects> Subjects { get; set; }
+        public DbSet<SubjectCodes> SubjectCodes { get; set; }
 
     }
 }

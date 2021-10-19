@@ -28,15 +28,15 @@ namespace IDGenWebsite.Controllers
 
         public async Task<IActionResult> GetStudentPartial()
         {
-            var students = await _context.Students.OrderBy(s => s.LastName).ToListAsync();
+            var students = await _context.Users.OrderBy(s => s.FamilyName).ToListAsync();
             var idOrders = await _context.IDRequests.ToListAsync();
             foreach (var order in idOrders)
             {
                 foreach (var student in students)
                 {
-                    if (order.StudentID.Equals(student.StudentID))
+                    if (order.StudentID.Equals(student.Identifier))
                     {
-                        student.IdRequestPrinted = order.HasBeenPrinted;
+                        //student.IdRequestPrinted = order.HasBeenPrinted;
                     }
                 }
             }
@@ -45,18 +45,18 @@ namespace IDGenWebsite.Controllers
 
         public async Task<IActionResult> SearchStudents(string searchString)
         {
-            var students = from s in _context.Students select s;
+            var students = from s in _context.Users select s;
             if (!String.IsNullOrEmpty(searchString))
             {
                 var names = searchString.Split(" ");
                 if(names.Length == 2)
                 {
-                    students = students.Where(s => s.LastName.Contains(searchString) || s.FirstName.Contains(searchString) || s.FirstName.Contains(names[0]) && s.LastName.Contains(names[1]) 
-                    || s.LastName.Contains(names[0]) && s.FirstName.Contains(names[1]));
+                    students = students.Where(s => s.FamilyName.Contains(searchString) || s.GivenName.Contains(searchString) || s.FamilyName.Contains(names[0]) && s.FamilyName.Contains(names[1]) 
+                    || s.FamilyName.Contains(names[0]) && s.FamilyName.Contains(names[1]));
                 }
                 else
                 {
-                    students = students.Where(s => s.LastName.Contains(searchString) || s.FirstName.Contains(searchString));
+                    students = students.Where(s => s.FamilyName.Contains(searchString) || s.GivenName.Contains(searchString));
                 }
                
             }
@@ -67,11 +67,11 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> GetStudent(int id)
         {
-            var student = await _context.Students.SingleOrDefaultAsync(s => s.ID == id);
+            var student = await _context.Users.SingleOrDefaultAsync(s => s.Identifier == id.ToString());
             return PartialView("~/Views/Admin/_EditStudentPartial.cshtml", student);
         }
 
-        [Authorize(Roles = "Admin")]
+        /*[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<string> SaveStudentEdits(StudentModel student)
         {
@@ -87,6 +87,6 @@ namespace IDGenWebsite.Controllers
             dbStudent.HasBeenManuallyEdited = true;
             await _context.SaveChangesAsync();
             return JsonConvert.SerializeObject("Success"); ;
-        } 
+        } */
     }
 }

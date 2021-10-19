@@ -99,7 +99,7 @@ namespace IDGenWebsite.Utilities
             foreach (var path in paths)
             {
                 var id = Path.GetFileNameWithoutExtension(path);
-                var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.StudentID == id);
+                var student = await _schoolContext.Users.SingleOrDefaultAsync(s => s.Identifier == id);
                 if (student != null)
                 {
                     student.IdPicPath = path;
@@ -111,7 +111,7 @@ namespace IDGenWebsite.Utilities
         private async Task ParseStudentFilesAsync(string fileName)
         {
 
-            HashSet<string> homerooms = new HashSet<string>();
+            //HashSet<string> homerooms = new HashSet<string>();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
@@ -122,21 +122,24 @@ namespace IDGenWebsite.Utilities
                   
                     while (reader.Read())
                     {
-                        StudentModel student = new StudentModel();
-                        student.StudentID = reader.GetValue(0).ToString();
-                        student.LastName = reader.GetValue(1).ToString();
-                        student.FirstName = reader.GetValue(2).ToString();
+                        Users student = new Users();
+                        student.Identifier = reader.GetValue(0).ToString();
+                        student.FamilyName = reader.GetValue(1).ToString();
+                        student.GivenName = reader.GetValue(2).ToString();
                         student.Email = reader.GetValue(3).ToString();
-                        student.GradeLevel = reader.GetValue(4).ToString();
-                        student.EnrollmentStartDate = DateTime.Parse(reader.GetValue(5).ToString());
+                        student.Grades.Add(new Grades
+                        {
+                            Description = reader.GetValue(4).ToString()
+                        });
+                        /*student.EnrollmentStartDate = DateTime.Parse(reader.GetValue(5).ToString());
                         student.HomeRoomTeacher = reader.GetValue(6).ToString().Trim();
-                        student.HomeRoomTeacherEmail = reader.GetValue(7).ToString();
+                        student.HomeRoomTeacherEmail = reader.GetValue(7).ToString(); */
 
-                        homerooms.Add(reader.GetValue(6).ToString().Trim());
+                        //homerooms.Add(reader.GetValue(6).ToString().Trim());
                       
                        
 
-                        var dbEntry = await _schoolContext.Students.FirstOrDefaultAsync(s => s.StudentID == student.StudentID);
+                        var dbEntry = await _schoolContext.Users.FirstOrDefaultAsync(s => s.Identifier == student.Identifier);
                         if (dbEntry == null)
                         {
                             _schoolContext.Add(student);
@@ -146,14 +149,14 @@ namespace IDGenWebsite.Utilities
                     _schoolContext.SaveChanges();
                 }
             }
-            foreach(string room in homerooms)
+            /*foreach(string room in homerooms)
             {
                 HomeroomsModel homeroomsModel = new HomeroomsModel()
                 {
                     Teacher = room
                 };
                 _schoolContext.Homerooms.Add(homeroomsModel);
-            }
+            } */
             _schoolContext.SaveChanges();
         }
 
@@ -171,10 +174,10 @@ namespace IDGenWebsite.Utilities
                         {
                             try
                             {
-                                var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
+                                var student = await _schoolContext.Users.SingleOrDefaultAsync(s => s.Email == reader.GetValue(2).ToString());
                                 if (student != null)
                                 {
-                                    student.DisplayName = reader.GetValue(3).ToString();
+                                    //student.DisplayName = reader.GetValue(3).ToString();
                                     student.QrCode = reader.GetValue(4).ToString();
                                 }
                             }
@@ -191,7 +194,7 @@ namespace IDGenWebsite.Utilities
             }
         }
 
-        public byte[] GenerateId(StudentModel student)
+        public byte[] GenerateId(Users student)
         {
             if (student != null && student.IdPicPath != null && student.QrCode != null)
             {
@@ -208,7 +211,7 @@ namespace IDGenWebsite.Utilities
 
                 //Generate the Front Barcode
                 Barcode barcode = new Barcode();
-                Image img = barcode.Encode(TYPE.CODE128, student.StudentID, Color.Black, Color.White, 200, 35);
+                Image img = barcode.Encode(TYPE.CODE128, student.Identifier, Color.Black, Color.White, 200, 35);
                 Bitmap barcodeBitmap = (Bitmap)img;
                 byte[] barcodeBytes = (byte[])converter.ConvertTo(barcodeBitmap, typeof(byte[]));
 
@@ -221,7 +224,7 @@ namespace IDGenWebsite.Utilities
                 string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(webroot + "/Images/FCSD_Hawk.png"));
                 string template = null;
                 string school = null;
-                switch (student.GradeLevel)
+                /*switch (student.GradeLevel)
                 {
                     case "PK":
                         template = "ElementaryStyleSheet.css";
@@ -279,7 +282,7 @@ namespace IDGenWebsite.Utilities
                         template = "HighStyleSheet.css";
                         school = "High";
                         break;
-                }
+                } */
                 //Get the front and back templates
                 string frontTemplate = File.ReadAllText(Path.Combine(webroot, "IdTemplateFront.html"));
                 string backTemplate = File.ReadAllText(Path.Combine(webroot, "IdTemplateBack.html"));
@@ -290,10 +293,10 @@ namespace IDGenWebsite.Utilities
                     .Replace("[LOGO]", logoPhotoBase64)
                     .Replace("[SCHOOL]", school)
                     .Replace("[IDPHOTO]", idPhotoBase64)
-                    .Replace("[NAME]", student.FirstName + " " +student.LastName)
-                    .Replace("[GRADE]", student.GradeLevel)
+                    .Replace("[NAME]", student.GivenName + " " +student.FamilyName)
+                    //.Replace("[GRADE]", student.GradeLevel)
                     .Replace("[BARCODE]", barcodeBase64)
-                    .Replace("[IDNUMBER]", student.StudentID);
+                    .Replace("[IDNUMBER]", student.Identifier);
                 //Replace the place holder strings on the back template
                 backTemplate = backTemplate.Replace("[QRCODE]", qrCodeBase64)
                     .Replace("[STYLESHEET]", template);
@@ -332,7 +335,7 @@ namespace IDGenWebsite.Utilities
             return null;
         }
 
-        public byte[] GenerateQrCode(StudentModel student)
+        public byte[] GenerateQrCode(Users student)
         {
             //IF the student and qr isnt null for somereason generate the qr code
             if (student != null && student.QrCode != null)
@@ -355,9 +358,9 @@ namespace IDGenWebsite.Utilities
                 string qrTemplate = File.ReadAllText(Path.Combine(webroot, "QrCodeTemplate.html"));
 
                 string html = qrTemplate.Replace("[QRCODE]", qrCodeBase64)
-                           .Replace("[NAME]", student.FirstName + " " + student.LastName)
+                           .Replace("[NAME]", student.GivenName + " " + student.FamilyName)
                            .Replace("[EMAIL]", student.Email)
-                           .Replace("[IDNUMBER]", student.StudentID)
+                           .Replace("[IDNUMBER]", student.Identifier)
                            .Replace("[PATH]", webroot);
 
                 var doc = new HtmlToPdfDocument()
@@ -390,10 +393,10 @@ namespace IDGenWebsite.Utilities
             return null;
         }
 
-        public byte[] GenerateQrCodes(List<StudentModel> students)
+        public byte[] GenerateQrCodes(List<Users> students)
         {
-            Dictionary<StudentModel, string> studentQrCodes = new Dictionary<StudentModel, string>();
-            foreach(StudentModel student in students)
+            Dictionary<Users, string> studentQrCodes = new Dictionary<Users, string>();
+            foreach(Users student in students)
             {
                 if (student != null && student.QrCode != null)
                 {
@@ -434,9 +437,9 @@ namespace IDGenWebsite.Utilities
                     {
                         var currentStudent = studentQrCodes.ElementAt(currentStudentNumber);
                         string html = qrHTML.Replace("[QRCODE]", currentStudent.Value)
-                            .Replace("[NAME]", currentStudent.Key.FirstName + " " + currentStudent.Key.LastName)
+                            .Replace("[NAME]", currentStudent.Key.GivenName + " " + currentStudent.Key.FamilyName)
                             .Replace("[EMAIL]", currentStudent.Key.Email)
-                            .Replace("[IDNUMBER]", currentStudent.Key.StudentID);
+                            .Replace("[IDNUMBER]", currentStudent.Key.Identifier);
                         bodyHtml = string.Concat(bodyHtml, html);
                         currentStudentNumber++;
 

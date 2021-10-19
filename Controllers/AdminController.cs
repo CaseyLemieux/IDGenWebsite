@@ -62,20 +62,20 @@ namespace IDGenWebsite.Controllers
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
             await _fileHelper.UploadStudentsAsync(focusFiles);
-            return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
+            return PartialView("_ViewStudentsPartial", await _schoolContext.Users.ToListAsync());
         }
 
         [HttpPost]
         public async Task<IActionResult> UploadClassLink(List<IFormFile> classLinkFiles)
         {
             await _fileHelper.UploadQrCodesAsync(classLinkFiles);
-            return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
+            return PartialView("_ViewStudentsPartial", await _schoolContext.Users.ToListAsync());
         }
         [HttpPost]
         public async Task<IActionResult> UploadIDs(List<IFormFile> idPdfs)
         {
             await _fileHelper.UploadIdsAsync(idPdfs);
-            return PartialView("_ViewStudentsPartial", await _schoolContext.Students.ToListAsync());
+            return PartialView("_ViewStudentsPartial", await _schoolContext.Users.ToListAsync());
         }
 
 
@@ -134,7 +134,7 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveID(int id)
         {
-            var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.ID == id);
+            var student = await _schoolContext.Users.SingleOrDefaultAsync(s => s.Identifier == id.ToString());
             return File(_fileHelper.GenerateId(student), "application/pdf",  string.Concat(student.Email, ".pdf"));
             //File(, "application/pdf", string.Concat(student.Email, ".pdf"))
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
@@ -142,16 +142,16 @@ namespace IDGenWebsite.Controllers
 
         public async Task<IActionResult> DownloadQrCode(int id)
         {
-            var student = await _schoolContext.Students.SingleOrDefaultAsync(s => s.ID == id);
+            var student = await _schoolContext.Users.SingleOrDefaultAsync(s => s.Identifier == id.ToString());
             return File(_fileHelper.GenerateQrCode(student), "application/pdf", string.Concat(student.Email, ".pdf"));
         }
 
         [HttpPost]
         public async Task<IActionResult> DownloadQrsByHomeroom()
         {
-            var homerooms = await _schoolContext.Homerooms.ToListAsync();
+            var homerooms = await _schoolContext.Users.ToListAsync();
             List<ZipItem> zipItems = new List<ZipItem>();
-            foreach (HomeroomsModel homeroom in homerooms)
+            /*foreach (HomeroomsModel homeroom in homerooms)
             {
                 var students = await _schoolContext.Students.Where(s => s.HomeRoomTeacher == homeroom.Teacher).ToListAsync();
                 string fileName = homeroom.Teacher.Replace(",", "-");
@@ -161,16 +161,16 @@ namespace IDGenWebsite.Controllers
                     ZipItem zipItem = new ZipItem(fileName, classBytes);
                     zipItems.Add(zipItem);
                 }
-            }
+            } */
             return File(_fileHelper.GenerateZipFile(zipItems), "application/zip", "QrCodesByHomeroom.zip");
         }
 
         [HttpPost]
         public async Task<IActionResult> DownloadIdsByGradeLevel(string grade) {
 
-            var students = await _schoolContext.Students.Where(s => s.GradeLevel == grade).ToListAsync();
+            //var students = await _schoolContext.Users.Where(s => s.GradeLevel == grade).ToListAsync();
             List<ZipItem> zipItems = new List<ZipItem>();
-            foreach(StudentModel student in students)
+            /*foreach(Users student in students)
             {
                 var bytes = _fileHelper.GenerateId(student);
                 if (bytes != null && bytes.Length > 0)
@@ -179,13 +179,13 @@ namespace IDGenWebsite.Controllers
                     ZipItem zipItem = new ZipItem(fileName, bytes);
                     zipItems.Add(zipItem);
                 }
-            }
+            } */
             return File(_fileHelper.GenerateZipFile(zipItems), "application/zip", string.Concat("Grade",grade,"IDs", ".zip"));
         }
 
         
         
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> DownloadIdsByHomeroom()
         {
             var homerooms = _schoolContext.Homerooms.ToList();
@@ -206,6 +206,6 @@ namespace IDGenWebsite.Controllers
                 teacherList.Add(fileName, zipItems);
             }
             return File(_fileHelper.GenerateZipFile(teacherList), "application/zip", "IDsByHomeroom.zip");
-        } 
+        }  */
     }
 }

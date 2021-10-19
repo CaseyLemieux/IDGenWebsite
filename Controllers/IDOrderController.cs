@@ -36,10 +36,10 @@ namespace IDGenWebsite.Controllers
 
         public async Task<string> RequestIdPrint(int id)
         {
-            var student = await _schoolContext.Students.FirstOrDefaultAsync(s => s.ID == id);
+            var student = await _schoolContext.Users.FirstOrDefaultAsync(s => s.Identifier == id.ToString());
             var idOrder = new IDRequestModel()
             {
-                StudentID = student.StudentID,
+                StudentID = student.Identifier,
                 UserName = User.Identity.Name,
                 DateCreated = DateTime.Now,
                 Cost = 1.50

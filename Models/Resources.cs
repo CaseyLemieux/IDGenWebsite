@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace IDGenWebsite.Models
 {
     public class Resources
     {
+        [Key]
         public Guid SourcedId { get; set; }
         public string Status { get; set; }
         public DateTime DateLastModified { get; set; }

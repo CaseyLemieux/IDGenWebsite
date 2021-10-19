@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StudentModel>
+﻿@model IEnumerable<Users>
 
 <!--Edit Student Modal-->
 <div class="modal fade" id="editStudentModal" tabindex="-1" role="dialog">
@@ -151,13 +151,13 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.StudentID)
+                            @Html.DisplayFor(modelItem => item.Identifier)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.LastName)
+                            @Html.DisplayFor(modelItem => item.FamilyName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.FirstName)
+                            @Html.DisplayFor(modelItem => item.GivenName)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Email)
@@ -175,12 +175,7 @@
                                 <p>N/A</p>
                             }
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.HomeRoomTeacher)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.GradeLevel)
-                        </td>
+                       
                         <td>
                             @if (User.IsInRole("Admin"))
                             {
@@ -189,31 +184,31 @@
                                     @if (item.IdPicPath == null)
                                     {
                                         <div>
-                                            <button type="submit" class="btn btn-success" name="id" value="@item.ID" disabled><i class='fa fa-file'>Download ID</i></button>
+                                            <button type="submit" class="btn btn-success" name="id" value="@item.Identifier" disabled><i class='fa fa-file'>Download ID</i></button>
                                         </div>
                                     }
                                     else
                                     {
                                         <div>
-                                            <button type="submit" class="btn btn-success" name="id" value="@item.ID"><i class='fa fa-file'>Download ID</i></button>
+                                            <button type="submit" class="btn btn-success" name="id" value="@item.Identifier"><i class='fa fa-file'>Download ID</i></button>
                                         </div>
                                     }
                                 }
                             }
                             else
                             {
-                                @if (item.IdRequestPrinted)
+                                /*@if (item.IdRequestPrinted)
                                 {
                                     <div>
-                                        <button type="submit" class="btn btn-success" name="id" onclick="RequestIdPrint(@item.ID, this)"><i class='fa fa-file'>Request Print</i></button>
+                                        <button type="submit" class="btn btn-success" name="id" onclick="RequestIdPrint(@item.Identifier, this)"><i class='fa fa-file'>Request Print</i></button>
                                     </div>
                                 }
                                 else
                                 {
                                     <div>
-                                        <button type="submit" class="btn btn-danger" disabled name="id" onclick="RequestIdPrint(@item.ID, this)"><i class='fa fa-file'>Request Print</i></button>
+                                        <button type="submit" class="btn btn-danger" disabled name="id" onclick="RequestIdPrint(@item.Identifier, this)"><i class='fa fa-file'>Request Print</i></button>
                                     </div>
-                                }
+                                } */
                             }
                         </td>
                         <td>
@@ -224,13 +219,13 @@
                                     @if (item.QrCode == null)
                                     {
                                         <div>
-                                            <button type="submit" class="btn btn-success" name="id" value="@item.ID" disabled><i class='fa fa-file'>Download QR</i></button>
+                                            <button type="submit" class="btn btn-success" name="id" value="@item.Identifier" disabled><i class='fa fa-file'>Download QR</i></button>
                                         </div>
                                     }
                                     else
                                     {
                                         <div>
-                                            <button type="submit" class="btn btn-success" name="id" value="@item.ID" disabled><i class='fa fa-file'>Download QR</i></button>
+                                            <button type="submit" class="btn btn-success" name="id" value="@item.Identifier" disabled><i class='fa fa-file'>Download QR</i></button>
                                         </div>
                                     }
                                 }
@@ -240,13 +235,13 @@
                             @if (User.IsInRole("Admin"))
                             {
                                 <div>
-                                    <button type="submit" class="btn btn-success" name="id" onclick="EditStudent(@item.ID)"><i class='fa fa-file'>Edit</i></button>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="EditStudent(@item.Identifier)"><i class='fa fa-file'>Edit</i></button>
                                 </div>
                             }
                             else
                             {
                                 <div>
-                                    <button type="submit" class="btn btn-success" name="id" onclick="EditStudent(@item.ID)" disabled><i class='fa fa-file'>Edit</i></button>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="EditStudent(@item.Identifier)" disabled><i class='fa fa-file'>Edit</i></button>
                                 </div>
                             }
                         </td>
@@ -254,13 +249,13 @@
                             @if (User.IsInRole("Admin"))
                             {
                                 <div>
-                                    <button type="submit" class="btn btn-success" name="id" onclick="TakePhoto(@item.ID, this)" disabled><i class='fa fa-file'>Take Photo</i></button>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="TakePhoto(@item.Identifier, this)" disabled><i class='fa fa-file'>Take Photo</i></button>
                                 </div>
                             }
                             else
                             {
                                 <div>
-                                    <button type="submit" class="btn btn-success" name="id" onclick="TakePhoto(@item.ID, this)" disabled><i class='fa fa-file'>Take Photo</i></button>
+                                    <button type="submit" class="btn btn-success" name="id" onclick="TakePhoto(@item.Identifier, this)" disabled><i class='fa fa-file'>Take Photo</i></button>
                                 </div>
                             }
                         </td>
