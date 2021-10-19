@@ -21,8 +21,8 @@ namespace IDGenWebsite.Models
         public string Location { get; set; }
         public List<Grades> Grades { get; set; }
         public List<Subjects> Subjects { get; set; }
-        public Guid Course { get; set; }
-        public Guid School { get; set; }
+        public Courses Course { get; set; }
+        public Organizations School { get; set; }
         public List<AcademicSessions> Terms { get; set; }
         public List<SubjectCodes> SubjectCodes { get; set; }
         public List<Periods> Periods { get; set; }
