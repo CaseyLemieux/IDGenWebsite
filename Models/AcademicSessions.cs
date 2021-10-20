@@ -20,5 +20,7 @@ namespace IDGenWebsite.Models
         public DateTime EndDate { get; set; }
         public AcademicSessions Parent { get; set; }
         public string SchoolYear { get; set; }
+        public List<Classes> Classes { get; set; }
+
     }
 }

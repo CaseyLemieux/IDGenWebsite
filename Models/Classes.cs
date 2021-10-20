@@ -23,7 +23,7 @@ namespace IDGenWebsite.Models
         public List<Subjects> Subjects { get; set; }
         public Courses Course { get; set; }
         public Organizations School { get; set; }
-        public List<AcademicSessions> Terms { get; set; }
+        public List<AcademicSessions> AcademicSessions { get; set; }
         public List<SubjectCodes> SubjectCodes { get; set; }
         public List<Periods> Periods { get; set; }
         public List<Resources> Resources { get; set; }
