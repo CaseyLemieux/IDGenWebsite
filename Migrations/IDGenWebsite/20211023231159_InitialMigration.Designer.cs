@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IDGenWebsite.Migrations.IDGenWebsite
 {
     [DbContext(typeof(IDGenWebsiteContext))]
-    [Migration("20211020173354_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20211023231159_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

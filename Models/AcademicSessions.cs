@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +16,10 @@ namespace IDGenWebsite.Models
         public Guid SourcedId { get; set; }
         public string Status { get; set; }
         public DateTime DateLastModified { get; set; }
+        public List<Metadata> Metadata { get; set; }
+        [JsonProperty("metadata")]
+        [NotMapped]
+        public JObject TempMetadata { get; set; }
         public string Title { get; set; }
         public string Type { get; set; }
         public DateTime StartDate { get; set; }

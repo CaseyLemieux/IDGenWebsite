@@ -18,6 +18,7 @@ namespace IDGenWebsite.Data
         public DbSet<IDRequestModel> IDRequests { get; set; }
         public DbSet<SettingModel> Settings { get; set; }
         public DbSet<IdTemplate> IdTemplates { get; set; }
+        
 
         //Add the OneRoster Tables to the Database
         public DbSet<Organizations> Orgs { get; set; }
@@ -31,6 +32,7 @@ namespace IDGenWebsite.Data
         public DbSet<Resources> Resources { get; set; }
         public DbSet<Subjects> Subjects { get; set; }
         public DbSet<SubjectCodes> SubjectCodes { get; set; }
+        public DbSet<Metadata> Metadatas { get; set; }
 
     }
 }

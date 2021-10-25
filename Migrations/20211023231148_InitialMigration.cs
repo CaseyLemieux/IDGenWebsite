@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IDGenWebsite.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -108,7 +108,6 @@ namespace IDGenWebsite.Migrations
                     SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EnabledUser = table.Column<bool>(type: "bit", nullable: false),
                     GivenName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -134,7 +133,6 @@ namespace IDGenWebsite.Migrations
                     SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Identifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -165,7 +163,6 @@ namespace IDGenWebsite.Migrations
                     SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SchoolYearSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CourseCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -195,7 +192,6 @@ namespace IDGenWebsite.Migrations
                     SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClassCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClassType = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -251,7 +247,6 @@ namespace IDGenWebsite.Migrations
                     SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SchoolSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -343,7 +338,6 @@ namespace IDGenWebsite.Migrations
                     SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Importance = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VendorResourceId = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -422,6 +416,68 @@ namespace IDGenWebsite.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Metadatas",
+                columns: table => new
+                {
+                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AcademicSessionsSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ClassesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CoursesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    EnrollmentsSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    OrganizationsSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ResourcesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UsersSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Metadatas", x => x.SourcedId);
+                    table.ForeignKey(
+                        name: "FK_Metadatas_AcademicSessions_AcademicSessionsSourcedId",
+                        column: x => x.AcademicSessionsSourcedId,
+                        principalTable: "AcademicSessions",
+                        principalColumn: "SourcedId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Metadatas_Classes_ClassesSourcedId",
+                        column: x => x.ClassesSourcedId,
+                        principalTable: "Classes",
+                        principalColumn: "SourcedId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Metadatas_Courses_CoursesSourcedId",
+                        column: x => x.CoursesSourcedId,
+                        principalTable: "Courses",
+                        principalColumn: "SourcedId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Metadatas_Enrollments_EnrollmentsSourcedId",
+                        column: x => x.EnrollmentsSourcedId,
+                        principalTable: "Enrollments",
+                        principalColumn: "SourcedId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Metadatas_Orgs_OrganizationsSourcedId",
+                        column: x => x.OrganizationsSourcedId,
+                        principalTable: "Orgs",
+                        principalColumn: "SourcedId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Metadatas_Resources_ResourcesSourcedId",
+                        column: x => x.ResourcesSourcedId,
+                        principalTable: "Resources",
+                        principalColumn: "SourcedId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Metadatas_Users_UsersSourcedId",
+                        column: x => x.UsersSourcedId,
+                        principalTable: "Users",
+                        principalColumn: "SourcedId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AcademicSessions_ParentSourcedId",
                 table: "AcademicSessions",
@@ -483,6 +539,41 @@ namespace IDGenWebsite.Migrations
                 column: "UsersSourcedId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Metadatas_AcademicSessionsSourcedId",
+                table: "Metadatas",
+                column: "AcademicSessionsSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Metadatas_ClassesSourcedId",
+                table: "Metadatas",
+                column: "ClassesSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Metadatas_CoursesSourcedId",
+                table: "Metadatas",
+                column: "CoursesSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Metadatas_EnrollmentsSourcedId",
+                table: "Metadatas",
+                column: "EnrollmentsSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Metadatas_OrganizationsSourcedId",
+                table: "Metadatas",
+                column: "OrganizationsSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Metadatas_ResourcesSourcedId",
+                table: "Metadatas",
+                column: "ResourcesSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Metadatas_UsersSourcedId",
+                table: "Metadatas",
+                column: "UsersSourcedId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orgs_ParentSourcedId",
                 table: "Orgs",
                 column: "ParentSourcedId");
@@ -534,9 +625,6 @@ namespace IDGenWebsite.Migrations
                 name: "AcademicSessionsClasses");
 
             migrationBuilder.DropTable(
-                name: "Enrollments");
-
-            migrationBuilder.DropTable(
                 name: "Grades");
 
             migrationBuilder.DropTable(
@@ -546,10 +634,10 @@ namespace IDGenWebsite.Migrations
                 name: "IdTemplates");
 
             migrationBuilder.DropTable(
-                name: "Periods");
+                name: "Metadatas");
 
             migrationBuilder.DropTable(
-                name: "Resources");
+                name: "Periods");
 
             migrationBuilder.DropTable(
                 name: "Settings");
@@ -559,6 +647,12 @@ namespace IDGenWebsite.Migrations
 
             migrationBuilder.DropTable(
                 name: "Subjects");
+
+            migrationBuilder.DropTable(
+                name: "Enrollments");
+
+            migrationBuilder.DropTable(
+                name: "Resources");
 
             migrationBuilder.DropTable(
                 name: "Classes");

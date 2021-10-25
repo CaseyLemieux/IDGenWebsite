@@ -90,9 +90,6 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid?>("SchoolSourcedId")
                         .HasColumnType("uniqueidentifier");
 
@@ -121,9 +118,6 @@ namespace IDGenWebsite.Migrations
 
                     b.Property<DateTime>("DateLastModified")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("OrganizationSourcedId")
                         .HasColumnType("uniqueidentifier");
@@ -162,9 +156,6 @@ namespace IDGenWebsite.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Primary")
                         .HasColumnType("bit");
@@ -323,6 +314,58 @@ namespace IDGenWebsite.Migrations
                     b.ToTable("IdTemplates");
                 });
 
+            modelBuilder.Entity("IDGenWebsite.Models.Metadata", b =>
+                {
+                    b.Property<Guid>("SourcedId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AcademicSessionsSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClassesSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CoursesSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("EnrollmentsSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OrganizationsSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ResourcesSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UsersSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SourcedId");
+
+                    b.HasIndex("AcademicSessionsSourcedId");
+
+                    b.HasIndex("ClassesSourcedId");
+
+                    b.HasIndex("CoursesSourcedId");
+
+                    b.HasIndex("EnrollmentsSourcedId");
+
+                    b.HasIndex("OrganizationsSourcedId");
+
+                    b.HasIndex("ResourcesSourcedId");
+
+                    b.HasIndex("UsersSourcedId");
+
+                    b.ToTable("Metadatas");
+                });
+
             modelBuilder.Entity("IDGenWebsite.Models.Organizations", b =>
                 {
                     b.Property<Guid>("SourcedId")
@@ -332,9 +375,6 @@ namespace IDGenWebsite.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Identifier")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Metadata")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -399,9 +439,6 @@ namespace IDGenWebsite.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Importance")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Metadata")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -538,9 +575,6 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Identifier")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Metadata")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
@@ -661,6 +695,37 @@ namespace IDGenWebsite.Migrations
                     b.Navigation("Courses");
                 });
 
+            modelBuilder.Entity("IDGenWebsite.Models.Metadata", b =>
+                {
+                    b.HasOne("IDGenWebsite.Models.AcademicSessions", null)
+                        .WithMany("Metadata")
+                        .HasForeignKey("AcademicSessionsSourcedId");
+
+                    b.HasOne("IDGenWebsite.Models.Classes", null)
+                        .WithMany("Metadata")
+                        .HasForeignKey("ClassesSourcedId");
+
+                    b.HasOne("IDGenWebsite.Models.Courses", null)
+                        .WithMany("Metadata")
+                        .HasForeignKey("CoursesSourcedId");
+
+                    b.HasOne("IDGenWebsite.Models.Enrollments", null)
+                        .WithMany("Metadata")
+                        .HasForeignKey("EnrollmentsSourcedId");
+
+                    b.HasOne("IDGenWebsite.Models.Organizations", null)
+                        .WithMany("Metadata")
+                        .HasForeignKey("OrganizationsSourcedId");
+
+                    b.HasOne("IDGenWebsite.Models.Resources", null)
+                        .WithMany("Metadata")
+                        .HasForeignKey("ResourcesSourcedId");
+
+                    b.HasOne("IDGenWebsite.Models.Users", null)
+                        .WithMany("Metadata")
+                        .HasForeignKey("UsersSourcedId");
+                });
+
             modelBuilder.Entity("IDGenWebsite.Models.Organizations", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.Organizations", "Parent")
@@ -714,9 +779,16 @@ namespace IDGenWebsite.Migrations
                         .HasForeignKey("CoursesSourcedId");
                 });
 
+            modelBuilder.Entity("IDGenWebsite.Models.AcademicSessions", b =>
+                {
+                    b.Navigation("Metadata");
+                });
+
             modelBuilder.Entity("IDGenWebsite.Models.Classes", b =>
                 {
                     b.Navigation("Grades");
+
+                    b.Navigation("Metadata");
 
                     b.Navigation("Periods");
 
@@ -731,6 +803,8 @@ namespace IDGenWebsite.Migrations
                 {
                     b.Navigation("Grades");
 
+                    b.Navigation("Metadata");
+
                     b.Navigation("Resources");
 
                     b.Navigation("SubjectCodes");
@@ -738,9 +812,26 @@ namespace IDGenWebsite.Migrations
                     b.Navigation("Subjects");
                 });
 
+            modelBuilder.Entity("IDGenWebsite.Models.Enrollments", b =>
+                {
+                    b.Navigation("Metadata");
+                });
+
+            modelBuilder.Entity("IDGenWebsite.Models.Organizations", b =>
+                {
+                    b.Navigation("Metadata");
+                });
+
+            modelBuilder.Entity("IDGenWebsite.Models.Resources", b =>
+                {
+                    b.Navigation("Metadata");
+                });
+
             modelBuilder.Entity("IDGenWebsite.Models.Users", b =>
                 {
                     b.Navigation("Grades");
+
+                    b.Navigation("Metadata");
 
                     b.Navigation("Organizations");
                 });
