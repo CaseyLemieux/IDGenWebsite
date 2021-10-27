@@ -33,6 +33,9 @@ namespace IDGenWebsite.Models
         public string QrCode { get; set; }
         public string IdPicPath { get; set; }
         public List<Organizations> Organizations { get; set; }
+        [JsonProperty("grades")]
+        [NotMapped]
+        public List<string> StringGrades { get; set; }
         public List<Grades> Grades { get; set; }
 
     }
