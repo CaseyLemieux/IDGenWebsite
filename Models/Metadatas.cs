@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace IDGenWebsite.Models
 {
-    public class Metadata
+    public class Metadatas
     {
         [Key]
+        [Display(Name = "Source Id")]
         public Guid SourcedId { get; set; }
+        [Display(Name = "Title")]
         public string Key { get; set; }
+        [Display(Name = "Value")]
         public string Value { get; set; }
     }
 }

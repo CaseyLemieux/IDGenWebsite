@@ -32,7 +32,7 @@ namespace IDGenWebsite.Data
         public DbSet<Resources> Resources { get; set; }
         public DbSet<Subjects> Subjects { get; set; }
         public DbSet<SubjectCodes> SubjectCodes { get; set; }
-        public DbSet<Metadata> Metadatas { get; set; }
+        public DbSet<Metadatas> Metadatas { get; set; }
 
     }
 }

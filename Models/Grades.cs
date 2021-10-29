@@ -10,12 +10,16 @@ namespace IDGenWebsite.Models
     public class Grades
     {
         [Key]
+        [Display(Name = "Source Id")]
         public Guid SourcedId { get; set; }
+        [Display(Name = "Description")]
         public string Description { get; set; }
+        [Display(Name = "Code")]
         public string Code { get; set; }
         public Courses Courses { get; set; }
         public Classes Classes { get; set; }
         [NotMapped]
+        [Display(Name = "Ceds Grade Levels")]
         public Dictionary<string, string> CedsLevels = new Dictionary<string, string>()
         {
             {"IT", "Infant Todler" },

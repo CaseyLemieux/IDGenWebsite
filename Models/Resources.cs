@@ -15,7 +15,7 @@ namespace IDGenWebsite.Models
         public Guid SourcedId { get; set; }
         public string Status { get; set; }
         public DateTime DateLastModified { get; set; }
-        public List<Metadata> Metadata { get; set; }
+        public List<Metadatas> Metadata { get; set; }
         [JsonProperty("metadata")]
         [NotMapped]
         public JObject TempMetadata { get; set; }
