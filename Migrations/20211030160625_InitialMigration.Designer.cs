@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IDGenWebsite.Migrations
 {
     [DbContext(typeof(SchoolContext))]
-    [Migration("20211027150114_InitialMigration")]
+    [Migration("20211030160625_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,7 +150,7 @@ namespace IDGenWebsite.Migrations
                     b.Property<DateTime>("BeginDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ClassSourcedId")
+                    b.Property<Guid>("Class_SourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -159,28 +159,28 @@ namespace IDGenWebsite.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("Organizations_SourcedId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Primary")
                         .HasColumnType("bit");
 
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("SchoolSourcedId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserSourcedId")
+                    b.Property<Guid>("User_SourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("SourcedId");
 
-                    b.HasIndex("ClassSourcedId");
+                    b.HasIndex("Class_SourcedId");
 
-                    b.HasIndex("SchoolSourcedId");
+                    b.HasIndex("Organizations_SourcedId");
 
-                    b.HasIndex("UserSourcedId");
+                    b.HasIndex("User_SourcedId");
 
                     b.ToTable("Enrollments");
                 });
@@ -316,7 +316,7 @@ namespace IDGenWebsite.Migrations
                     b.ToTable("IdTemplates");
                 });
 
-            modelBuilder.Entity("IDGenWebsite.Models.Metadata", b =>
+            modelBuilder.Entity("IDGenWebsite.Models.Metadatas", b =>
                 {
                     b.Property<Guid>("SourcedId")
                         .ValueGeneratedOnAdd()
@@ -661,15 +661,21 @@ namespace IDGenWebsite.Migrations
                 {
                     b.HasOne("IDGenWebsite.Models.Classes", "Class")
                         .WithMany()
-                        .HasForeignKey("ClassSourcedId");
+                        .HasForeignKey("Class_SourcedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("IDGenWebsite.Models.Organizations", "School")
                         .WithMany()
-                        .HasForeignKey("SchoolSourcedId");
+                        .HasForeignKey("Organizations_SourcedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("IDGenWebsite.Models.Users", "User")
                         .WithMany()
-                        .HasForeignKey("UserSourcedId");
+                        .HasForeignKey("User_SourcedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Class");
 
@@ -697,7 +703,7 @@ namespace IDGenWebsite.Migrations
                     b.Navigation("Courses");
                 });
 
-            modelBuilder.Entity("IDGenWebsite.Models.Metadata", b =>
+            modelBuilder.Entity("IDGenWebsite.Models.Metadatas", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.AcademicSessions", null)
                         .WithMany("Metadata")

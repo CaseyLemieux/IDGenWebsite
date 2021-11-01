@@ -23,11 +23,14 @@ namespace IDGenWebsite.Models
         [JsonProperty("metadata")]
         [NotMapped]
         public JObject TempMetadata { get; set; }
-        [ForeignKey("UserId")]
+        [JsonProperty("user")]
+        [ForeignKey("User_SourcedId")]
         public Users User { get; set; }
-        [ForeignKey("ClassId")]
+        [JsonProperty("class")]
+        [ForeignKey("Class_SourcedId")]
         public Classes Class { get; set; }
-        [ForeignKey("SchoolId")]
+        [JsonProperty("school")]
+        [ForeignKey("Organizations_SourcedId")]
         public Organizations School { get; set; }
         [JsonProperty("role")]
         public string Role { get; set; }
@@ -38,11 +41,8 @@ namespace IDGenWebsite.Models
         [JsonProperty("endDate")]
         public DateTime EndDate { get; set; }
 
-
-
-        public string UserId { get; set; }
-        public string ClassId { get; set; }
-        public string SchoolId { get; set; }
-
+        public Guid User_SourcedId { get; set; }
+        public Guid Class_SourcedId { get; set; }
+        public Guid Organizations_SourcedId { get; set; }
     }
 }

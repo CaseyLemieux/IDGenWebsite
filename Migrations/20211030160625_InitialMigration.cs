@@ -247,35 +247,35 @@ namespace IDGenWebsite.Migrations
                     SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SchoolSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Primary = table.Column<bool>(type: "bit", nullable: false),
                     BeginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    User_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Class_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Organizations_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Enrollments", x => x.SourcedId);
                     table.ForeignKey(
-                        name: "FK_Enrollments_Classes_ClassSourcedId",
-                        column: x => x.ClassSourcedId,
+                        name: "FK_Enrollments_Classes_Class_SourcedId",
+                        column: x => x.Class_SourcedId,
                         principalTable: "Classes",
                         principalColumn: "SourcedId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Enrollments_Orgs_SchoolSourcedId",
-                        column: x => x.SchoolSourcedId,
+                        name: "FK_Enrollments_Orgs_Organizations_SourcedId",
+                        column: x => x.Organizations_SourcedId,
                         principalTable: "Orgs",
                         principalColumn: "SourcedId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Enrollments_Users_UserSourcedId",
-                        column: x => x.UserSourcedId,
+                        name: "FK_Enrollments_Users_User_SourcedId",
+                        column: x => x.User_SourcedId,
                         principalTable: "Users",
                         principalColumn: "SourcedId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -509,19 +509,19 @@ namespace IDGenWebsite.Migrations
                 column: "SchoolYearSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_ClassSourcedId",
+                name: "IX_Enrollments_Class_SourcedId",
                 table: "Enrollments",
-                column: "ClassSourcedId");
+                column: "Class_SourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_SchoolSourcedId",
+                name: "IX_Enrollments_Organizations_SourcedId",
                 table: "Enrollments",
-                column: "SchoolSourcedId");
+                column: "Organizations_SourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_UserSourcedId",
+                name: "IX_Enrollments_User_SourcedId",
                 table: "Enrollments",
-                column: "UserSourcedId");
+                column: "User_SourcedId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grades_ClassesSourcedId",

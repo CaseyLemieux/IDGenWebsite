@@ -66,6 +66,7 @@ namespace IDGenWebsite.Models
         [NotMapped]
         public List<string> StringGrades { get; set; }
         public List<Grades> Grades { get; set; }
+        public List<Enrollments> Enrollments { get; set; }
 
     }
 }
