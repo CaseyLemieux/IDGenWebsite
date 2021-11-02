@@ -15,7 +15,7 @@ namespace IDGenWebsite.Models
         [Key]
         [JsonProperty("sourcedId")]
         [Display(Name = "Source Id")]
-        public Guid SourcedId { get; set; }
+        public Guid UserSourcedId { get; set; }
         [JsonProperty("status")]
         [Display(Name = "Status")]
         public string Status { get; set; }

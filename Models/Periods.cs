@@ -9,7 +9,7 @@ namespace IDGenWebsite.Models
     public class Periods
     {
         [Key]
-        public Guid SourcedId { get; set; }
+        public Guid PeriodSourcedId { get; set; }
         public string Title { get; set; }
     }
 }

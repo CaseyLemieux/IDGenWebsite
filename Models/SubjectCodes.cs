@@ -9,7 +9,7 @@ namespace IDGenWebsite.Models
     public class SubjectCodes
     {
         [Key]
-        public Guid SourcedId { get; set; }
+        public Guid SubjectCodeSourcedId { get; set; }
         public string SubjectCode { get; set; }
         public string Title { get; set; }
     }

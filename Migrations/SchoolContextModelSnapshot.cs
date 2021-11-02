@@ -21,22 +21,22 @@ namespace IDGenWebsite.Migrations
 
             modelBuilder.Entity("AcademicSessionsClasses", b =>
                 {
-                    b.Property<Guid>("AcademicSessionsSourcedId")
+                    b.Property<Guid>("AcademicSessionsSessionSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClassesSourcedId")
+                    b.Property<Guid>("ClassesClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("AcademicSessionsSourcedId", "ClassesSourcedId");
+                    b.HasKey("AcademicSessionsSessionSourcedId", "ClassesClassSourcedId");
 
-                    b.HasIndex("ClassesSourcedId");
+                    b.HasIndex("ClassesClassSourcedId");
 
                     b.ToTable("AcademicSessionsClasses");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.AcademicSessions", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("SessionSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -45,7 +45,7 @@ namespace IDGenWebsite.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ParentSourcedId")
+                    b.Property<Guid?>("Parent_SourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SchoolYear")
@@ -63,16 +63,16 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("SessionSourcedId");
 
-                    b.HasIndex("ParentSourcedId");
+                    b.HasIndex("Parent_SourcedId");
 
                     b.ToTable("AcademicSessions");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Classes", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("ClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ClassCode")
@@ -81,7 +81,10 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("ClassType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CourseSourcedId")
+                    b.Property<Guid>("CourseSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CourseSourcedId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -90,7 +93,10 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("SchoolSourcedId")
+                    b.Property<Guid>("OrgSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SchoolOrgSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -99,18 +105,18 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("ClassSourcedId");
 
-                    b.HasIndex("CourseSourcedId");
+                    b.HasIndex("CourseSourcedId1");
 
-                    b.HasIndex("SchoolSourcedId");
+                    b.HasIndex("SchoolOrgSourcedId");
 
                     b.ToTable("Classes");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Courses", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("CourseSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CourseCode")
@@ -119,10 +125,16 @@ namespace IDGenWebsite.Migrations
                     b.Property<DateTime>("DateLastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("OrganizationSourcedId")
+                    b.Property<Guid>("OrgSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("SchoolYearSourcedId")
+                    b.Property<Guid?>("OrganizationOrgSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SchoolYearSessionSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SessionSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -131,24 +143,27 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("CourseSourcedId");
 
-                    b.HasIndex("OrganizationSourcedId");
+                    b.HasIndex("OrganizationOrgSourcedId");
 
-                    b.HasIndex("SchoolYearSourcedId");
+                    b.HasIndex("SchoolYearSessionSourcedId");
 
                     b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Enrollments", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("EnrollmentSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("BeginDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("Class_SourcedId")
+                    b.Property<Guid>("ClassSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClassSourcedId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -157,7 +172,7 @@ namespace IDGenWebsite.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("Organizations_SourcedId")
+                    b.Property<Guid>("OrgSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Primary")
@@ -166,51 +181,57 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SchoolOrgSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("User_SourcedId")
+                    b.Property<Guid>("UserSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SourcedId");
+                    b.Property<Guid?>("UserSourcedId1")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("Class_SourcedId");
+                    b.HasKey("EnrollmentSourcedId");
 
-                    b.HasIndex("Organizations_SourcedId");
+                    b.HasIndex("ClassSourcedId1");
 
-                    b.HasIndex("User_SourcedId");
+                    b.HasIndex("SchoolOrgSourcedId");
+
+                    b.HasIndex("UserSourcedId1");
 
                     b.ToTable("Enrollments");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Grades", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("GradeSourcedId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ClassesSourcedId")
+                    b.Property<Guid?>("ClassesClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CoursesSourcedId")
+                    b.Property<Guid?>("CourseSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UsersSourcedId")
+                    b.Property<Guid?>("UserSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("GradeSourcedId");
 
-                    b.HasIndex("ClassesSourcedId");
+                    b.HasIndex("ClassesClassSourcedId");
 
-                    b.HasIndex("CoursesSourcedId");
+                    b.HasIndex("CourseSourcedId");
 
-                    b.HasIndex("UsersSourcedId");
+                    b.HasIndex("UserSourcedId");
 
                     b.ToTable("Grades");
                 });
@@ -316,59 +337,59 @@ namespace IDGenWebsite.Migrations
 
             modelBuilder.Entity("IDGenWebsite.Models.Metadatas", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("MetadataSourcedId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AcademicSessionsSourcedId")
+                    b.Property<Guid?>("AcademicSessionsSessionSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ClassesSourcedId")
+                    b.Property<Guid?>("ClassesClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CoursesSourcedId")
+                    b.Property<Guid?>("CourseSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("EnrollmentsSourcedId")
+                    b.Property<Guid?>("EnrollmentSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Key")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("OrganizationsSourcedId")
+                    b.Property<Guid?>("OrganizationsOrgSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ResourcesSourcedId")
+                    b.Property<Guid?>("ResourceSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UsersSourcedId")
+                    b.Property<Guid?>("UserSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("MetadataSourcedId");
 
-                    b.HasIndex("AcademicSessionsSourcedId");
+                    b.HasIndex("AcademicSessionsSessionSourcedId");
 
-                    b.HasIndex("ClassesSourcedId");
+                    b.HasIndex("ClassesClassSourcedId");
 
-                    b.HasIndex("CoursesSourcedId");
+                    b.HasIndex("CourseSourcedId");
 
-                    b.HasIndex("EnrollmentsSourcedId");
+                    b.HasIndex("EnrollmentSourcedId");
 
-                    b.HasIndex("OrganizationsSourcedId");
+                    b.HasIndex("OrganizationsOrgSourcedId");
 
-                    b.HasIndex("ResourcesSourcedId");
+                    b.HasIndex("ResourceSourcedId");
 
-                    b.HasIndex("UsersSourcedId");
+                    b.HasIndex("UserSourcedId");
 
                     b.ToTable("Metadatas");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Organizations", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("OrgSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -380,7 +401,7 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParentSourcedId")
+                    b.Property<Guid?>("Parent_SourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -389,50 +410,45 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UsersSourcedId")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("OrgSourcedId");
 
-                    b.HasKey("SourcedId");
-
-                    b.HasIndex("ParentSourcedId");
-
-                    b.HasIndex("UsersSourcedId");
+                    b.HasIndex("Parent_SourcedId");
 
                     b.ToTable("Orgs");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Periods", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("PeriodSourcedId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ClassesSourcedId")
+                    b.Property<Guid?>("ClassesClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("PeriodSourcedId");
 
-                    b.HasIndex("ClassesSourcedId");
+                    b.HasIndex("ClassesClassSourcedId");
 
                     b.ToTable("Periods");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Resources", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("ResourceSourcedId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ApplicationId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ClassesSourcedId")
+                    b.Property<Guid?>("ClassesClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CoursesSourcedId")
+                    b.Property<Guid?>("CourseSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -453,11 +469,11 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("VendorResourceId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("ResourceSourcedId");
 
-                    b.HasIndex("ClassesSourcedId");
+                    b.HasIndex("ClassesClassSourcedId");
 
-                    b.HasIndex("CoursesSourcedId");
+                    b.HasIndex("CourseSourcedId");
 
                     b.ToTable("Resources");
                 });
@@ -500,14 +516,14 @@ namespace IDGenWebsite.Migrations
 
             modelBuilder.Entity("IDGenWebsite.Models.SubjectCodes", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("SubjectCodeSourcedId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ClassesSourcedId")
+                    b.Property<Guid?>("ClassesClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CoursesSourcedId")
+                    b.Property<Guid?>("CourseSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SubjectCode")
@@ -516,42 +532,42 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("SubjectCodeSourcedId");
 
-                    b.HasIndex("ClassesSourcedId");
+                    b.HasIndex("ClassesClassSourcedId");
 
-                    b.HasIndex("CoursesSourcedId");
+                    b.HasIndex("CourseSourcedId");
 
                     b.ToTable("SubjectCodes");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Subjects", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("SubjectSourcedId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ClassesSourcedId")
+                    b.Property<Guid?>("ClassesClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CoursesSourcedId")
+                    b.Property<Guid?>("CourseSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("SubjectSourcedId");
 
-                    b.HasIndex("ClassesSourcedId");
+                    b.HasIndex("ClassesClassSourcedId");
 
-                    b.HasIndex("CoursesSourcedId");
+                    b.HasIndex("CourseSourcedId");
 
                     b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Users", b =>
                 {
-                    b.Property<Guid>("SourcedId")
+                    b.Property<Guid>("UserSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -596,22 +612,37 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SourcedId");
+                    b.HasKey("UserSourcedId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("OrganizationsUsers", b =>
+                {
+                    b.Property<Guid>("OrganizationsOrgSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserSourcedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OrganizationsOrgSourcedId", "UserSourcedId");
+
+                    b.HasIndex("UserSourcedId");
+
+                    b.ToTable("OrganizationsUsers");
                 });
 
             modelBuilder.Entity("AcademicSessionsClasses", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.AcademicSessions", null)
                         .WithMany()
-                        .HasForeignKey("AcademicSessionsSourcedId")
+                        .HasForeignKey("AcademicSessionsSessionSourcedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("IDGenWebsite.Models.Classes", null)
                         .WithMany()
-                        .HasForeignKey("ClassesSourcedId")
+                        .HasForeignKey("ClassesClassSourcedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -620,7 +651,7 @@ namespace IDGenWebsite.Migrations
                 {
                     b.HasOne("IDGenWebsite.Models.AcademicSessions", "Parent")
                         .WithMany()
-                        .HasForeignKey("ParentSourcedId");
+                        .HasForeignKey("Parent_SourcedId");
 
                     b.Navigation("Parent");
                 });
@@ -629,11 +660,11 @@ namespace IDGenWebsite.Migrations
                 {
                     b.HasOne("IDGenWebsite.Models.Courses", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseSourcedId");
+                        .HasForeignKey("CourseSourcedId1");
 
                     b.HasOne("IDGenWebsite.Models.Organizations", "School")
-                        .WithMany()
-                        .HasForeignKey("SchoolSourcedId");
+                        .WithMany("Classes")
+                        .HasForeignKey("SchoolOrgSourcedId");
 
                     b.Navigation("Course");
 
@@ -643,12 +674,12 @@ namespace IDGenWebsite.Migrations
             modelBuilder.Entity("IDGenWebsite.Models.Courses", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.Organizations", "Organization")
-                        .WithMany()
-                        .HasForeignKey("OrganizationSourcedId");
+                        .WithMany("Courses")
+                        .HasForeignKey("OrganizationOrgSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.AcademicSessions", "SchoolYear")
                         .WithMany()
-                        .HasForeignKey("SchoolYearSourcedId");
+                        .HasForeignKey("SchoolYearSessionSourcedId");
 
                     b.Navigation("Organization");
 
@@ -658,22 +689,16 @@ namespace IDGenWebsite.Migrations
             modelBuilder.Entity("IDGenWebsite.Models.Enrollments", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.Classes", "Class")
-                        .WithMany()
-                        .HasForeignKey("Class_SourcedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Enrollments")
+                        .HasForeignKey("ClassSourcedId1");
 
                     b.HasOne("IDGenWebsite.Models.Organizations", "School")
                         .WithMany()
-                        .HasForeignKey("Organizations_SourcedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SchoolOrgSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("User_SourcedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Enrollments")
+                        .HasForeignKey("UserSourcedId1");
 
                     b.Navigation("Class");
 
@@ -686,15 +711,15 @@ namespace IDGenWebsite.Migrations
                 {
                     b.HasOne("IDGenWebsite.Models.Classes", "Classes")
                         .WithMany("Grades")
-                        .HasForeignKey("ClassesSourcedId");
+                        .HasForeignKey("ClassesClassSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Courses", "Courses")
                         .WithMany("Grades")
-                        .HasForeignKey("CoursesSourcedId");
+                        .HasForeignKey("CourseSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Users", null)
                         .WithMany("Grades")
-                        .HasForeignKey("UsersSourcedId");
+                        .HasForeignKey("UserSourcedId");
 
                     b.Navigation("Classes");
 
@@ -705,42 +730,38 @@ namespace IDGenWebsite.Migrations
                 {
                     b.HasOne("IDGenWebsite.Models.AcademicSessions", null)
                         .WithMany("Metadata")
-                        .HasForeignKey("AcademicSessionsSourcedId");
+                        .HasForeignKey("AcademicSessionsSessionSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Classes", null)
                         .WithMany("Metadata")
-                        .HasForeignKey("ClassesSourcedId");
+                        .HasForeignKey("ClassesClassSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Courses", null)
                         .WithMany("Metadata")
-                        .HasForeignKey("CoursesSourcedId");
+                        .HasForeignKey("CourseSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Enrollments", null)
                         .WithMany("Metadata")
-                        .HasForeignKey("EnrollmentsSourcedId");
+                        .HasForeignKey("EnrollmentSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Organizations", null)
                         .WithMany("Metadata")
-                        .HasForeignKey("OrganizationsSourcedId");
+                        .HasForeignKey("OrganizationsOrgSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Resources", null)
                         .WithMany("Metadata")
-                        .HasForeignKey("ResourcesSourcedId");
+                        .HasForeignKey("ResourceSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Users", null)
                         .WithMany("Metadata")
-                        .HasForeignKey("UsersSourcedId");
+                        .HasForeignKey("UserSourcedId");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Organizations", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.Organizations", "Parent")
                         .WithMany()
-                        .HasForeignKey("ParentSourcedId");
-
-                    b.HasOne("IDGenWebsite.Models.Users", null)
-                        .WithMany("Organizations")
-                        .HasForeignKey("UsersSourcedId");
+                        .HasForeignKey("Parent_SourcedId");
 
                     b.Navigation("Parent");
                 });
@@ -749,40 +770,55 @@ namespace IDGenWebsite.Migrations
                 {
                     b.HasOne("IDGenWebsite.Models.Classes", null)
                         .WithMany("Periods")
-                        .HasForeignKey("ClassesSourcedId");
+                        .HasForeignKey("ClassesClassSourcedId");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Resources", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.Classes", null)
                         .WithMany("Resources")
-                        .HasForeignKey("ClassesSourcedId");
+                        .HasForeignKey("ClassesClassSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Courses", null)
                         .WithMany("Resources")
-                        .HasForeignKey("CoursesSourcedId");
+                        .HasForeignKey("CourseSourcedId");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.SubjectCodes", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.Classes", null)
                         .WithMany("SubjectCodes")
-                        .HasForeignKey("ClassesSourcedId");
+                        .HasForeignKey("ClassesClassSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Courses", null)
                         .WithMany("SubjectCodes")
-                        .HasForeignKey("CoursesSourcedId");
+                        .HasForeignKey("CourseSourcedId");
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.Subjects", b =>
                 {
                     b.HasOne("IDGenWebsite.Models.Classes", null)
                         .WithMany("Subjects")
-                        .HasForeignKey("ClassesSourcedId");
+                        .HasForeignKey("ClassesClassSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Courses", null)
                         .WithMany("Subjects")
-                        .HasForeignKey("CoursesSourcedId");
+                        .HasForeignKey("CourseSourcedId");
+                });
+
+            modelBuilder.Entity("OrganizationsUsers", b =>
+                {
+                    b.HasOne("IDGenWebsite.Models.Organizations", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationsOrgSourcedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IDGenWebsite.Models.Users", null)
+                        .WithMany()
+                        .HasForeignKey("UserSourcedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("IDGenWebsite.Models.AcademicSessions", b =>
@@ -792,6 +828,8 @@ namespace IDGenWebsite.Migrations
 
             modelBuilder.Entity("IDGenWebsite.Models.Classes", b =>
                 {
+                    b.Navigation("Enrollments");
+
                     b.Navigation("Grades");
 
                     b.Navigation("Metadata");
@@ -825,6 +863,10 @@ namespace IDGenWebsite.Migrations
 
             modelBuilder.Entity("IDGenWebsite.Models.Organizations", b =>
                 {
+                    b.Navigation("Classes");
+
+                    b.Navigation("Courses");
+
                     b.Navigation("Metadata");
                 });
 
@@ -835,11 +877,11 @@ namespace IDGenWebsite.Migrations
 
             modelBuilder.Entity("IDGenWebsite.Models.Users", b =>
                 {
+                    b.Navigation("Enrollments");
+
                     b.Navigation("Grades");
 
                     b.Navigation("Metadata");
-
-                    b.Navigation("Organizations");
                 });
 #pragma warning restore 612, 618
         }

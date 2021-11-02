@@ -10,7 +10,7 @@ namespace IDGenWebsite.Models
     {
         [Key]
         [Display(Name = "Source Id")]
-        public Guid SourcedId { get; set; }
+        public Guid MetadataSourcedId { get; set; }
         [Display(Name = "Title")]
         public string Key { get; set; }
         [Display(Name = "Value")]

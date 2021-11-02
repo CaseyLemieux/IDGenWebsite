@@ -10,7 +10,7 @@ namespace IDGenWebsite.Models
     public class Subjects
     {
         [Key]
-        public Guid SourcedId { get; set; }
+        public Guid SubjectSourcedId { get; set; }
         public string Title { get; set; }
 
     }

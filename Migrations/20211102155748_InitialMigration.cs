@@ -11,24 +11,24 @@ namespace IDGenWebsite.Migrations
                 name: "AcademicSessions",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SessionSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ParentSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SchoolYear = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    SchoolYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Parent_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AcademicSessions", x => x.SourcedId);
+                    table.PrimaryKey("PK_AcademicSessions", x => x.SessionSourcedId);
                     table.ForeignKey(
-                        name: "FK_AcademicSessions_AcademicSessions_ParentSourcedId",
-                        column: x => x.ParentSourcedId,
+                        name: "FK_AcademicSessions_AcademicSessions_Parent_SourcedId",
+                        column: x => x.Parent_SourcedId,
                         principalTable: "AcademicSessions",
-                        principalColumn: "SourcedId",
+                        principalColumn: "SessionSourcedId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -82,6 +82,29 @@ namespace IDGenWebsite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Orgs",
+                columns: table => new
+                {
+                    OrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Identifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Parent_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orgs", x => x.OrgSourcedId);
+                    table.ForeignKey(
+                        name: "FK_Orgs_Orgs_Parent_SourcedId",
+                        column: x => x.Parent_SourcedId,
+                        principalTable: "Orgs",
+                        principalColumn: "OrgSourcedId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Settings",
                 columns: table => new
                 {
@@ -105,7 +128,7 @@ namespace IDGenWebsite.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -123,96 +146,94 @@ namespace IDGenWebsite.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.SourcedId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orgs",
-                columns: table => new
-                {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Identifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ParentSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UsersSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orgs", x => x.SourcedId);
-                    table.ForeignKey(
-                        name: "FK_Orgs_Orgs_ParentSourcedId",
-                        column: x => x.ParentSourcedId,
-                        principalTable: "Orgs",
-                        principalColumn: "SourcedId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Orgs_Users_UsersSourcedId",
-                        column: x => x.UsersSourcedId,
-                        principalTable: "Users",
-                        principalColumn: "SourcedId",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_Users", x => x.UserSourcedId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Courses",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SchoolYearSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SchoolYearSessionSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CourseCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OrganizationSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    OrganizationOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SessionSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Courses", x => x.SourcedId);
+                    table.PrimaryKey("PK_Courses", x => x.CourseSourcedId);
                     table.ForeignKey(
-                        name: "FK_Courses_AcademicSessions_SchoolYearSourcedId",
-                        column: x => x.SchoolYearSourcedId,
+                        name: "FK_Courses_AcademicSessions_SchoolYearSessionSourcedId",
+                        column: x => x.SchoolYearSessionSourcedId,
                         principalTable: "AcademicSessions",
-                        principalColumn: "SourcedId",
+                        principalColumn: "SessionSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Courses_Orgs_OrganizationSourcedId",
-                        column: x => x.OrganizationSourcedId,
+                        name: "FK_Courses_Orgs_OrganizationOrgSourcedId",
+                        column: x => x.OrganizationOrgSourcedId,
                         principalTable: "Orgs",
-                        principalColumn: "SourcedId",
+                        principalColumn: "OrgSourcedId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrganizationsUsers",
+                columns: table => new
+                {
+                    OrganizationsOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganizationsUsers", x => new { x.OrganizationsOrgSourcedId, x.UserSourcedId });
+                    table.ForeignKey(
+                        name: "FK_OrganizationsUsers_Orgs_OrganizationsOrgSourcedId",
+                        column: x => x.OrganizationsOrgSourcedId,
+                        principalTable: "Orgs",
+                        principalColumn: "OrgSourcedId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrganizationsUsers_Users_UserSourcedId",
+                        column: x => x.UserSourcedId,
+                        principalTable: "Users",
+                        principalColumn: "UserSourcedId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Classes",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClassCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClassType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SchoolSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CourseSourcedId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SchoolOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    OrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Classes", x => x.SourcedId);
+                    table.PrimaryKey("PK_Classes", x => x.ClassSourcedId);
                     table.ForeignKey(
-                        name: "FK_Classes_Courses_CourseSourcedId",
-                        column: x => x.CourseSourcedId,
+                        name: "FK_Classes_Courses_CourseSourcedId1",
+                        column: x => x.CourseSourcedId1,
                         principalTable: "Courses",
-                        principalColumn: "SourcedId",
+                        principalColumn: "CourseSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Classes_Orgs_SchoolSourcedId",
-                        column: x => x.SchoolSourcedId,
+                        name: "FK_Classes_Orgs_SchoolOrgSourcedId",
+                        column: x => x.SchoolOrgSourcedId,
                         principalTable: "Orgs",
-                        principalColumn: "SourcedId",
+                        principalColumn: "OrgSourcedId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -220,23 +241,23 @@ namespace IDGenWebsite.Migrations
                 name: "AcademicSessionsClasses",
                 columns: table => new
                 {
-                    AcademicSessionsSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClassesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AcademicSessionsSessionSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClassesClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AcademicSessionsClasses", x => new { x.AcademicSessionsSourcedId, x.ClassesSourcedId });
+                    table.PrimaryKey("PK_AcademicSessionsClasses", x => new { x.AcademicSessionsSessionSourcedId, x.ClassesClassSourcedId });
                     table.ForeignKey(
-                        name: "FK_AcademicSessionsClasses_AcademicSessions_AcademicSessionsSourcedId",
-                        column: x => x.AcademicSessionsSourcedId,
+                        name: "FK_AcademicSessionsClasses_AcademicSessions_AcademicSessionsSessionSourcedId",
+                        column: x => x.AcademicSessionsSessionSourcedId,
                         principalTable: "AcademicSessions",
-                        principalColumn: "SourcedId",
+                        principalColumn: "SessionSourcedId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AcademicSessionsClasses_Classes_ClassesSourcedId",
-                        column: x => x.ClassesSourcedId,
+                        name: "FK_AcademicSessionsClasses_Classes_ClassesClassSourcedId",
+                        column: x => x.ClassesClassSourcedId,
                         principalTable: "Classes",
-                        principalColumn: "SourcedId",
+                        principalColumn: "ClassSourcedId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -244,71 +265,74 @@ namespace IDGenWebsite.Migrations
                 name: "Enrollments",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EnrollmentSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserSourcedId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ClassSourcedId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SchoolOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Primary = table.Column<bool>(type: "bit", nullable: false),
                     BeginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    User_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Class_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Organizations_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Enrollments", x => x.SourcedId);
+                    table.PrimaryKey("PK_Enrollments", x => x.EnrollmentSourcedId);
                     table.ForeignKey(
-                        name: "FK_Enrollments_Classes_Class_SourcedId",
-                        column: x => x.Class_SourcedId,
+                        name: "FK_Enrollments_Classes_ClassSourcedId1",
+                        column: x => x.ClassSourcedId1,
                         principalTable: "Classes",
-                        principalColumn: "SourcedId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ClassSourcedId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Enrollments_Orgs_Organizations_SourcedId",
-                        column: x => x.Organizations_SourcedId,
+                        name: "FK_Enrollments_Orgs_SchoolOrgSourcedId",
+                        column: x => x.SchoolOrgSourcedId,
                         principalTable: "Orgs",
-                        principalColumn: "SourcedId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "OrgSourcedId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Enrollments_Users_User_SourcedId",
-                        column: x => x.User_SourcedId,
+                        name: "FK_Enrollments_Users_UserSourcedId1",
+                        column: x => x.UserSourcedId1,
                         principalTable: "Users",
-                        principalColumn: "SourcedId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserSourcedId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Grades",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GradeSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CoursesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ClassesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UsersSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ClassesClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Grades", x => x.SourcedId);
+                    table.PrimaryKey("PK_Grades", x => x.GradeSourcedId);
                     table.ForeignKey(
-                        name: "FK_Grades_Classes_ClassesSourcedId",
-                        column: x => x.ClassesSourcedId,
+                        name: "FK_Grades_Classes_ClassesClassSourcedId",
+                        column: x => x.ClassesClassSourcedId,
                         principalTable: "Classes",
-                        principalColumn: "SourcedId",
+                        principalColumn: "ClassSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Grades_Courses_CoursesSourcedId",
-                        column: x => x.CoursesSourcedId,
+                        name: "FK_Grades_Courses_CourseSourcedId",
+                        column: x => x.CourseSourcedId,
                         principalTable: "Courses",
-                        principalColumn: "SourcedId",
+                        principalColumn: "CourseSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Grades_Users_UsersSourcedId",
-                        column: x => x.UsersSourcedId,
+                        name: "FK_Grades_Users_UserSourcedId",
+                        column: x => x.UserSourcedId,
                         principalTable: "Users",
-                        principalColumn: "SourcedId",
+                        principalColumn: "UserSourcedId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -316,18 +340,18 @@ namespace IDGenWebsite.Migrations
                 name: "Periods",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PeriodSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClassesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ClassesClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Periods", x => x.SourcedId);
+                    table.PrimaryKey("PK_Periods", x => x.PeriodSourcedId);
                     table.ForeignKey(
-                        name: "FK_Periods_Classes_ClassesSourcedId",
-                        column: x => x.ClassesSourcedId,
+                        name: "FK_Periods_Classes_ClassesClassSourcedId",
+                        column: x => x.ClassesClassSourcedId,
                         principalTable: "Classes",
-                        principalColumn: "SourcedId",
+                        principalColumn: "ClassSourcedId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -335,7 +359,7 @@ namespace IDGenWebsite.Migrations
                 name: "Resources",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ResourceSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -343,23 +367,23 @@ namespace IDGenWebsite.Migrations
                     VendorResourceId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VendorId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApplicationId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClassesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CoursesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ClassesClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Resources", x => x.SourcedId);
+                    table.PrimaryKey("PK_Resources", x => x.ResourceSourcedId);
                     table.ForeignKey(
-                        name: "FK_Resources_Classes_ClassesSourcedId",
-                        column: x => x.ClassesSourcedId,
+                        name: "FK_Resources_Classes_ClassesClassSourcedId",
+                        column: x => x.ClassesClassSourcedId,
                         principalTable: "Classes",
-                        principalColumn: "SourcedId",
+                        principalColumn: "ClassSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Resources_Courses_CoursesSourcedId",
-                        column: x => x.CoursesSourcedId,
+                        name: "FK_Resources_Courses_CourseSourcedId",
+                        column: x => x.CourseSourcedId,
                         principalTable: "Courses",
-                        principalColumn: "SourcedId",
+                        principalColumn: "CourseSourcedId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -367,26 +391,26 @@ namespace IDGenWebsite.Migrations
                 name: "SubjectCodes",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubjectCodeSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SubjectCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClassesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CoursesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ClassesClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubjectCodes", x => x.SourcedId);
+                    table.PrimaryKey("PK_SubjectCodes", x => x.SubjectCodeSourcedId);
                     table.ForeignKey(
-                        name: "FK_SubjectCodes_Classes_ClassesSourcedId",
-                        column: x => x.ClassesSourcedId,
+                        name: "FK_SubjectCodes_Classes_ClassesClassSourcedId",
+                        column: x => x.ClassesClassSourcedId,
                         principalTable: "Classes",
-                        principalColumn: "SourcedId",
+                        principalColumn: "ClassSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SubjectCodes_Courses_CoursesSourcedId",
-                        column: x => x.CoursesSourcedId,
+                        name: "FK_SubjectCodes_Courses_CourseSourcedId",
+                        column: x => x.CourseSourcedId,
                         principalTable: "Courses",
-                        principalColumn: "SourcedId",
+                        principalColumn: "CourseSourcedId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -394,25 +418,25 @@ namespace IDGenWebsite.Migrations
                 name: "Subjects",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubjectSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClassesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CoursesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ClassesClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subjects", x => x.SourcedId);
+                    table.PrimaryKey("PK_Subjects", x => x.SubjectSourcedId);
                     table.ForeignKey(
-                        name: "FK_Subjects_Classes_ClassesSourcedId",
-                        column: x => x.ClassesSourcedId,
+                        name: "FK_Subjects_Classes_ClassesClassSourcedId",
+                        column: x => x.ClassesClassSourcedId,
                         principalTable: "Classes",
-                        principalColumn: "SourcedId",
+                        principalColumn: "ClassSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Subjects_Courses_CoursesSourcedId",
-                        column: x => x.CoursesSourcedId,
+                        name: "FK_Subjects_Courses_CourseSourcedId",
+                        column: x => x.CourseSourcedId,
                         principalTable: "Courses",
-                        principalColumn: "SourcedId",
+                        principalColumn: "CourseSourcedId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -420,203 +444,203 @@ namespace IDGenWebsite.Migrations
                 name: "Metadatas",
                 columns: table => new
                 {
-                    SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MetadataSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Key = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AcademicSessionsSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ClassesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CoursesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EnrollmentsSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    OrganizationsSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ResourcesSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UsersSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    AcademicSessionsSessionSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ClassesClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    EnrollmentSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    OrganizationsOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ResourceSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Metadatas", x => x.SourcedId);
+                    table.PrimaryKey("PK_Metadatas", x => x.MetadataSourcedId);
                     table.ForeignKey(
-                        name: "FK_Metadatas_AcademicSessions_AcademicSessionsSourcedId",
-                        column: x => x.AcademicSessionsSourcedId,
+                        name: "FK_Metadatas_AcademicSessions_AcademicSessionsSessionSourcedId",
+                        column: x => x.AcademicSessionsSessionSourcedId,
                         principalTable: "AcademicSessions",
-                        principalColumn: "SourcedId",
+                        principalColumn: "SessionSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Metadatas_Classes_ClassesSourcedId",
-                        column: x => x.ClassesSourcedId,
+                        name: "FK_Metadatas_Classes_ClassesClassSourcedId",
+                        column: x => x.ClassesClassSourcedId,
                         principalTable: "Classes",
-                        principalColumn: "SourcedId",
+                        principalColumn: "ClassSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Metadatas_Courses_CoursesSourcedId",
-                        column: x => x.CoursesSourcedId,
+                        name: "FK_Metadatas_Courses_CourseSourcedId",
+                        column: x => x.CourseSourcedId,
                         principalTable: "Courses",
-                        principalColumn: "SourcedId",
+                        principalColumn: "CourseSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Metadatas_Enrollments_EnrollmentsSourcedId",
-                        column: x => x.EnrollmentsSourcedId,
+                        name: "FK_Metadatas_Enrollments_EnrollmentSourcedId",
+                        column: x => x.EnrollmentSourcedId,
                         principalTable: "Enrollments",
-                        principalColumn: "SourcedId",
+                        principalColumn: "EnrollmentSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Metadatas_Orgs_OrganizationsSourcedId",
-                        column: x => x.OrganizationsSourcedId,
+                        name: "FK_Metadatas_Orgs_OrganizationsOrgSourcedId",
+                        column: x => x.OrganizationsOrgSourcedId,
                         principalTable: "Orgs",
-                        principalColumn: "SourcedId",
+                        principalColumn: "OrgSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Metadatas_Resources_ResourcesSourcedId",
-                        column: x => x.ResourcesSourcedId,
+                        name: "FK_Metadatas_Resources_ResourceSourcedId",
+                        column: x => x.ResourceSourcedId,
                         principalTable: "Resources",
-                        principalColumn: "SourcedId",
+                        principalColumn: "ResourceSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Metadatas_Users_UsersSourcedId",
-                        column: x => x.UsersSourcedId,
+                        name: "FK_Metadatas_Users_UserSourcedId",
+                        column: x => x.UserSourcedId,
                         principalTable: "Users",
-                        principalColumn: "SourcedId",
+                        principalColumn: "UserSourcedId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AcademicSessions_ParentSourcedId",
+                name: "IX_AcademicSessions_Parent_SourcedId",
                 table: "AcademicSessions",
-                column: "ParentSourcedId");
+                column: "Parent_SourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AcademicSessionsClasses_ClassesSourcedId",
+                name: "IX_AcademicSessionsClasses_ClassesClassSourcedId",
                 table: "AcademicSessionsClasses",
-                column: "ClassesSourcedId");
+                column: "ClassesClassSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Classes_CourseSourcedId",
+                name: "IX_Classes_CourseSourcedId1",
                 table: "Classes",
+                column: "CourseSourcedId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Classes_SchoolOrgSourcedId",
+                table: "Classes",
+                column: "SchoolOrgSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_OrganizationOrgSourcedId",
+                table: "Courses",
+                column: "OrganizationOrgSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_SchoolYearSessionSourcedId",
+                table: "Courses",
+                column: "SchoolYearSessionSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_ClassSourcedId1",
+                table: "Enrollments",
+                column: "ClassSourcedId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_SchoolOrgSourcedId",
+                table: "Enrollments",
+                column: "SchoolOrgSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_UserSourcedId1",
+                table: "Enrollments",
+                column: "UserSourcedId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_ClassesClassSourcedId",
+                table: "Grades",
+                column: "ClassesClassSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_CourseSourcedId",
+                table: "Grades",
                 column: "CourseSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Classes_SchoolSourcedId",
-                table: "Classes",
-                column: "SchoolSourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Courses_OrganizationSourcedId",
-                table: "Courses",
-                column: "OrganizationSourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Courses_SchoolYearSourcedId",
-                table: "Courses",
-                column: "SchoolYearSourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_Class_SourcedId",
-                table: "Enrollments",
-                column: "Class_SourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_Organizations_SourcedId",
-                table: "Enrollments",
-                column: "Organizations_SourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_User_SourcedId",
-                table: "Enrollments",
-                column: "User_SourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Grades_ClassesSourcedId",
+                name: "IX_Grades_UserSourcedId",
                 table: "Grades",
-                column: "ClassesSourcedId");
+                column: "UserSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grades_CoursesSourcedId",
-                table: "Grades",
-                column: "CoursesSourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Grades_UsersSourcedId",
-                table: "Grades",
-                column: "UsersSourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Metadatas_AcademicSessionsSourcedId",
+                name: "IX_Metadatas_AcademicSessionsSessionSourcedId",
                 table: "Metadatas",
-                column: "AcademicSessionsSourcedId");
+                column: "AcademicSessionsSessionSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Metadatas_ClassesSourcedId",
+                name: "IX_Metadatas_ClassesClassSourcedId",
                 table: "Metadatas",
-                column: "ClassesSourcedId");
+                column: "ClassesClassSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Metadatas_CoursesSourcedId",
+                name: "IX_Metadatas_CourseSourcedId",
                 table: "Metadatas",
-                column: "CoursesSourcedId");
+                column: "CourseSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Metadatas_EnrollmentsSourcedId",
+                name: "IX_Metadatas_EnrollmentSourcedId",
                 table: "Metadatas",
-                column: "EnrollmentsSourcedId");
+                column: "EnrollmentSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Metadatas_OrganizationsSourcedId",
+                name: "IX_Metadatas_OrganizationsOrgSourcedId",
                 table: "Metadatas",
-                column: "OrganizationsSourcedId");
+                column: "OrganizationsOrgSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Metadatas_ResourcesSourcedId",
+                name: "IX_Metadatas_ResourceSourcedId",
                 table: "Metadatas",
-                column: "ResourcesSourcedId");
+                column: "ResourceSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Metadatas_UsersSourcedId",
+                name: "IX_Metadatas_UserSourcedId",
                 table: "Metadatas",
-                column: "UsersSourcedId");
+                column: "UserSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orgs_ParentSourcedId",
+                name: "IX_OrganizationsUsers_UserSourcedId",
+                table: "OrganizationsUsers",
+                column: "UserSourcedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orgs_Parent_SourcedId",
                 table: "Orgs",
-                column: "ParentSourcedId");
+                column: "Parent_SourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orgs_UsersSourcedId",
-                table: "Orgs",
-                column: "UsersSourcedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Periods_ClassesSourcedId",
+                name: "IX_Periods_ClassesClassSourcedId",
                 table: "Periods",
-                column: "ClassesSourcedId");
+                column: "ClassesClassSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resources_ClassesSourcedId",
+                name: "IX_Resources_ClassesClassSourcedId",
                 table: "Resources",
-                column: "ClassesSourcedId");
+                column: "ClassesClassSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resources_CoursesSourcedId",
+                name: "IX_Resources_CourseSourcedId",
                 table: "Resources",
-                column: "CoursesSourcedId");
+                column: "CourseSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubjectCodes_ClassesSourcedId",
+                name: "IX_SubjectCodes_ClassesClassSourcedId",
                 table: "SubjectCodes",
-                column: "ClassesSourcedId");
+                column: "ClassesClassSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubjectCodes_CoursesSourcedId",
+                name: "IX_SubjectCodes_CourseSourcedId",
                 table: "SubjectCodes",
-                column: "CoursesSourcedId");
+                column: "CourseSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subjects_ClassesSourcedId",
+                name: "IX_Subjects_ClassesClassSourcedId",
                 table: "Subjects",
-                column: "ClassesSourcedId");
+                column: "ClassesClassSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subjects_CoursesSourcedId",
+                name: "IX_Subjects_CourseSourcedId",
                 table: "Subjects",
-                column: "CoursesSourcedId");
+                column: "CourseSourcedId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -637,6 +661,9 @@ namespace IDGenWebsite.Migrations
                 name: "Metadatas");
 
             migrationBuilder.DropTable(
+                name: "OrganizationsUsers");
+
+            migrationBuilder.DropTable(
                 name: "Periods");
 
             migrationBuilder.DropTable(
@@ -655,6 +682,9 @@ namespace IDGenWebsite.Migrations
                 name: "Resources");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "Classes");
 
             migrationBuilder.DropTable(
@@ -665,9 +695,6 @@ namespace IDGenWebsite.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orgs");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

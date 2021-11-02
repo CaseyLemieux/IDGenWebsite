@@ -11,7 +11,7 @@ namespace IDGenWebsite.Models
     {
         [Key]
         [Display(Name = "Source Id")]
-        public Guid SourcedId { get; set; }
+        public Guid GradeSourcedId { get; set; }
         [Display(Name = "Description")]
         public string Description { get; set; }
         [Display(Name = "Code")]

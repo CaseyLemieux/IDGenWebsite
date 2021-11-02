@@ -13,20 +13,40 @@ namespace IDGenWebsite.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
-        public Guid SourcedId { get; set; }
+        [JsonProperty("sourcedId")]
+        [Display(Name = "Source Id")]
+        public Guid SessionSourcedId { get; set; }
+        [JsonProperty("status")]
+        [Display(Name = "Status")]
         public string Status { get; set; }
+        [JsonProperty("dateLasteModified")]
+        [Display(Name = "Date Last Modified")]
         public DateTime DateLastModified { get; set; }
         public List<Metadatas> Metadata { get; set; }
         [JsonProperty("metadata")]
         [NotMapped]
         public JObject TempMetadata { get; set; }
+        [JsonProperty("title")]
+        [Display(Name = "Title")]
         public string Title { get; set; }
+        [JsonProperty("type")]
+        [Display(Name = "Type")]
         public string Type { get; set; }
+        [Display(Name = "Start Date")]
+        [JsonProperty("startDate")]
         public DateTime StartDate { get; set; }
+        [JsonProperty("endDate")]
+        [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
+        [JsonProperty("parent")]
+        [Display(Name = "Parent")]
+        [ForeignKey("Parent_SourcedId")]
         public AcademicSessions Parent { get; set; }
+        [JsonProperty("schoolYear")]
+        [Display(Name = "School")]
         public string SchoolYear { get; set; }
         public List<Classes> Classes { get; set; }
+        public Guid? Parent_SourcedId { get; set; }
 
     }
 }
