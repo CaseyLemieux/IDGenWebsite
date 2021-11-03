@@ -4,7 +4,7 @@
 @inject UserManager<EmployeeModel> UserManager
 
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
     {
         <li class="nav-item">
             <a id="manage" class="nav-link text-dark" title="Manage" readonly>Hello @UserManager.GetUserAsync(User).Result.FirstName!</a>

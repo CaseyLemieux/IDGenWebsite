@@ -1,425 +1,54 @@
 ﻿@{
     ViewData["Title"] = "Admin Dashboard";
 }
-<div class="row">
-    <div class="col-sm-1">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" aria-orientation="vertical">
-            <ul class="nav navbar-nav" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#" onclick="ViewOrders()" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#" onclick="ViewStudents()" role="tab" aria-controls="v-pills-profile" aria-selected="false">View Students</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#" onclick="UploadFiles()" role="tab" aria-controls="v-pills-messages" aria-selected="false">Upload Files</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#" onclick="ViewUsers()" role="tab" aria-controls="v-pills-settings" aria-selected="false">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#" onclick="ViewTemplates()" role="tab" aria-controls="v-pills-settings" aria-selected="false">Templates</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#" onclick="ViewSettings()" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
-                </li>
-                <li class="nav-item">
-                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
-                    </form>
-                </li>
-            </ul>
-
+<link rel="stylesheet" href="~/css/AdminDashboardStyleSheet.css" />
+<div class="row d-flex justify-content-center">
+    <div class="card-deck">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Organizations</h4>
+                <p class="card-text">Chromebook #1</p>
+                <a href="#" class="btn btn-primary">See Profile</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Academic Sessions</h4>
+                <p class="card-text">Chromebook #2</p>
+                <a href="#" class="btn btn-primary">See Profile</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Users</h4>
+                <p class="card-text">Chromebook #3</p>
+                <a href="#" class="btn btn-primary">See Profile</a>
+            </div>
         </div>
     </div>
-    <div class="col-9" id="panel">
-
+</div>
+<div class="row d-flex justify-content-center">
+    <div class="card-deck">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Courses</h4>
+                <p class="card-text">Chromebook #1</p>
+                <a href="#" class="btn btn-primary">See Profile</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Classes</h4>
+                <p class="card-text">Chromebook #2</p>
+                <a href="#" class="btn btn-primary">See Profile</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Enrollments</h4>
+                <p class="card-text">Chromebook #3</p>
+                <a href="#" class="btn btn-primary">See Profile</a>
+            </div>
+        </div>
     </div>
 </div>
-
-@section Scripts{
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-
-
-    <script src="~/lib/print-js/print.js"></script>
-    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-            //This retrieved the data for the autocomplete on products
-            $.ajax({
-                url: '/IDOrder/GetIdOrdersPartial',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error loading ');
-                }
-            });
-
-        
-        });
-        // The function takes Form and the event object as parameter
-        function SubmitNewUser(frm, caller) {
-            caller.preventDefault();
-            var form = document.getElementById('CreateUserForm');
-            //var fdata = new FormData(form);
-            var fdata = $('#CreateUserForm').serialize();
-            //var fdata = form.serialize();
-            console.log(fdata);
-            console.log(form.method);
-            console.log(form.action);
-            $.ajax({
-                type: form.method,
-                url: form.action,
-                dataType: 'json',
-                data: fdata,
-                processData: false,
-                //contentType: false,
-                success: function (data) {
-                    $('#addUserModal').modal('hide');
-                    ViewUsers();
-                },
-                error: function (data) {
-                    alert('failure');
-                }
-            });
-        }
-
-        function SubmitStudentEdits(frm, caller) {
-            caller.preventDefault();
-            var form = document.getElementById('editStudentForm');
-            //var fdata = new FormData(form);
-            var fdata = $('#editStudentForm').serialize();
-            //var fdata = form.serialize();
-            console.log(fdata);
-            console.log(form.method);
-            console.log(form.action);
-            $.ajax({
-                type: form.method,
-                url: form.action,
-                dataType: 'json',
-                data: fdata,
-                processData: false,
-                //contentType: false,
-                success: function (data) {
-                    $('#editStudentModal').modal('hide');
-                    ViewStudents();
-                },
-                error: function (data) {
-                    alert('failure');
-                }
-            });
-        }
-
-        function EditStudent(id) {
-            console.log(id);
-            //var id = $(itemData).data('assigned-id');
-            $.ajax({
-                type: "POST",
-                url: "/Student/GetStudent",
-                data: { "id": id },
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("editStudentModalBody");
-                    div.innerHTML = data;
-                    $('#editStudentModal').modal('show');
-                },
-                error: function (data) {
-                    alert('failure');
-                }
-            });
-        }
-
-
-        function SubmitFocusIds(inputId, caller) {
-            caller.preventDefault;
-            var input = document.getElementById(inputId);
-            var files = input.files;
-            var formData = new FormData();
-            for (var i = 0; i != files.length; i++) {
-                formData.append("idPdfs", files[i]);
-            }
-
-            $.ajax(
-                {
-                    url: '/Admin/UploadIds',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: "html",
-                    type: "POST",
-                    success: function (data) {
-                        console.log("Focus Ids Uploaded!");
-                        var div = document.getElementById("panel");
-                        div.innerHTML = data;
-                    },
-                    error: function (data) {
-                        console.log("Error Uploading Ids!")
-                    }
-                }
-            );
-
-        }
-
-        function SubmitStudentForm(inputId, caller) {
-            caller.preventDefault;
-            var input = document.getElementById(inputId);
-            var files = input.files;
-            console.log(files);
-            var formData = new FormData();
-            for (var i = 0; i != files.length; i++) {
-                console.log(files[i]);
-                formData.append("focusFiles", files[i]);
-            }
-
-            $.ajax(
-                {
-                    url: '/Admin/UploadFocus',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: "html",
-                    type: "POST",
-                    success: function (data) {
-                        console.log("Focus Students Uploaded!");
-                        var div = document.getElementById("panel");
-                        div.innerHTML = data;
-                    },
-                    error: function (data) {
-                        console.log(data);
-                        console.log("Error Uploading Students!")
-                    }
-                }
-            );
-        }
-
-        function SubmitQrForm(inputId, caller) {
-            caller.preventDefault;
-            var input = document.getElementById(inputId);
-            var files = input.files;
-            var formData = new FormData();
-            for (var i = 0; i != files.length; i++) {
-                formData.append("classLinkFiles", files[i]);
-            }
-
-            $.ajax(
-                {
-                    url: '/Admin/UploadClassLink',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: "html",
-                    type: "POST",
-                    success: function (data) {
-                        console.log("Focus ClassLink Uploaded!");
-                        var div = document.getElementById("panel");
-                        div.innerHTML = data;
-                    },
-                    error: function (data) {
-                        console.log("Error Uploading ClassLink!")
-                    }
-                }
-            );
-        }
-
-        function ViewUsers() {
-            $.ajax({
-                url: '/Admin/GetUsersPartial',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting users partial');
-                }
-            });
-        }
-
-
-        function ViewStudents() {
-            $.ajax({
-                url: '/Student/GetStudentPartial',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting students partial');
-                }
-            });
-        }
-
-        function ViewOrders() {
-            $.ajax({
-                url: '/IDOrder/GetIdOrdersPartial',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error loading ');
-                }
-            });
-        }
-
-        function UploadFiles() {
-            $.ajax({
-                url: '/Admin/GetUploadFilesPartial',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting file partial');
-                }
-            });
-
-        }
-
-        function ViewSettings() {
-            $.ajax({
-                url: '/Admin/GetSettingsPartial',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting settings partial');
-                }
-            });
-
-        }
-
-        function ViewTemplates() {
-            $.ajax({
-                url: '/Admin/GetIdTemplateSettings',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting template partial');
-                }
-            });
-
-        }
-
-        function CreateUserPartial() {
-            $.ajax({
-                url: '/Admin/GetCreateUserPartial',
-                type: 'GET',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("addUserModalBody");
-                    div.innerHTML = data;
-                    $('#addUserModal').modal('show');
-
-                },
-                error: function (data) {
-                    console.log('Error getting file partial');
-                }
-            });
-        }
-
-        function Logout() {
-            $.ajax({
-                url: '/Identity/Account/Logout',
-                type: 'POST',
-                cache: false,
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting file partial');
-                }
-            });
-        }
-
-        function SearchStudent() {
-            var text = $(studentTextField).val();
-            console.log(text);
-            $.ajax({
-                url: '/Student/SearchStudents',
-                type: 'GET',
-                cache: false,
-                data: { "searchString": text },
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting users partial');
-                }
-            });
-        }
-
-        function PrintGradeLevel(grade) {
-            console.log(grade);
-            $.ajax({
-                url: '/Student/SearchStudents',
-                type: 'GET',
-                cache: false,
-                data: { "searchString": text },
-                dataType: "html",
-                success: function (data) {
-                    var div = document.getElementById("panel");
-                    div.innerHTML = data;
-                },
-                error: function (data) {
-                    console.log('Error getting users partial');
-                }
-            });
-        }
-
-        function DownloadGradeLevel(grade) {
-            console.log(grade);
-            $.ajax({
-                url: '/Admin/DownloadGradeLevel',
-                type: 'POST',
-                cache: false,
-                data: { "grade": grade }
-            });
-        }
-
-        function DownloadByHomeroom() {
-            $.ajax({
-                url: '/Admin/DownloadByHomeroom',
-                type: 'POST',
-                cache: false,
-            });
-        }
-
-    </script>
-
-}
