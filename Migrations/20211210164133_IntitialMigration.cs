@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IDGenWebsite.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class IntitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

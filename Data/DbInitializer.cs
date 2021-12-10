@@ -32,13 +32,13 @@ namespace IDGenWebsite.Data
 
         private static void SeedUsers(UserManager<EmployeeModel> userManager)
         {
-            if(userManager.FindByEmailAsync("clemieux@franklincountyschools.org").Result == null)
+            if(userManager.FindByEmailAsync("clemieux@seahawksfl.com").Result == null)
             {
                 EmployeeModel user = new EmployeeModel();
                 user.FirstName = "Casey";
                 user.LastName = "Lemieux";
-                user.UserName = "clemieux@franklincountyschools.org";
-                user.Email = "clemieux@franklincountyschools.org";
+                user.UserName = "clemieux@seahawksfl.com";
+                user.Email = "clemieux@seahawksfl.com";
                 user.EmailConfirmed = true;
 
                 IdentityResult result = userManager.CreateAsync(user, "*CHevy6969*").Result;
