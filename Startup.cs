@@ -15,12 +15,12 @@ using IDGenWebsite.Models;
 using WkHtmlToPdfDotNet;
 using WkHtmlToPdfDotNet.Contracts;
 using Microsoft.Extensions.Azure;
-using Azure.Storage.Queues;
-using Azure.Storage.Blobs;
 using Azure.Core.Extensions;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Identity.Web.UI;
 
 namespace IDGenWebsite
 {
@@ -42,16 +42,20 @@ namespace IDGenWebsite
             services.AddDbContext<SchoolContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdGenWebsiteDBProd")));
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
 
-            services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-            .AddAzureAD(options => Configuration.Bind("AzureAd", options));
-            services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options => {
-                options.SignInScheme = IdentityConstants.ExternalScheme;
-
-                //other config
+            services.AddControllersWithViews(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
             });
+            services.AddRazorPages()
+                 .AddMicrosoftIdentityUI();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

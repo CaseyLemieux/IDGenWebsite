@@ -1,4 +1,4 @@
-﻿using Azure.Storage.Blobs;
+﻿
 using BarcodeLib;
 using ExcelDataReader;
 using IDGenWebsite.Data;

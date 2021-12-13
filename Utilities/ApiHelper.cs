@@ -40,8 +40,16 @@ namespace IDGenWebsite.Utilities
             //Add the token to the header for the rest of the api requests
             restClient.Authenticator = new JwtAuthenticator(token);
         }
-
-        public async Task GetOrgs()
+        public async Task ImportData()
+        {
+            await GetOrgs();
+            await GetAcademicSessions();
+            await GetUsers();
+            await GetCourses();
+            await GetClasses();
+            await GetEnrollments();
+        }
+        private async Task GetOrgs()
         {
             //Make request to Focus API for the orgs
             RestRequest orgRequest = new RestRequest("/orgs?limit=500&offset=0");
@@ -61,7 +69,7 @@ namespace IDGenWebsite.Utilities
             await _schoolContext.SaveChangesAsync();
         }
 
-        public async Task GetAcademicSessions()
+        private async Task GetAcademicSessions()
         {
             //Make request to Focus API for the Academic Sessions
             RestRequest sessionsRequest = new RestRequest("/academicSessions?limit=500&offset=0");
@@ -97,7 +105,7 @@ namespace IDGenWebsite.Utilities
             }
         }
 
-        public async Task GetUsers()
+        private async Task GetUsers()
         {
             //Make request to the Focus API for the Users in Student and Teacher roles
             RestRequest usersRequest = new RestRequest("/users?limit=500&offset=0&filter=role='student' OR role='teacher'");
@@ -185,7 +193,7 @@ namespace IDGenWebsite.Utilities
             }
         }
 
-        public async Task GetCourses()
+        private async Task GetCourses()
         {
             //Make request to the Focus API for the Courses
             RestRequest coursesRequest = new RestRequest("/courses?limit=500&offset=0");
@@ -286,7 +294,7 @@ namespace IDGenWebsite.Utilities
             }
         }
 
-        public async Task GetClasses()
+        private async Task GetClasses()
         {
             //Make request to the Focus API for the Classes
             RestRequest classesRequest = new RestRequest("/classes?limit=500&offset=0");
@@ -400,7 +408,7 @@ namespace IDGenWebsite.Utilities
             }
         }
 
-        public async Task GetEnrollments()
+        private async Task GetEnrollments()
         {
             //Make request to the Focus API for the Enrollments 
             RestRequest enrollmentsRequest = new RestRequest("/enrollments?limit=500&offset=0");

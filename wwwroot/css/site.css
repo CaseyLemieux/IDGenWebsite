@@ -76,3 +76,8 @@ body {
     line-height: 60px; /* Vertically center the text there */
     /*background: #222D32;*/
 }
+
+.fa {
+    margin-left: -12px;
+    margin-right: 8px;
+}

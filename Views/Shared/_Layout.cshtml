@@ -41,23 +41,34 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a id="manage" class="nav-link text-dark" title="Manage" readonly>Welcome @UserManager.GetUserAsync(User).Result.FirstName!</a>
+                            </li>
                             <li class="nav-item active">
-                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Dashboard">Home <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Roster Data</a>
+                                <a class="nav-link" asp-area="" asp-controller="RosterData" asp-action="Index">Roster Data</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Users</a>
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="SiteUsers">Site Users</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Templates</a>
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Templates">Templates</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Upload Qr Codes</a>
+                               <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="FilesUpload">Upload Files</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Settings</a>
+                               <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Imports">Imports</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Settings">Settings</a>
+                            </li>
+                            <li class="nav-item">
+                                <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                    <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
+                                </form>
                             </li>
                         </ul>
                     </div>

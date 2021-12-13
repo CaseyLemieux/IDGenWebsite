@@ -9,24 +9,23 @@
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h4 class="card-title">Organizations</h4>
-                <p class="card-text">Organizations: </p>
-                <a href="#" class="btn btn-primary">See Organizations</a>
+                <p class="card-text" id="orgsCount">Place Holder </p>
+               
             </div>
         </div>
         <!--Academic Sessions Card-->
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h4 class="card-title">Academic Sessions</h4>
-                <p class="card-text">Academic Sessions: </p>
-                <a href="#" class="btn btn-primary">See Academic Sessions </a>
+                <p class="card-text" id="sessionsCount">Place Holder</p>
+               
             </div>
         </div>
         <!--Users Card-->
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h4 class="card-title">Users</h4>
-                <p class="card-text">Users: </p>
-                <a href="#" class="btn btn-primary">See Users</a>
+                <p class="card-text" id="usersCount">Place Holder</p>
             </div>
         </div>
     </div>
@@ -38,25 +37,100 @@
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h4 class="card-title">Courses</h4>
-                <p class="card-text">Courses: </p>
-                <a href="#" class="btn btn-primary">See Courses</a>
+                <p class="card-text" id="coursesCount">Place Holder</p>
             </div>
         </div>
         <!--Classes Card-->
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h4 class="card-title">Classes</h4>
-                <p class="card-text">Classes: </p>
-                <a href="#" class="btn btn-primary">See Classes</a>
+                <p class="card-text" id="classesCount">Place Holder</p>
             </div>
         </div>
         <!--Enrollments Card-->
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h4 class="card-title">Enrollments</h4>
-                <p class="card-text">Enrollments: </p>
-                <a href="#" class="btn btn-primary">See Enrollments</a>
+                <p class="card-text" id="enrollmentsCount">Place Holder</p>
             </div>
         </div>
     </div>
 </div>
+
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Admin/GetOrgsCount',
+                type: 'GET',
+                success: function (data) {
+                    $('#orgsCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting org count');
+                }
+            });
+
+            $.ajax({
+                url: '/Admin/GetSessionsCount',
+                type: 'GET',
+                success: function (data) {
+                   $('#sessionsCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting session count');
+                }
+            });
+
+            $.ajax({
+                url: '/Admin/GetUsersCount',
+                type: 'GET',
+                success: function (data) {
+                    $('#usersCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting user count');
+                }
+            });
+
+            $.ajax({
+                url: '/Admin/GetCoursesCount',
+                type: 'GET',
+                success: function (data) {
+                    $('#coursesCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting courses count');
+                }
+            });
+
+            $.ajax({
+                url: '/Admin/GetClassesCount',
+                type: 'GET',
+                success: function (data) {
+                   $('#classesCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting classes count');
+                }
+            });
+
+            $.ajax({
+                url: '/Admin/GetEnrollmentsCount',
+                type: 'GET',
+                success: function (data) {
+                    $('#enrollmentsCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting enrollments count');
+                }
+            });
+
+        });
+
+    </script>
+
+}

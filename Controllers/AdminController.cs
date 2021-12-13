@@ -49,13 +49,84 @@ namespace IDGenWebsite.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Settings()
+        {
+            var settings = await _schoolContext.Settings.ToListAsync();
+            return View(settings);
+        }
+
+        public async Task<IActionResult> SiteUsers()
+        {
+            return View();
+        }
+
+        public IActionResult FilesUpload()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Imports()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Templates()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        
 
+        public async Task<IActionResult> GetOrgsCount()
+        {
+            var orgCount = await _schoolContext.Orgs.CountAsync();
+            return Content(orgCount.ToString());
+        }
+
+        public async Task<IActionResult> GetSessionsCount()
+        {
+            var sessionsCount = await _schoolContext.AcademicSessions.CountAsync();
+            return Content(sessionsCount.ToString());
+        }
+
+        public async Task<IActionResult> GetUsersCount()
+        {
+            var usersCount = await _schoolContext.Users.CountAsync();
+            return Content(usersCount.ToString());
+        }
+
+        public async Task<IActionResult> GetCoursesCount()
+        {
+            var coursesCount = await _schoolContext.Courses.CountAsync();
+            return Content(coursesCount.ToString());
+        }
+
+        public async Task<IActionResult> GetClassesCount()
+        {
+            var classesCount = await _schoolContext.Classes.CountAsync();
+            return Content(classesCount.ToString());
+        }
+
+        public async Task<IActionResult> GetEnrollmentsCount()
+        {
+            var enrollmentsCount = await _schoolContext.Enrollments.CountAsync();
+            return Content(enrollmentsCount.ToString());
+        }
+
+        //TODO:This needs to be revisited in the future for thersholds and such
+        public async Task<IActionResult> ImportRosterData(){
+            ApiHelper apiHelper = new ApiHelper(_schoolContext);
+            await apiHelper.ImportData();
+            return Content("Succces");
+        }
+
+        //Below this are all the old actions from the manual file upload and partial layout
 
 
         [HttpPost]
@@ -79,31 +150,6 @@ namespace IDGenWebsite.Controllers
         }
 
 
-
-        public async Task<IActionResult> GetUsersPartial()
-        {
-            return PartialView("_ViewUsersPartial", await _userContext.EmployeeModel.ToListAsync());
-        }
-
-        public IActionResult GetUploadFilesPartial()
-        {
-            return PartialView("_UploadFilesPartial");
-        }
-
-        public IActionResult GetCreateUserPartial()
-        {
-            return PartialView("_CreateUserPartial", new EmployeeModel());
-        }
-
-        public async Task<IActionResult> GetSettingsPartial()
-        {
-            return PartialView("_SettingsPartial", await _schoolContext.Settings.ToListAsync());
-        }
-
-        public async Task<IActionResult> GetIdTemplateSettings()
-        {
-            return PartialView("_TemplatePartial", await _schoolContext.IdTemplates.ToListAsync());
-        }
 
         [HttpPost]
         public string CreateUser(EmployeeModel employee)
@@ -180,10 +226,11 @@ namespace IDGenWebsite.Controllers
                     zipItems.Add(zipItem);
                 }
             } */
-            return File(_fileHelper.GenerateZipFile(zipItems), "application/zip", string.Concat("Grade",grade,"IDs", ".zip"));
+            return File(_fileHelper.GenerateZipFile(zipItems), "application/zip", string.Concat("Grade", grade, "IDs", ".zip"));
         }
 
         
+       
         
         /*[HttpPost]
         public async Task<IActionResult> DownloadIdsByHomeroom()
