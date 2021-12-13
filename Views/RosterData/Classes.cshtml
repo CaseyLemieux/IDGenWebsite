@@ -28,4 +28,82 @@
 
         </div>
     </div>
+    <div class="col-md-9">
+        @if (Model.Count() > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.ClassSourcedId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.Status)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.DateLastModified)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.ClassCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.ClassType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.Location)
+                        </th>
+                         <th>
+                            @Html.DisplayNameFor(mode => mode.CourseSourcedId)
+                        </th>
+                         <th>
+                            @Html.DisplayNameFor(mode => mode.School)
+                        </th>
+                         <th>
+                            @Html.DisplayNameFor(mode => mode.OrgSourcedId)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CourseSourcedId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateLastModified)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClassCode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClassType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Location)
+                            </td>
+                             <td>
+                                @Html.DisplayFor(modelItem => item.CourseSourcedId)
+                            </td>
+                             <td>
+                                @Html.DisplayFor(modelItem => item.School)
+                            </td>
+                             <td>
+                                @Html.DisplayFor(modelItem => item.OrgSourcedId)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
 </div>

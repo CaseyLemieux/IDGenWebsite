@@ -28,4 +28,82 @@
 
         </div>
     </div>
+    <div class="col-md-9">
+        @if (Model.Count() > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.EnrollmentSourcedId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.Status)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.DateLastModified)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.UserSourcedId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.ClassSourcedId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.OrgSourcedId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(mode => mode.Role)
+                        </th>
+                         <th>
+                            @Html.DisplayNameFor(mode => mode.Primary)
+                        </th>
+                         <th>
+                            @Html.DisplayNameFor(mode => mode.BeginDate)
+                        </th>
+                         <th>
+                            @Html.DisplayNameFor(mode => mode.EndDate)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EnrollmentSourcedId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateLastModified)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserSourcedId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClassSourcedId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrgSourcedId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                             <td>
+                                @Html.DisplayFor(modelItem => item.Primary)
+                            </td>
+                             <td>
+                                @Html.DisplayFor(modelItem => item.BeginDate)
+                            </td>
+                             <td>
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
 </div>

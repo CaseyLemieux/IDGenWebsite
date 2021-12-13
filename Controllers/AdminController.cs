@@ -132,7 +132,7 @@ namespace IDGenWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
-            await _fileHelper.UploadStudentsAsync(focusFiles);
+            await _fileHelper.UploadStudentsFileAsync(focusFiles);
             return PartialView("_ViewStudentsPartial", await _schoolContext.Users.ToListAsync());
         }
 

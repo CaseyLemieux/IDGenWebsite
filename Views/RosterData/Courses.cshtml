@@ -53,20 +53,7 @@
                             @Html.DisplayNameFor(mode => mode.CourseCode)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.Role)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.Identifier)
-                            <i class="bi bi-sort-up"></i>
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.Email)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.QrCode)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.IdPicPath)
+                            @Html.DisplayNameFor(mode => mode.OrgSourcedId)
                         </th>
                     </tr>
                 </thead>
@@ -75,7 +62,7 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.UserSourcedId)
+                                @Html.DisplayFor(modelItem => item.CourseSourcedId)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Status)
@@ -84,35 +71,16 @@
                                 @Html.DisplayFor(modelItem => item.DateLastModified)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Username)
+                                @Html.DisplayFor(modelItem => item.Title)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.GivenName)
+                                @Html.DisplayFor(modelItem => item.SchoolYear)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.FamilyName)
+                                @Html.DisplayFor(modelItem => item.CourseCode)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Role)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Identifier)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.QrCode)
-                            </td>
-                            <td>
-                                @if (item.IdPicPath != null)
-                                {
-                                    <p>Uploaded</p>
-                                }
-                                else
-                                {
-                                    <p>N/A</p>
-                                }
+                                @Html.DisplayFor(modelItem => item.OrgSourcedId)
                             </td>
                         </tr>
                     }

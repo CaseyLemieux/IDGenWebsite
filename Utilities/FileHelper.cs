@@ -63,8 +63,8 @@ namespace IDGenWebsite.Utilities
 
         }
 
-        //Can keep around for manual imports if auto is not setup. Will rename to UploadRosterDataAsync
-        public async Task UploadStudentsAsync(List<IFormFile> studentFiles)
+        //Used for Manual Upload of Student Data by Excel Sheet
+        public async Task UploadStudentsFileAsync(List<IFormFile> studentFiles)
         {
             var filePaths = await SaveFiles("C:/IDGenWebsite/Uploads/Student Imports/", studentFiles);
             await ParseStudentFilesAsync(filePaths.ElementAt(0));
@@ -94,6 +94,7 @@ namespace IDGenWebsite.Utilities
             return paths;
         }
 
+        //TODO: Change how upload writes over previous student image
         private async Task ParseIdFilesAsync(List<string> paths)
         {
             foreach (var path in paths)
