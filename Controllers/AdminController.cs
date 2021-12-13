@@ -130,23 +130,26 @@ namespace IDGenWebsite.Controllers
 
 
         [HttpPost]
+        //TODO: Add an Error Response on failed manual upload for Focus
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
         {
             await _fileHelper.UploadStudentsFileAsync(focusFiles);
-            return PartialView("_ViewStudentsPartial", await _schoolContext.Users.ToListAsync());
+            return Content("Succces");
         }
 
         [HttpPost]
+        //TODO: Add an Error Response on failed manual upload for ClassLink Qr Codes
         public async Task<IActionResult> UploadClassLink(List<IFormFile> classLinkFiles)
         {
             await _fileHelper.UploadQrCodesAsync(classLinkFiles);
-            return PartialView("_ViewStudentsPartial", await _schoolContext.Users.ToListAsync());
+            return Content("Succces");
         }
         [HttpPost]
+        //TODO: Add an Error Response on failed manual upload for Photo Ids
         public async Task<IActionResult> UploadIDs(List<IFormFile> idPdfs)
         {
             await _fileHelper.UploadIdsAsync(idPdfs);
-            return PartialView("_ViewStudentsPartial", await _schoolContext.Users.ToListAsync());
+            return Content("Succces");
         }
 
 

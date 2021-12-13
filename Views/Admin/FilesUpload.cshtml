@@ -1,6 +1,179 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿<div class=row>
+    <div>
+    <p>
+        Please Upload Files in this Order:
+        1. Student Excel File
+        2. Student QR Code File
+        3. Student Photo Id Files
+    </p>
+    <p>
+        Note: Id Photo Files must be named the Students ID.
+    </p>
+</div>
+<div class="input-group mb-3">
+    <form method="post" enctype="multipart/form-data" id="UploadFocusForm" action="">
+        <div class="form-group">
+            <div class="col-md-10">
+                <p>Upload Students:</p>
+                <input type="file" name="focusFiles" single id="focusStudentInput"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <!--<input type="button" value="Upload" onclick="SubmitStudentForm('focusStudentInput', event)"/>-->
+                <button  type="submit" class="btn btn-primary" id="studentImportButton" onclick="SubmitStudentForm('focusStudentInput', event)">Import Students</button>
+                <button class="btn btn-primary" id="studentLoadingButton" style="display:none">
+                    <i class="fa fa-circle-o-notch fa-spin" id="studentImportButtonInner"></i>Importing...
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<div>
+    <form method="post" enctype="multipart/form-data" id="UploadClassLinkForm">
+        <div class="form-group">
+            <div class="col-md-10">
+                <p>Upload ClassLink QR File:</p>
+                <input type="file" name="classLinkFiles" multiple id="classLinkInput"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <!--<input type="button" value="Upload" onclick="SubmitQrForm('classLinkInput', event)"/>-->
+                <button  type="submit" class="btn btn-primary" id="qrImportButton" onclick="SubmitQrForm('classLinkInput', event)">Import Qr Codes</button>
+                <button class="btn btn-primary" id="qrLoadingButton" style="display:none">
+                    <i class="fa fa-circle-o-notch fa-spin" id="qrImportButtonInner"></i>Importing...
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<div>
+    <form method="post" enctype="multipart/form-data" id="UploadIdsForm">
+        <div class="form-group">
+            <div class="col-md-10">
+                <p>Upload Focus Ids:</p>
+                <input type="file" name="idPdfs" multiple id="idsInput"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <!--<input type="button" value="Upload" onclick="SubmitFocusIds('idsInput', event)"/>-->
+                <button  type="submit" class="btn btn-primary" id="idImportButton" onclick="SubmitFocusIds('idsInput', event)">Import Photo Ids</button>
+                <button class="btn btn-primary" id="idLoadingButton" style="display:none">
+                    <i class="fa fa-circle-o-notch fa-spin" id="idImportButtonInner"></i>Importing...
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
+    <script type="text/javascript">
+
+        function SubmitFocusIds(inputId, caller) {
+            caller.preventDefault;
+            document.getElementById('idLoadingButton').style.display = 'block';
+            document.getElementById('idImportButton').style.display = 'none';
+            var input = document.getElementById(inputId);
+            var files = input.files;
+            var formData = new FormData();
+            for (var i = 0; i != files.length; i++) {
+                formData.append("idPdfs", files[i]);
+            }
+
+            $.ajax(
+                {
+                    url: '/Admin/UploadIds',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    success: function (data) {
+                        document.getElementById('idLoadingButton').style.display = 'none';
+                        document.getElementById('idImportButton').style.display = 'block';
+                        console.log("Focus Ids Uploaded!");
+                    },
+                    error: function (data) {
+                        document.getElementById('idLoadingButton').style.display = 'none';
+                        document.getElementById('idImportButton').style.display = 'block';
+                        console.log("Error Uploading Ids!")
+                    }
+                }
+            );
+
+        }
+
+        function SubmitStudentForm(inputId, caller) {
+            caller.preventDefault;
+            document.getElementById('studentLoadingButton').style.display = 'block';
+            document.getElementById('studentImportButton').style.display = 'none';
+            var input = document.getElementById(inputId);
+            var files = input.files;
+            console.log(files);
+            var formData = new FormData();
+            for (var i = 0; i != files.length; i++) {
+                console.log(files[i]);
+                formData.append("focusFiles", files[i]);
+            }
+
+            $.ajax(
+                {
+                    url: '/Admin/UploadFocus',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    success: function (data) {
+                        document.getElementById('studentLoadingButton').style.display = 'none';
+                        document.getElementById('studentImportButton').style.display = 'block';
+                        console.log("Focus Students Uploaded!");
+                    },
+                    error: function (data) {
+                        document.getElementById('studentLoadingButton').style.display = 'none';
+                        document.getElementById('studentImportButton').style.display = 'block';
+                        console.log("Error Uploading Students!")
+                    }
+                }
+            );
+        }
+
+        function SubmitQrForm(inputId, caller) {
+            caller.preventDefault;
+            document.getElementById('qrLoadingButton').style.display = 'block';
+            document.getElementById('qrImportButton').style.display = 'none';
+            var input = document.getElementById(inputId);
+            var files = input.files;
+            var formData = new FormData();
+            for (var i = 0; i != files.length; i++) {
+                formData.append("classLinkFiles", files[i]);
+            }
+
+            $.ajax(
+                {
+                    url: '/Admin/UploadClassLink',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    success: function (data) {
+                        document.getElementById('qrLoadingButton').style.display = 'none';
+                        document.getElementById('qrImportButton').style.display = 'block';
+                        console.log("Focus ClassLink Uploaded!");
+                    },
+                    error: function (data) {
+                        document.getElementById('qrLoadingButton').style.display = 'none';
+                        document.getElementById('qrImportButton').style.display = 'block';
+                        console.log("Error Uploading ClassLink!")
+                    }
+                }
+            );
+        }
+    </script>
+
 }
-<h1>Under Construction!!!</h1>
