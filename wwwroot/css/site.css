@@ -6,13 +6,23 @@ a.navbar-brand {
   text-align: center;
   word-break: break-all;
 }
-/*.navbar {
-    background: #222D32;
-}*/
+.navbar {
+    background-color: #b10d02;
+    color: #fff;
+}
 
+.nav {
+    background-color: #b10d02;
+    color: #fff;
+}
+.nav-link {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: black;
 }
 
 .btn-primary {
@@ -23,8 +33,8 @@ a {
   margin-right: 5px;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
+.nav-pills .nav-link.active, .nav-pills .show > {
+  color: #495867;
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
@@ -67,6 +77,10 @@ body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
     /*background: #222D32;*/
+    background-color: #d3d9de;
+}
+.table {
+    color: black;
 }
 .footer {
     position: absolute;
