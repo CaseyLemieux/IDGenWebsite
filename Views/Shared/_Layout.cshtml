@@ -46,8 +46,18 @@
                             <li class="nav-item active">
                                 <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Dashboard">Home <span class="sr-only">(current)</span></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="RosterData" asp-action="Index">Roster Data</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Roster Data
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Orgs">Organizations</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Sessions">Academic Sessions</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Users">Users</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Courses">Courses</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Classes">Classes</a>
+                                     <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Enrollments">Enrollments</a>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="SiteUsers">Site Users</a>

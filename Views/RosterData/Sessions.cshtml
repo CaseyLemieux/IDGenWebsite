@@ -3,31 +3,7 @@
     ViewData["Title"] = "Roster Data";
 }
 <div class="row">
-    <div class="col-sm-3">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" aria-orientation="vertical">
-            <ul class="nav navbar-nav" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="RosterData" asp-action="Orgs" role="tab" aria-controls="v-pills-orgs" aria-selected="true">Organizations</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link active" asp-area="" asp-controller="RosterData" asp-action="Sessions" role="tab" aria-controls="v-pills-sessions" aria-selected="true">Academic Sessions</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="RosterData" asp-action="Users" role="tab" aria-controls="v-pills-users" aria-selected="true">Users</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="RosterData" asp-action="Courses" role="tab" aria-controls="v-pills-courses" aria-selected="true">Courses</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="RosterData" asp-action="Classes" role="tab" aria-controls="v-pills-classes" aria-selected="true">Classes</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="RosterData" asp-action="Enrollments" role="tab" aria-controls="v-pills-enrollments" aria-selected="true">Enrollments</a>
-                </li>
-            </ul>
 
-        </div>
-    </div>
     <div class="col-md-9">
         @if (Model.Count() > 0)
         {
