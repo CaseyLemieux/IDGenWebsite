@@ -1,28 +1,60 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+/* Navbar Styles
+-------------------------------------------------- */
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
 }
 .navbar {
-    background-color: #b10d02;
-    color: #fff;
+    background-color: #171717;
+    border-bottom-style: solid;
+    border-color: #c13610;
+    font-size: 30px;
 }
 
-.nav {
-    background-color: #b10d02;
-    color: #fff;
+.navbar-logo {
+    height: 115px;
+    width: auto;
 }
-.nav-link {
-    color: #fff;
+.nav-row{
+    margin:auto;
+}
+#customNav * {
+    color: white;
+}
+
+.logout-button{
+    background-color: #171717;
+    border-style: none;
+}
+
+.dropdown-menu {
+    background-color: #171717;
+    border-left-style: solid;
+    border-left-color: #c13610;
+    border-right-style: solid;
+    border-right-color: #c13610;
+    border-bottom-style: solid;
+    border-bottom-color: #c13610;
+    border-width: 3px;
     font-size: 20px;
-    font-weight: bold;
 }
+
+.dropdown-menu > a:hover {
+    background-color: #c13610;
+    background-image: none;
+}
+
+/* Navbar Styles
+-------------------------------------------------- */
+
 /* Provide sufficient contrast against white background */
 a {
-  color: black;
+  color: white;
 }
 
 .btn-primary {
@@ -33,11 +65,7 @@ a {
   margin-right: 5px;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > {
-  color: #495867;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -51,10 +79,11 @@ html {
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
@@ -64,6 +93,25 @@ html {
 button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+    border-color: #c13610;
+    border-top-style: solid;
+    border-top-width: 2px;
+    text-align: center;
+    background-color: #171717;
+    color: white;
+}
+
+.fa {
+    margin-left: -12px;
+    margin-right: 8px;
 }
 
 /* Sticky footer styles
@@ -77,21 +125,92 @@ body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
     /*background: #222D32;*/
-    background-color: #d3d9de;
-}
-.table {
-    color: black;
-}
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
-    /*background: #222D32;*/
+    background-color: #424e57;
 }
 
-.fa {
-    margin-left: -12px;
-    margin-right: 8px;
+/* Table Styles
+-------------------------------------------------- */
+.table {
+    color: black;
+    background-color: #e2e6e9;
 }
+
+.dataTable {
+
+}
+.custom-thead{
+    border-bottom-color: #c13610;
+    border-bottom-style: solid;
+}
+
+thead{
+    background-color: #171717;
+    color: white;
+
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #171717;
+    color: white;
+}
+
+
+
+tr *{
+    border-bottom-color: black;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+.page-item.active .page-link {
+    background-color: #c13610;
+    border-color: black;
+}
+
+.page-link {
+    color: white;
+    border-color: #c13610;
+}
+.page-item.disabled .page-link {
+    background-color: #171717;
+    border-color: #c13610;
+    color: #c13610;
+}
+
+.page-link {
+    background-color: #171717;
+    border-color: #c13610;
+    
+}
+
+.dataTables_info{
+    color: white;
+}
+
+.dataTables_filter {
+    padding-top: 10px;
+    color: white;
+}
+
+.dataTables_length{
+    padding-top: 10px;
+    color: white;
+}
+
+.pagination {
+    
+}
+
+/* Table Styles
+-------------------------------------------------- */
+
+/* Dashboard Card Syles
+-------------------------------------------------- */
+.dashboard-card {
+    background-color: #e2e6e9;
+    border-color: #c13610;
+    border-width: 3px;
+    margin-top: 15px;
+}
+/* Dashboard Card Syles
+-------------------------------------------------- */

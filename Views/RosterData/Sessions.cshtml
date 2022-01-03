@@ -1,13 +1,8 @@
-﻿@model IEnumerable<AcademicSessions>
+﻿@model AcademicSessions
 @{
     ViewData["Title"] = "Roster Data";
 }
-<div class="row">
-
-    <div class="col-md-9">
-        @if (Model.Count() > 0)
-        {
-            <table class="table">
+<table id="sessionsTable" class="table">
                 <thead>
                     <tr>
                         <th>
@@ -43,43 +38,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SessionSourcedId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateLastModified)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Title)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Type)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EndDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Parent)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Parent_SourcedId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SchoolYear)
-                            </td>
-                        </tr>
-                    }
+                    
                 </tbody>
             </table>
-        }
-    </div>
-</div>
+@section scripts{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.3/fh-3.2.1/r-2.2.9/sc-2.0.5/sl-1.3.4/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.3/fh-3.2.1/r-2.2.9/sc-2.0.5/sl-1.3.4/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#sessionsTable').dataTable({
+                "processing": true,
+                "paging": true,
+                "autoWidth": false,
+                "ajax": {
+                    "url": "/RosterData/GetSessions",
+                    "type": "get"
+                },
+                "columns":[
+                    {"data": "sessionSourcedId", "name": "Session Sourced Id", "autoWidth": true},
+                    {"data": "status", "name": "Status", "autoWidth": true},
+                    {"data": "dateLastModified", "name": "Last Modified", "autoWidth": true},
+                    {"data": "title", "name": "Title", "autoWidth": true},
+                    {"data": "type", "name": "Type", "autoWidth": true},
+                    {"data": "startDate", "name": "Start Date", "autoWidth": true},
+                    {"data": "endDate", "name": "End Date", "autoWidth": true},
+                    {"data": "parent", "name": "Parent", "autoWidth": true},
+                    {"data": "parent_SourcedId", "name": "Parent Sourced Id", "autoWidth": true},
+                    {"data": "schoolYear", "name": "School Year", "autoWidth": true},
+                ]
+            });
+        });
+    </script>
+}

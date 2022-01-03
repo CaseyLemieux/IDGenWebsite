@@ -1,8 +1,12 @@
 ﻿using IDGenWebsite.Data;
+using IDGenWebsite.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace IDGenWebsite.Controllers
@@ -23,35 +27,112 @@ namespace IDGenWebsite.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Orgs()
+        public IActionResult Orgs()
         {
-            var orgs = await _schoolContext.Orgs.ToListAsync();
-            return View(orgs);
+            Organizations org = new Organizations();
+            return View(org);
         }
-        public async Task<IActionResult> Sessions()
+        public IActionResult Sessions()
         {
-            var sessions = await _schoolContext.AcademicSessions.ToListAsync();
-            return View(sessions);
+            AcademicSessions session = new AcademicSessions();
+            return View(session);
         }
-        public async Task<IActionResult> Users()
+        public IActionResult Users()
         {
-            var users = await _schoolContext.Users.ToListAsync();
-            return View(users);
+            Users user = new Users();
+            return View(user);
         }
-        public async Task<IActionResult> Courses()
+        public IActionResult Courses()
         {
-            var courses = await _schoolContext.Courses.ToListAsync();
-            return View(courses);
+            Courses course = new Courses();
+            return View(course);
         }
-        public async Task<IActionResult> Classes()
+        public IActionResult Classes()
         {
-            var classes = await _schoolContext.Classes.ToListAsync();
+            Classes classes = new Classes();
             return View(classes);
         }
-        public async Task<IActionResult> Enrollments()
+        public IActionResult Enrollments()
+        {
+            Enrollments enrollment = new Enrollments();
+            return View(enrollment);
+        }
+        [HttpGet]
+        public async Task<ActionResult<DataTableResponse>> GetOrgs()
+        {
+            var orgs = await _schoolContext.Orgs.ToListAsync();
+
+            return new DataTableResponse
+            {
+                RecordsTotal = orgs.Count(),
+                RecordsFiltered = 10,
+                Data = orgs.ToArray()
+            };
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<DataTableResponse>> GetSessions()
+        {
+            var sessions = await _schoolContext.AcademicSessions.ToListAsync();
+
+            return new DataTableResponse
+            {
+                RecordsTotal = sessions.Count(),
+                RecordsFiltered = 10,
+                Data = sessions.ToArray()
+            };
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<DataTableResponse>> GetUsers()
+        {
+            var users = await _schoolContext.Users.ToListAsync();
+
+            return new DataTableResponse
+            {
+                RecordsTotal = users.Count(),
+                RecordsFiltered = 10,
+                Data = users.ToArray()
+            };
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<DataTableResponse>> GetCourses()
+        {
+            var courses = await _schoolContext.Courses.ToListAsync();
+
+            return new DataTableResponse
+            {
+                RecordsTotal = courses.Count(),
+                RecordsFiltered = 10,
+                Data = courses.ToArray()
+            };
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<DataTableResponse>> GetClasses()
+        {
+            var classes = await _schoolContext.Classes.ToListAsync();
+
+            return new DataTableResponse
+            {
+                RecordsTotal = classes.Count(),
+                RecordsFiltered = 10,
+                Data = classes.ToArray()
+            };
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<DataTableResponse>> GetEnrollments()
         {
             var enrollments = await _schoolContext.Enrollments.ToListAsync();
-            return View(enrollments);
+
+            return new DataTableResponse
+            {
+                RecordsTotal = enrollments.Count(),
+                RecordsFiltered = 10,
+                Data = enrollments.ToArray()
+            };
         }
     }
 }

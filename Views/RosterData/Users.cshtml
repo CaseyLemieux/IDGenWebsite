@@ -1,22 +1,86 @@
-﻿@model IEnumerable<Users>
+﻿@model Users
 @{
     ViewData["Title"] = "Roster Data";
+
 }
-<div class="container-fluid">
-    <table id="userDataTable" class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>Source Id</th>
-                <th>Status</th>
-                <th>Username</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Role</th>
-                <th>Identifier</th>
-                <th>Email</th>
-                <th>Qr Code</th>
-                <th>Id Pic</th>
-            </tr>
-        </thead>
-    </table>
-</div>
+<table id="userDataTable" class="table table-hover">
+    <thead class="custom-thead">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserSourcedId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GivenName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FamilyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Identifier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QrCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPicPath)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+@section scripts{
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.4/css/select.bootstrap4.min.css" />
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#userDataTable').dataTable({
+            "processing": true,
+            "paging": true,
+            "autoWidth": false,
+            "ajax": {
+                "url": "/RosterData/GetUsers",
+                "type": "get"
+            },
+            "columns":[
+                {"data": "userSourcedId", "name": "User Sourced Id", "autoWidth": true},
+                {"data": "status", "name": "Status", "autoWidth": true},
+                {"data": "username", "name": "Username", "autoWidth": true},
+                {"data": "givenName", "name": "First Name", "autoWidth": true},
+                {"data": "familyName", "name": "Last Name", "autoWidth": true},
+                {"data": "role", "name": "Role", "autoWidth": true},
+                {"data": "identifier", "name": "Identifier", "autoWidth": true},
+                {"data": "email", "name": "Email", "autoWidth": true},
+                {"data": "qrCode", "name": "Qr Code", "autoWidth": true},
+                {"data": "idPicPath", "name": "Id Picture", "autoWidth": true},
+            ]
+        });
+        var table = $('#userDataTable').DataTable();
+
+        $('#userDataTable tbody').on('click', 'tr', function () {
+            var data = table.row( this ).data();
+            alert( 'You clicked on '+data['familyName']+'\'s row' );
+            } );
+    });
+</script>
+}

@@ -1,74 +1,65 @@
-﻿@model IEnumerable<Organizations>
+﻿@model Organizations
 @{
     ViewData["Title"] = "Roster Data";
 }
-<div class="row">
-  
-    <div class="col-md-9">
-        @if (Model.Count() > 0)
-        {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.OrgSourcedId)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.Status)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.DateLastModified)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.Name)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.Type)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.Identifier)
-                            <i class="bi bi-sort-up"></i>
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.Parent)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.Parent_SourcedId)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.OrgSourcedId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateLastModified)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Type)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Identifier)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Parent)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Parent_SourcedId)
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
-</div>
+<table id="orgTable" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(mode => mode.OrgSourcedId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(mode => mode.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(mode => mode.DateLastModified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(mode => mode.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(mode => mode.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(mode => mode.Identifier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(mode => mode.Parent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(mode => mode.Parent_SourcedId)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+@section scripts{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.3/fh-3.2.1/r-2.2.9/sc-2.0.5/sl-1.3.4/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.3/fh-3.2.1/r-2.2.9/sc-2.0.5/sl-1.3.4/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#orgTable').dataTable({
+                "processing": true,
+                "paging": true,
+                "autoWidth": false,
+                "ajax": {
+                    "url": "/RosterData/GetOrgs",
+                    "type": "get"
+                },
+                "columns":[
+                    {"data": "orgSourcedId", "name": "Org Sourced Id", "autoWidth": true},
+                    {"data": "status", "name": "Status", "autoWidth": true},
+                    {"data": "dateLastModified", "name": "Last Modified", "autoWidth": true},
+                    {"data": "name", "name": "Name", "autoWidth": true},
+                    {"data": "type", "name": "Type", "autoWidth": true},
+                    {"data": "identifier", "name": "Identifier", "autoWidth": true},
+                    {"data": "parent", "name": "Parent", "autoWidth": true},
+                    {"data": "parent_SourcedId", "name": "Parent Id", "autoWidth": true},
+                ]
+            });
+        });
+    </script>
+}

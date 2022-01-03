@@ -14,40 +14,27 @@
 </head>
 <body>
     <header>
-        <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm  bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">IDGenWebsite</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </nav>-->
-         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-            {
-                <nav class="navbar sticky-top navbar-expand-lg">
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            <nav id="customNav" class="navbar sticky-top navbar-expand-lg navbar-dark ">
+               <div class="container-fluid">
+                   <div class="row justify-content-center nav-row">
+                       <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img class="navbar-logo" src="~/Images/IdGenLogoThumbnailCropped2.png" alt="ID Gen Logo Thumbnail Cropped" />
+                    </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a id="manage" class="nav-link text-dark" title="Manage" readonly>Welcome @UserManager.GetUserAsync(User).Result.FirstName!</a>
+                                <a id="manage" class="nav-link text-nowrap" title="Manage" readonly>Welcome @UserManager.GetUserAsync(User).Result.FirstName!</a>
                             </li>
                             <li class="nav-item active">
-                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Dashboard">Home <span class="sr-only">(current)</span></a>
+                                <a class="nav-link text-nowrap" asp-area="" asp-controller="Admin" asp-action="Dashboard">Home <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle text-nowrap" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Roster Data
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -56,68 +43,71 @@
                                     <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Users">Users</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Courses">Courses</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Classes">Classes</a>
-                                     <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Enrollments">Enrollments</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="RosterData" asp-action="Enrollments">Enrollments</a>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="SiteUsers">Site Users</a>
+                                <a class="nav-link text-nowrap" asp-area="" asp-controller="Admin" asp-action="SiteUsers">Site Users</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Templates">Templates</a>
+                                <a class="nav-link text-nowrap" asp-area="" asp-controller="Admin" asp-action="Templates">Templates</a>
                             </li>
                             <li class="nav-item">
-                               <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="FilesUpload">Upload Files</a>
+                                <a class="nav-link text-nowrap" asp-area="" asp-controller="Admin" asp-action="FilesUpload">Upload Files</a>
                             </li>
                             <li class="nav-item">
-                               <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Imports">Imports</a>
+                                <a class="nav-link text-nowrap" asp-area="" asp-controller="Admin" asp-action="Imports">Imports</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Settings">Settings</a>
+                                <a class="nav-link text-nowrap" asp-area="" asp-controller="Admin" asp-action="Settings">Settings</a>
                             </li>
                             <li class="nav-item">
                                 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                    <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
+                                    <button id="logout" type="submit" class="nav-link btn-link logout-button">Logout</button>
                                 </form>
+
                             </li>
                         </ul>
                     </div>
-                </nav>
-            }
-            else if (SignInManager.IsSignedIn(User) && User.IsInRole("User"))
-            {
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Chromebooks</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Classes
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Home Room</a>
-                                    <a class="dropdown-item" href="#">First Period</a>
-                                    <a class="dropdown-item" href="#">Second Period</a>
-                                    <a class="dropdown-item" href="#">Third Period</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">All Students</a>
-                                </div>
-                            </li>
-                        </ul>
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Student/Chromebook" aria-label="Search">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                        </form>
-                    </div>
-                </nav>
-            }
+                   </div>
+               </div>
+            </nav>
+        }
+        else if (SignInManager.IsSignedIn(User) && User.IsInRole("User"))
+        {
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Chromebooks</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Classes
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Home Room</a>
+                                <a class="dropdown-item" href="#">First Period</a>
+                                <a class="dropdown-item" href="#">Second Period</a>
+                                <a class="dropdown-item" href="#">Third Period</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">All Students</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Student/Chromebook" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+            </nav>
+        }
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
@@ -125,9 +115,9 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer">
         <div class="container">
-            &copy; 2021 - IDGenWebsite - <a asp-area="" asp-controller="Login" asp-action="Privacy">Privacy</a>
+            &copy; 2021 - IDGenWebsite -
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
