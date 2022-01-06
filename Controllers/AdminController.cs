@@ -65,7 +65,7 @@ namespace IDGenWebsite.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Imports()
+        public IActionResult Imports()
         {
             return View();
         }
@@ -127,8 +127,7 @@ namespace IDGenWebsite.Controllers
         }
 
         //Below this are all the old actions from the manual file upload and partial layout
-
-
+        //<---------------------------------------------------------------------------------->
         [HttpPost]
         //TODO: Add an Error Response on failed manual upload for Focus
         public async Task<IActionResult> UploadFocus(List<IFormFile> focusFiles)
@@ -151,7 +150,7 @@ namespace IDGenWebsite.Controllers
             await _fileHelper.UploadIdsAsync(idPdfs);
             return Content("Succces");
         }
-
+        //<---------------------------------------------------------------------------------->
 
 
         [HttpPost]

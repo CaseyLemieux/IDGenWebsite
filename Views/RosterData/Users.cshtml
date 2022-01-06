@@ -3,6 +3,24 @@
     ViewData["Title"] = "Roster Data";
 
 }
+<!--Show User Details and action Modal-->
+<!--------------------------------------------------------------------------------->
+<div class="modal fade" id="viewUserDetailsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalHeading"></h2>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--------------------------------------------------------------------------------->
 <table id="userDataTable" class="table table-hover">
     <thead class="custom-thead">
         <tr>
@@ -11,9 +29,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.GivenName)
@@ -65,7 +80,6 @@
             "columns":[
                 {"data": "userSourcedId", "name": "User Sourced Id", "autoWidth": true},
                 {"data": "status", "name": "Status", "autoWidth": true},
-                {"data": "username", "name": "Username", "autoWidth": true},
                 {"data": "givenName", "name": "First Name", "autoWidth": true},
                 {"data": "familyName", "name": "Last Name", "autoWidth": true},
                 {"data": "role", "name": "Role", "autoWidth": true},
@@ -79,7 +93,9 @@
 
         $('#userDataTable tbody').on('click', 'tr', function () {
             var data = table.row( this ).data();
-            alert( 'You clicked on '+data['familyName']+'\'s row' );
+            //alert( 'You clicked on '+data['familyName']+'\'s row' );
+            $('#modalHeading').text(data['givenName'] + ' ' + data['familyName']);
+            $('#viewUserDetailsModal').modal('show');
             } );
     });
 </script>

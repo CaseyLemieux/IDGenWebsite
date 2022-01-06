@@ -86,7 +86,7 @@ namespace IDGenWebsite.Controllers
         [HttpGet]
         public async Task<ActionResult<DataTableResponse>> GetUsers()
         {
-            var users = await _schoolContext.Users.ToListAsync();
+            var users = await _schoolContext.Users.Include(g => g.Grades).ToListAsync();
 
             return new DataTableResponse
             {
