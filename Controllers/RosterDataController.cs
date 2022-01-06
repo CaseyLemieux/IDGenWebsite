@@ -62,6 +62,11 @@ namespace IDGenWebsite.Controllers
         {
             var orgs = await _schoolContext.Orgs.ToListAsync();
 
+            foreach(var org in orgs)
+            {
+
+            }
+
             return new DataTableResponse
             {
                 RecordsTotal = orgs.Count(),
@@ -133,6 +138,12 @@ namespace IDGenWebsite.Controllers
                 RecordsFiltered = 10,
                 Data = enrollments.ToArray()
             };
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudentPhoto(string sourcedId)
+        {
+
         }
     }
 }

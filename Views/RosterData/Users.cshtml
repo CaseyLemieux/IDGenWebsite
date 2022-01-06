@@ -45,12 +45,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QrCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPicPath)
-            </th>
+           
         </tr>
     </thead>
     <tbody>
@@ -85,8 +80,7 @@
                 {"data": "role", "name": "Role", "autoWidth": true},
                 {"data": "identifier", "name": "Identifier", "autoWidth": true},
                 {"data": "email", "name": "Email", "autoWidth": true},
-                {"data": "qrCode", "name": "Qr Code", "autoWidth": true},
-                {"data": "idPicPath", "name": "Id Picture", "autoWidth": true},
+                
             ]
         });
         var table = $('#userDataTable').DataTable();
