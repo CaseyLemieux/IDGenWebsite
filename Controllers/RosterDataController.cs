@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace IDGenWebsite.Controllers
 {
@@ -62,11 +64,6 @@ namespace IDGenWebsite.Controllers
         {
             var orgs = await _schoolContext.Orgs.ToListAsync();
 
-            foreach(var org in orgs)
-            {
-
-            }
-
             return new DataTableResponse
             {
                 RecordsTotal = orgs.Count(),
@@ -92,7 +89,14 @@ namespace IDGenWebsite.Controllers
         public async Task<ActionResult<DataTableResponse>> GetUsers()
         {
             var users = await _schoolContext.Users.Include(g => g.Grades).ToListAsync();
-
+            foreach(var user in users)
+            {
+                if(user.IdPicPath != null)
+                {
+                    string idPhotoBase64 = Convert.ToBase64String(System.IO.File.ReadAllBytes(user.IdPicPath));
+                    user.IdBase64 = idPhotoBase64;
+                }
+            }
             return new DataTableResponse
             {
                 RecordsTotal = users.Count(),
@@ -140,10 +144,10 @@ namespace IDGenWebsite.Controllers
             };
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async Task<IActionResult> GetStudentPhoto(string sourcedId)
         {
 
-        }
+        } */
     }
 }

@@ -45,7 +45,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-           
         </tr>
     </thead>
     <tbody>
@@ -87,6 +86,7 @@
 
         $('#userDataTable tbody').on('click', 'tr', function () {
             var data = table.row( this ).data();
+            console.log(data);
             //alert( 'You clicked on '+data['familyName']+'\'s row' );
             $('#modalHeading').text(data['givenName'] + ' ' + data['familyName']);
             $('#viewUserDetailsModal').modal('show');
