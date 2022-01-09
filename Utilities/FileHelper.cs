@@ -225,7 +225,7 @@ namespace IDGenWebsite.Utilities
                 string logoPhotoBase64 = Convert.ToBase64String(File.ReadAllBytes(webroot + "/Images/FCSD_Hawk.png"));
                 string template = null;
                 string school = null;
-                /*switch (student.GradeLevel)
+                switch (student.Grades.ElementAt(0).Code)
                 {
                     case "PK":
                         template = "ElementaryStyleSheet.css";
@@ -283,7 +283,7 @@ namespace IDGenWebsite.Utilities
                         template = "HighStyleSheet.css";
                         school = "High";
                         break;
-                } */
+                } 
                 //Get the front and back templates
                 string frontTemplate = File.ReadAllText(Path.Combine(webroot, "IdTemplateFront.html"));
                 string backTemplate = File.ReadAllText(Path.Combine(webroot, "IdTemplateBack.html"));

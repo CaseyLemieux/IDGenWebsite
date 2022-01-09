@@ -8,14 +8,29 @@
 <div class="modal fade" id="viewUserDetailsModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalHeading"></h2>
+            <div class="modal-header student-modal-header">
+                <h2 id="modalStudentHeading"></h2>
             </div>
-            <div class="modal-body">
-                <img id="modalStudentPhoto" src="">
+            <div class="modal-body student-modal-body">
+                <img id="modalStudentPhoto" class="student-modal-img" src="">
+                <br />
+                <label>SourcedID:</label>
+                <p id="modalStudentSourcedId"></p>
+                <label>Email:</label>
+                <p id="modalStudentEmail"></p>
+                <label>Enabled:</label>
+                <p id="modalStudentEnabled"></p>
+                <label>Qr Code:</label>
+                <p id="modalStudentQrCode"></p>
             </div>
-            <div class="modal-footer">
-
+            <div class="modal-footer student-modal-footer">
+                @using (Html.BeginForm("DownloadStudentId", "Admin", FormMethod.Post)){
+                    <button id="modalIdBtn" name="sourcedId" type="submit" class="btn student-modal-btn">Download Id</button>
+                }
+                @using (Html.BeginForm("DownloadStudentQrCode", "Admin", FormMethod.Post)){
+                    <button id="modalQrBtn" name="sourcedId" type="submit" class="btn student-modal-btn">Download Qr</button>
+                }
+                <button class="btn student-modal-btn" onclick="ExitStudentModal()">Exit</button>
             </div>
         </div>
     </div>
@@ -86,12 +101,40 @@
 
         $('#userDataTable tbody').on('click', 'tr', function () {
             var data = table.row( this ).data();
-            console.log(data);
-            //alert( 'You clicked on '+data['familyName']+'\'s row' );
-            $('#modalHeading').text(data['givenName'] + ' ' + data['familyName']);
-            $('#modalStudentPhoto').src="data:image/png;base64, " + + data['idBase64'];
+            $('#modalStudentHeading').text(data['givenName'] + ' ' + data['familyName']);
+            $('#modalStudentPhoto').attr("src", "data:image/png;base64, " + data['idBase64']);
+            $('#modalIdBtn').val(data['userSourcedId']);
+            $('#modalQrBtn').val(data['userSourcedId']);
+            $('#modalStudentSourcedId').text(data['userSourcedId']);
+            $('#modalStudentEmail').text(data['email']);
+            $('#modalStudentEnabled').text(data['enabledUser']);
+            $('#modalStudentQrCode').text(data['qrCode']);
             $('#viewUserDetailsModal').modal('show');
             } );
     });
+
+    function DownloadId(){
+        var sourcedId = $('#modalStudentSourcedId').text();
+        $.ajax({
+                url: '/Admin/DownloadStudentId',
+                type: 'POST',
+                data: {"sourcedId" : sourcedId},
+                success: function (data) {
+                   console.log("ID Downloaded Succesfully");
+                },
+                error: function (data) {
+                    console.log(data);
+                    console.log('Error getting User ID');
+                }
+            });
+    }
+
+    function DownloadQrCode(){
+        var sourcedId = $('#modalStudentSourcedId').text();
+    }
+
+    function ExitStudentModal(){
+        $('#viewUserDetailsModal').modal('hide');
+    }
 </script>
 }

@@ -180,17 +180,17 @@ namespace IDGenWebsite.Controllers
 
         
         [HttpPost]
-        public async Task<IActionResult> SaveID(int id)
+        public async Task<IActionResult> DownloadStudentId(string sourcedId)
         {
-            var student = await _schoolContext.Users.SingleOrDefaultAsync(s => s.Identifier == id.ToString());
+            var student = await _schoolContext.Users.Include(g => g.Grades).SingleOrDefaultAsync(s => s.UserSourcedId == Guid.Parse(sourcedId));
             return File(_fileHelper.GenerateId(student), "application/pdf",  string.Concat(student.Email, ".pdf"));
             //File(, "application/pdf", string.Concat(student.Email, ".pdf"))
             //return RedirectToAction("ViewStudents", await _context.Students.ToListAsync());
         }
-
-        public async Task<IActionResult> DownloadQrCode(int id)
+        [HttpPost]
+        public async Task<IActionResult> DownloadStudentQrCode(string sourcedId)
         {
-            var student = await _schoolContext.Users.SingleOrDefaultAsync(s => s.Identifier == id.ToString());
+            var student = await _schoolContext.Users.Include(g => g.Grades).SingleOrDefaultAsync(s => s.UserSourcedId == Guid.Parse(sourcedId));
             return File(_fileHelper.GenerateQrCode(student), "application/pdf", string.Concat(student.Email, ".pdf"));
         }
 

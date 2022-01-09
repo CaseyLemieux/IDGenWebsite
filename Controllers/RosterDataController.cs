@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Hosting;
 
 namespace IDGenWebsite.Controllers
 {
@@ -18,11 +19,13 @@ namespace IDGenWebsite.Controllers
     {
         private readonly ILogger<RosterDataController> _logger;
         private readonly SchoolContext _schoolContext;
+        private readonly IWebHostEnvironment _env;
 
-        public RosterDataController(ILogger<RosterDataController> logger, SchoolContext context)
+        public RosterDataController(ILogger<RosterDataController> logger, SchoolContext context, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _schoolContext = context;
+            _env = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -94,6 +97,11 @@ namespace IDGenWebsite.Controllers
                 if(user.IdPicPath != null)
                 {
                     string idPhotoBase64 = Convert.ToBase64String(System.IO.File.ReadAllBytes(user.IdPicPath));
+                    user.IdBase64 = idPhotoBase64;
+                }
+                else
+                {
+                    string idPhotoBase64 = Convert.ToBase64String(System.IO.File.ReadAllBytes(_env.WebRootPath + "/noUser96.png"));
                     user.IdBase64 = idPhotoBase64;
                 }
             }

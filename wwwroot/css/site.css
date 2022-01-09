@@ -214,3 +214,40 @@ tr *{
 }
 /* Dashboard Card Syles
 -------------------------------------------------- */
+
+/* Student Modal Styles
+-------------------------------------------------- */
+
+.student-modal-header {
+    color: white;
+    background-color: #171717;
+    border-bottom-color: #c13610;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+.student-modal-body {
+    color: black;
+    background-color: #e2e6e9;
+}
+
+.student-modal-footer {
+    background-color: #171717;
+    border-top-color: #c13610;
+    border-top-style: solid;
+    border-top-width: 2px;
+}
+
+.student-modal-btn {
+    color: white;
+    background-color: #c13610;
+}
+
+.student-modal-img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Student Modal Styles
+-------------------------------------------------- */
