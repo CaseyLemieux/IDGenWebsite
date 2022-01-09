@@ -47,6 +47,21 @@ namespace IDGenWebsite.Data
                     userManager.AddToRoleAsync(user, "Admin").Wait();
                 }
             }
+            if (userManager.FindByEmailAsync("ghenson@franklincountyschools.org").Result == null)
+            {
+                EmployeeModel user = new EmployeeModel();
+                user.FirstName = "Genevieve";
+                user.LastName = "Henson";
+                user.UserName = "ghenson@franklincountyschools.org";
+                user.Email = "ghenson@franklincountyschools.org";
+                user.EmailConfirmed = true;
+
+                IdentityResult result = userManager.CreateAsync(user, "Seahawks22!").Result;
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Admin").Wait();
+                }
+            }
         }
 
         private static void SeedRoles(RoleManager<IdentityRole> roleManager)
