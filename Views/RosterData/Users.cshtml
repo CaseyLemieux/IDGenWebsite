@@ -6,22 +6,31 @@
 <!--Show User Details and action Modal-->
 <!--------------------------------------------------------------------------------->
 <div class="modal fade" id="viewUserDetailsModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header student-modal-header">
                 <h2 id="modalStudentHeading"></h2>
             </div>
             <div class="modal-body student-modal-body">
-                <img id="modalStudentPhoto" class="student-modal-img" src="">
-                <br />
-                <label>SourcedID:</label>
-                <p id="modalStudentSourcedId"></p>
-                <label>Email:</label>
-                <p id="modalStudentEmail"></p>
-                <label>Enabled:</label>
-                <p id="modalStudentEnabled"></p>
-                <label>Qr Code:</label>
-                <p id="modalStudentQrCode"></p>
+                <row>
+                    <img id="modalStudentPhoto" class="student-modal-img" src="">
+                </row>
+                <div class="modalStudentDiv">
+                    <label>SourcedID:</label>
+                    <p id="modalStudentSourcedId"></p>
+                </div>
+                <div class="modalStudentDiv">
+                    <label>Email:</label>
+                    <p id="modalStudentEmail"></p>
+                </div>
+                <div class="modalStudentDiv">
+                    <label>Enabled:</label>
+                    <p id="modalStudentEnabled"></p>
+                </div>
+                <div class="modalStudentDiv">
+                    <label>Qr Code:</label>
+                    <p id="modalStudentQrCode"></p>
+                </div>
             </div>
             <div class="modal-footer student-modal-footer">
                 @using (Html.BeginForm("DownloadStudentId", "Admin", FormMethod.Post)){
@@ -101,16 +110,28 @@
 
         $('#userDataTable tbody').on('click', 'tr', function () {
             var data = table.row( this ).data();
+            console.log(data);
             $('#modalStudentHeading').text(data['givenName'] + ' ' + data['familyName']);
             $('#modalStudentPhoto').attr("src", "data:image/png;base64, " + data['idBase64']);
-            $('#modalIdBtn').val(data['userSourcedId']);
-            $('#modalQrBtn').val(data['userSourcedId']);
+            if(data['qrCode'] == null){
+                $('#modalQrBtn').prop("disabled", true);
+                $('#modalStudentQrCode').text("Not Uploaded");
+            } else{
+                $('#modalQrBtn').prop("disabled", false);
+                $('#modalQrBtn').val(data['userSourcedId']);
+                $('#modalStudentQrCode').text(data['qrCode']);
+            }
+            if(data['idPicPath'] == null){
+                 $('#modalIdBtn').prop("disabled", true);
+            } else{
+                 $('#modalIdBtn').prop("disabled", false);
+                 $('#modalIdBtn').val(data['userSourcedId']);
+            }   
             $('#modalStudentSourcedId').text(data['userSourcedId']);
             $('#modalStudentEmail').text(data['email']);
             $('#modalStudentEnabled').text(data['enabledUser']);
-            $('#modalStudentQrCode').text(data['qrCode']);
             $('#viewUserDetailsModal').modal('show');
-            } );
+            });
     });
 
     function DownloadId(){

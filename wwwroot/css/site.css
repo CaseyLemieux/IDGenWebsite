@@ -224,6 +224,11 @@ tr *{
     border-bottom-color: #c13610;
     border-bottom-style: solid;
     border-bottom-width: 2px;
+    
+}
+
+h2.student-modal-header {
+    text-align: center !important;
 }
 
 .student-modal-body {
@@ -236,6 +241,12 @@ tr *{
     border-top-color: #c13610;
     border-top-style: solid;
     border-top-width: 2px;
+}
+
+.modalStudentDiv {
+    border-bottom-color: #424e57 !important;
+    border-bottom-style: solid !important;
+    border-bottom-width: 2px !important;
 }
 
 .student-modal-btn {
