@@ -81,44 +81,6 @@ namespace IDGenWebsite.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        
-
-        public async Task<IActionResult> GetOrgsCount()
-        {
-            var orgCount = await _schoolContext.Orgs.CountAsync();
-            return Content(orgCount.ToString());
-        }
-
-        public async Task<IActionResult> GetSessionsCount()
-        {
-            var sessionsCount = await _schoolContext.AcademicSessions.CountAsync();
-            return Content(sessionsCount.ToString());
-        }
-
-        public async Task<IActionResult> GetUsersCount()
-        {
-            var usersCount = await _schoolContext.Users.CountAsync();
-            return Content(usersCount.ToString());
-        }
-
-        public async Task<IActionResult> GetCoursesCount()
-        {
-            var coursesCount = await _schoolContext.Courses.CountAsync();
-            return Content(coursesCount.ToString());
-        }
-
-        public async Task<IActionResult> GetClassesCount()
-        {
-            var classesCount = await _schoolContext.Classes.CountAsync();
-            return Content(classesCount.ToString());
-        }
-
-        public async Task<IActionResult> GetEnrollmentsCount()
-        {
-            var enrollmentsCount = await _schoolContext.Enrollments.CountAsync();
-            return Content(enrollmentsCount.ToString());
-        }
-
         //TODO:This needs to be revisited in the future for thersholds and such
         public async Task<IActionResult> ImportRosterData(){
             ApiHelper apiHelper = new ApiHelper(_schoolContext);

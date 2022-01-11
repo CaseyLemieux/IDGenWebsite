@@ -5,7 +5,7 @@
 <div class="row d-flex justify-content-center">
     <div class="card-deck">
         <!--Orgs Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card" style="width: 18rem;" onclick="">
             <div class="card-body">
                 <h4 class="card-title">Organizations</h4>
                 <p class="card-text" id="orgsCount"></p>
@@ -47,10 +47,36 @@
             </div>
         </div>
         <!--Enrollments Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card" style="width: 18rem;" >
             <div class="card-body">
                 <h4 class="card-title">Enrollments</h4>
                 <p class="card-text" id="enrollmentsCount"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Third Row-->
+<div class="row d-flex justify-content-center">
+    <div class="card-deck">
+        <!--No Id Photo Card-->
+        <div class="card dashboard-card" style="width: 18rem;">
+            <div class="card-body">
+                <h4 class="card-title">No Id Photo</h4>
+                <p class="card-text" id="noIdCount"></p>
+            </div>
+        </div>
+        <!--No QR Code Card-->
+        <div class="card dashboard-card" style="width: 18rem;">
+            <div class="card-body">
+                <h4 class="card-title">No Qr Code</h4>
+                <p class="card-text" id="noQrCount"></p>
+            </div>
+        </div>
+        <!--Invalid Email Card-->
+        <div class="card dashboard-card" style="width: 18rem;">
+            <div class="card-body">
+                <h4 class="card-title">Invalid Email</h4>
+                <p class="card-text" id="invalidEmailCount"></p>
             </div>
         </div>
     </div>
@@ -63,7 +89,7 @@
 
         $(document).ready(function () {
             $.ajax({
-                url: '/Admin/GetOrgsCount',
+                url: '/RosterData/GetOrgsCount',
                 type: 'GET',
                 success: function (data) {
                     $('#orgsCount').text(data);
@@ -74,7 +100,7 @@
             });
 
             $.ajax({
-                url: '/Admin/GetSessionsCount',
+                url: '/RosterData/GetSessionsCount',
                 type: 'GET',
                 success: function (data) {
                    $('#sessionsCount').text(data);
@@ -85,7 +111,7 @@
             });
 
             $.ajax({
-                url: '/Admin/GetUsersCount',
+                url: '/RosterData/GetUsersCount',
                 type: 'GET',
                 success: function (data) {
                     $('#usersCount').text(data);
@@ -96,7 +122,7 @@
             });
 
             $.ajax({
-                url: '/Admin/GetCoursesCount',
+                url: '/RosterData/GetCoursesCount',
                 type: 'GET',
                 success: function (data) {
                     $('#coursesCount').text(data);
@@ -107,7 +133,7 @@
             });
 
             $.ajax({
-                url: '/Admin/GetClassesCount',
+                url: '/RosterData/GetClassesCount',
                 type: 'GET',
                 success: function (data) {
                    $('#classesCount').text(data);
@@ -118,13 +144,46 @@
             });
 
             $.ajax({
-                url: '/Admin/GetEnrollmentsCount',
+                url: '/RosterData/GetEnrollmentsCount',
                 type: 'GET',
                 success: function (data) {
                     $('#enrollmentsCount').text(data);
                 },
                 error: function (data) {
                     console.log('Error getting enrollments count');
+                }
+            });
+
+            $.ajax({
+                url: '/RosterData/GetNoIdPhotoCount',
+                type: 'GET',
+                success: function (data) {
+                    $('#noIdCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting No Id count');
+                }
+            });
+
+            $.ajax({
+                url: '/RosterData/GetNoQrCodeCount',
+                type: 'GET',
+                success: function (data) {
+                    $('#noQrCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting No Qr count');
+                }
+            });
+
+            $.ajax({
+                url: '/RosterData/GetInvalidEmailCount',
+                type: 'GET',
+                success: function (data) {
+                    $('#invalidEmailCount').text(data);
+                },
+                error: function (data) {
+                    console.log('Error getting Invalid Email count');
                 }
             });
 
