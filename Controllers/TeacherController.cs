@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IDGenWebsite.Controllers
 {
-    public class UserController : Controller
+    public class TeacherController : Controller
     {
         public IActionResult Dashboard()
         {

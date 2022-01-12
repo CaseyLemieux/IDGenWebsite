@@ -5,26 +5,27 @@
 <div class="row d-flex justify-content-center">
     <div class="card-deck">
         <!--Orgs Card-->
-        <div class="card dashboard-card" style="width: 18rem;" onclick="">
+        <div class="card dashboard-card">
             <div class="card-body">
                 <h4 class="card-title">Organizations</h4>
                 <p class="card-text" id="orgsCount"></p>
-               
+                <a href="~/RosterData/Orgs" class="stretched-link"></a> 
             </div>
         </div>
         <!--Academic Sessions Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card">
             <div class="card-body">
                 <h4 class="card-title">Academic Sessions</h4>
                 <p class="card-text" id="sessionsCount"></p>
-               
+                <a href="~/RosterData/Sessions" class="stretched-link"></a> 
             </div>
         </div>
         <!--Users Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card">
             <div class="card-body">
                 <h4 class="card-title">Users</h4>
                 <p class="card-text" id="usersCount"></p>
+                <a href="~/RosterData/Users" class="stretched-link"></a> 
             </div>
         </div>
     </div>
@@ -33,24 +34,27 @@
 <div class="row d-flex justify-content-center">
     <div class="card-deck">
         <!--Courses Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card">
             <div class="card-body">
                 <h4 class="card-title">Courses</h4>
                 <p class="card-text" id="coursesCount"></p>
+                <a href="~/RosterData/Courses" class="stretched-link"></a> 
             </div>
         </div>
         <!--Classes Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card">
             <div class="card-body">
                 <h4 class="card-title">Classes</h4>
                 <p class="card-text" id="classesCount"></p>
+                <a href="~/RosterData/Classes" class="stretched-link"></a> 
             </div>
         </div>
         <!--Enrollments Card-->
-        <div class="card dashboard-card" style="width: 18rem;" >
+        <div class="card dashboard-card">
             <div class="card-body">
                 <h4 class="card-title">Enrollments</h4>
                 <p class="card-text" id="enrollmentsCount"></p>
+                <a href="~/RosterData/Enrollments" class="stretched-link"></a> 
             </div>
         </div>
     </div>
@@ -59,24 +63,27 @@
 <div class="row d-flex justify-content-center">
     <div class="card-deck">
         <!--No Id Photo Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card">
             <div class="card-body">
-                <h4 class="card-title">No Id Photo</h4>
+                <h4 class="card-title">Missing Id Photos</h4>
                 <p class="card-text" id="noIdCount"></p>
+                <a href="~/Report/" class="stretched-link"></a> 
             </div>
         </div>
         <!--No QR Code Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card">
             <div class="card-body">
-                <h4 class="card-title">No Qr Code</h4>
+                <h4 class="card-title">Missing Qr Codes</h4>
                 <p class="card-text" id="noQrCount"></p>
+                <a href="" class="stretched-link"></a> 
             </div>
         </div>
         <!--Invalid Email Card-->
-        <div class="card dashboard-card" style="width: 18rem;">
+        <div class="card dashboard-card">
             <div class="card-body">
-                <h4 class="card-title">Invalid Email</h4>
-                <p class="card-text" id="invalidEmailCount"></p>
+                <h4 class="card-title">Invalid Emails</h4>
+                <p class="card-text" id="invalidEmailCount" ></p>
+                <a href="" class="stretched-link"></a> 
             </div>
         </div>
     </div>
@@ -155,7 +162,7 @@
             });
 
             $.ajax({
-                url: '/RosterData/GetNoIdPhotoCount',
+                url: '/Report/GetNoIdPhotoCount',
                 type: 'GET',
                 success: function (data) {
                     $('#noIdCount').text(data);
@@ -166,7 +173,7 @@
             });
 
             $.ajax({
-                url: '/RosterData/GetNoQrCodeCount',
+                url: '/Reports/GetNoQrCodeCount',
                 type: 'GET',
                 success: function (data) {
                     $('#noQrCount').text(data);
@@ -177,7 +184,7 @@
             });
 
             $.ajax({
-                url: '/RosterData/GetInvalidEmailCount',
+                url: '/Reports/GetInvalidEmailCount',
                 type: 'GET',
                 success: function (data) {
                     $('#invalidEmailCount').text(data);
@@ -189,6 +196,9 @@
 
         });
 
+        function ViewInvalidEmails(){
+            console.log("clicked");
+        }
     </script>
 
 }

@@ -32,6 +32,10 @@ a.navbar-brand {
     border-style: none;
 }
 
+.nav-item{
+    padding-right: 5px;
+}
+
 .dropdown-menu {
     background-color: #171717;
     border-left-style: solid;
@@ -211,6 +215,7 @@ tr *{
     border-color: #c13610;
     border-width: 3px;
     margin-top: 15px;
+    width: 18rem;
 }
 /* Dashboard Card Syles
 -------------------------------------------------- */
@@ -261,4 +266,16 @@ h2.student-modal-header {
 }
 
 /* Student Modal Styles
+-------------------------------------------------- */
+
+/* Side Nav Styles
+-------------------------------------------------- */
+
+.sideNav {
+    min-height: calc(100vh - 225px);
+    margin-bottom: 0px;
+}
+
+
+/* Side Nav Styles
 -------------------------------------------------- */
