@@ -295,7 +295,7 @@ namespace IDGenWebsite.Utilities
                     .Replace("[SCHOOL]", school)
                     .Replace("[IDPHOTO]", idPhotoBase64)
                     .Replace("[NAME]", student.GivenName + " " +student.FamilyName)
-                    //.Replace("[GRADE]", student.GradeLevel)
+                    .Replace("[GRADE]", student.Grades.ElementAt(0).Code)
                     .Replace("[BARCODE]", barcodeBase64)
                     .Replace("[IDNUMBER]", student.Identifier);
                 //Replace the place holder strings on the back template

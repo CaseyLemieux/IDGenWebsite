@@ -93,7 +93,7 @@ namespace IDGenWebsite.Models
         [Display(Name = "ID Picture")]
         public string IdPicPath { get; set; }
 
-
+        [NotMapped]
         public string IdBase64 { get; set; }
 
         [JsonProperty("orgs")]
