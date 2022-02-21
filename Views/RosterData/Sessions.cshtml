@@ -6,34 +6,31 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.SessionSourcedId)
+                            @Html.DisplayNameFor(model => model.SessionSourcedId)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.Status)
+                            @Html.DisplayNameFor(model => model.Status)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.DateLastModified)
+                            @Html.DisplayNameFor(model => model.DateLastModified)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.Title)
+                            @Html.DisplayNameFor(model => model.Title)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.Type)
+                            @Html.DisplayNameFor(model => model.Type)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.StartDate)
+                            @Html.DisplayNameFor(model => model.StartDate)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.EndDate)
+                            @Html.DisplayNameFor(model => model.EndDate)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.Parent)
+                            @Html.DisplayNameFor(model => model.Parent)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.Parent_SourcedId)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(mode => mode.SchoolYear)
+                            @Html.DisplayNameFor(model => model.SchoolYear)
                         </th>
                     </tr>
                 </thead>
@@ -57,6 +54,10 @@
                 "processing": true,
                 "paging": true,
                 "autoWidth": false,
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
                 "ajax": {
                     "url": "/RosterData/GetSessions",
                     "type": "get"
@@ -69,8 +70,7 @@
                     {"data": "type", "name": "Type", "autoWidth": true},
                     {"data": "startDate", "name": "Start Date", "autoWidth": true},
                     {"data": "endDate", "name": "End Date", "autoWidth": true},
-                    {"data": "parent", "name": "Parent", "autoWidth": true},
-                    {"data": "parent_SourcedId", "name": "Parent Sourced Id", "autoWidth": true},
+                    {"data": "parent.sessionSourcedId", "name": "Parent Sourced Id", "autoWidth": true},
                     {"data": "schoolYear", "name": "School Year", "autoWidth": true},
                 ]
             });

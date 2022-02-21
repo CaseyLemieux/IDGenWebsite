@@ -24,7 +24,7 @@
                             @Html.DisplayNameFor(mode => mode.CourseCode)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(mode => mode.OrgSourcedId)
+                            @Html.DisplayNameFor(mode => mode.Organization.OrgSourcedId)
                         </th>
                     </tr>
                 </thead>
@@ -48,6 +48,10 @@
                 "processing": true,
                 "paging": true,
                 "autoWidth": false,
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
                 "ajax": {
                     "url": "/RosterData/GetCourses",
                     "type": "get"

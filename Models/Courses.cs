@@ -14,7 +14,7 @@ namespace IDGenWebsite.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
         [JsonProperty("sourcedId")]
-        [Display(Name = "Source Id")]
+        [Display(Name = "Sourced Id")]
         public Guid CourseSourcedId { get; set; }
         [JsonProperty("status")]
         [Display(Name = "Status")]
@@ -53,8 +53,8 @@ namespace IDGenWebsite.Models
         [JsonProperty("resources")]
         public List<Resources> Resources { get; set; }
 
-        public Guid SessionSourcedId { get; set; }
-        public Guid OrgSourcedId { get; set; }
+        //public Guid SessionSourcedId { get; set; }
+        //public Guid OrgSourcedId { get; set; }
 
 
     }

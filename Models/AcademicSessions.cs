@@ -14,7 +14,7 @@ namespace IDGenWebsite.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
         [JsonProperty("sourcedId")]
-        [Display(Name = "Source Id")]
+        [Display(Name = "Sourced Id")]
         public Guid SessionSourcedId { get; set; }
         [JsonProperty("status")]
         [Display(Name = "Status")]
@@ -39,14 +39,14 @@ namespace IDGenWebsite.Models
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
         [JsonProperty("parent")]
-        [Display(Name = "Parent")]
+        [Display(Name = "Parent Sourced Id")]
         [ForeignKey("Parent_SourcedId")]
         public AcademicSessions Parent { get; set; }
         [JsonProperty("schoolYear")]
-        [Display(Name = "School")]
+        [Display(Name = "School Year")]
         public string SchoolYear { get; set; }
         public List<Classes> Classes { get; set; }
-        public Guid? Parent_SourcedId { get; set; }
+        //public Guid? Parent_SourcedId { get; set; }
 
     }
 }

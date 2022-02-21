@@ -78,7 +78,7 @@ namespace IDGenWebsite.Controllers
         [HttpGet]
         public async Task<ActionResult<DataTableResponse>> GetSessions()
         {
-            var sessions = await _schoolContext.AcademicSessions.ToListAsync();
+            var sessions = await _schoolContext.AcademicSessions.Include(a => a.Parent).ToListAsync();
 
             return new DataTableResponse
             {
@@ -138,6 +138,25 @@ namespace IDGenWebsite.Controllers
                 Data = classes.ToArray()
             };
         }
+
+        [HttpGet]
+        public async Task<string> GetClassUsers(string classSourcedId)
+        {
+            //Finally we send those user back to the frontend
+            //First We Need to get the class and its enrollments
+            var selectedClass = await _schoolContext.Classes.Include(a => a.AcademicSessions).Include(e => e.Enrollments).ThenInclude(e => e.User).SingleOrDefaultAsync(c => c.ClassSourcedId == Guid.Parse(classSourcedId));
+         
+            var response = new DataTableResponse
+            {
+                RecordsTotal = selectedClass.Enrollments.Count,
+                RecordsFiltered = 10,
+                Data = selectedClass.Enrollments.ToArray()
+            };
+
+            return JsonConvert.SerializeObject(response);
+
+        }
+
 
         [HttpGet]
         public async Task<ActionResult<DataTableResponse>> GetEnrollments()

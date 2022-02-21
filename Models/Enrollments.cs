@@ -14,6 +14,7 @@ namespace IDGenWebsite.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
         [JsonProperty("sourcedId")]
+        [Display(Name = "Sourced Id")]
         public Guid EnrollmentSourcedId { get; set; }
         [JsonProperty("status")]
         public string Status { get; set; }
@@ -38,8 +39,8 @@ namespace IDGenWebsite.Models
         [JsonProperty("endDate")]
         public DateTime EndDate { get; set; }
 
-        public Guid UserSourcedId { get; set; }
-        public Guid ClassSourcedId { get; set; }
-        public Guid OrgSourcedId { get; set; }
+        //public Guid UserSourcedId { get; set; }
+        //public Guid ClassSourcedId { get; set; }
+        //public Guid OrgSourcedId { get; set; }
     }
 }

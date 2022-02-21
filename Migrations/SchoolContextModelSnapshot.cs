@@ -81,10 +81,7 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("ClassType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CourseSourcedId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CourseSourcedId1")
+                    b.Property<Guid?>("CourseSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -92,9 +89,6 @@ namespace IDGenWebsite.Migrations
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("OrgSourcedId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("SchoolOrgSourcedId")
                         .HasColumnType("uniqueidentifier");
@@ -107,7 +101,7 @@ namespace IDGenWebsite.Migrations
 
                     b.HasKey("ClassSourcedId");
 
-                    b.HasIndex("CourseSourcedId1");
+                    b.HasIndex("CourseSourcedId");
 
                     b.HasIndex("SchoolOrgSourcedId");
 
@@ -125,16 +119,10 @@ namespace IDGenWebsite.Migrations
                     b.Property<DateTime>("DateLastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OrgSourcedId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("OrganizationOrgSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("SchoolYearSessionSourcedId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SessionSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -160,10 +148,7 @@ namespace IDGenWebsite.Migrations
                     b.Property<DateTime>("BeginDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ClassSourcedId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ClassSourcedId1")
+                    b.Property<Guid?>("ClassSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateLastModified")
@@ -171,9 +156,6 @@ namespace IDGenWebsite.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("OrgSourcedId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Primary")
                         .HasColumnType("bit");
@@ -187,19 +169,16 @@ namespace IDGenWebsite.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserSourcedId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UserSourcedId1")
+                    b.Property<Guid?>("UserSourcedId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("EnrollmentSourcedId");
 
-                    b.HasIndex("ClassSourcedId1");
+                    b.HasIndex("ClassSourcedId");
 
                     b.HasIndex("SchoolOrgSourcedId");
 
-                    b.HasIndex("UserSourcedId1");
+                    b.HasIndex("UserSourcedId");
 
                     b.ToTable("Enrollments");
                 });
@@ -660,7 +639,7 @@ namespace IDGenWebsite.Migrations
                 {
                     b.HasOne("IDGenWebsite.Models.Courses", "Course")
                         .WithMany()
-                        .HasForeignKey("CourseSourcedId1");
+                        .HasForeignKey("CourseSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Organizations", "School")
                         .WithMany("Classes")
@@ -690,7 +669,7 @@ namespace IDGenWebsite.Migrations
                 {
                     b.HasOne("IDGenWebsite.Models.Classes", "Class")
                         .WithMany("Enrollments")
-                        .HasForeignKey("ClassSourcedId1");
+                        .HasForeignKey("ClassSourcedId");
 
                     b.HasOne("IDGenWebsite.Models.Organizations", "School")
                         .WithMany()
@@ -698,7 +677,7 @@ namespace IDGenWebsite.Migrations
 
                     b.HasOne("IDGenWebsite.Models.Users", "User")
                         .WithMany("Enrollments")
-                        .HasForeignKey("UserSourcedId1");
+                        .HasForeignKey("UserSourcedId");
 
                     b.Navigation("Class");
 

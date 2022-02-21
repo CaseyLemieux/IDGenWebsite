@@ -49,6 +49,8 @@ namespace IDGenWebsite.Utilities
             await GetClasses();
             await GetEnrollments();
         }
+
+        
         private async Task GetOrgs()
         {
             //Make request to Focus API for the orgs
@@ -68,7 +70,7 @@ namespace IDGenWebsite.Utilities
             }
             await _schoolContext.SaveChangesAsync();
         }
-
+        
         private async Task GetAcademicSessions()
         {
             //Make request to Focus API for the Academic Sessions
@@ -97,14 +99,16 @@ namespace IDGenWebsite.Utilities
                 }
                 else
                 {
-                    term.Parent_SourcedId = term.Parent.Parent_SourcedId;
-                    term.Parent = null;
+                    //term.Parent_SourcedId = term.Parent.Parent_SourcedId;
+                    //term.Parent = null;
+                    var parentInDb = await _schoolContext.AcademicSessions.Where(a => a.SessionSourcedId == term.Parent.SessionSourcedId).SingleOrDefaultAsync();
+                    term.Parent = parentInDb;
                     await _schoolContext.AddAsync(term);
                     await _schoolContext.SaveChangesAsync();
                 }
             }
         }
-
+        
         private async Task GetUsers()
         {
             //Make request to the Focus API for the Users in Student and Teacher roles
@@ -192,7 +196,7 @@ namespace IDGenWebsite.Utilities
                 _schoolContext.ChangeTracker.Clear();
             }
         }
-
+        
         private async Task GetCourses()
         {
             //Make request to the Focus API for the Courses
@@ -268,12 +272,16 @@ namespace IDGenWebsite.Utilities
                     }
 
                     //The academic session will need to be replaced with the actual session exsisting in the database. 
-                    course.SessionSourcedId = course.SchoolYear.SessionSourcedId;
-                    course.SchoolYear = null;
-
+                    //course.SessionSourcedId = course.SchoolYear.SessionSourcedId;
+                    //course.SchoolYear = null;
+                    var schoolYearInDb = await _schoolContext.AcademicSessions.Where(a => a.SessionSourcedId == course.SchoolYear.SessionSourcedId).SingleOrDefaultAsync();
+                    course.SchoolYear = schoolYearInDb;
+    
                     //The course Orgs will need to be replaced with the actual org exsisting in the database.
-                    course.OrgSourcedId = course.Organization.OrgSourcedId;
-                    course.Organization = null;
+                    //course.OrgSourcedId = course.Organization.OrgSourcedId;
+                    //course.Organization = null;
+                    var orgInDb = await _schoolContext.Orgs.Where(o => o.OrgSourcedId == course.Organization.OrgSourcedId).SingleOrDefaultAsync();
+                    course.Organization = orgInDb;
 
                     //Add the course to the database and save them
                     await _schoolContext.Courses.AddAsync(course);
@@ -380,12 +388,16 @@ namespace IDGenWebsite.Utilities
                     classObject.AcademicSessions = sessionsInDb;
 
                     //The Class Orgs will need to be replaced with the actual org exsisting in the database.
-                    classObject.OrgSourcedId = classObject.School.OrgSourcedId;
-                    classObject.School = null;
+                    //classObject.OrgSourcedId = classObject.School.OrgSourcedId;
+                    //classObject.School = null;
+                    var orgInDb = await _schoolContext.Orgs.Where(o => o.OrgSourcedId == classObject.School.OrgSourcedId).SingleOrDefaultAsync();
+                    classObject.School = orgInDb;
 
                     //The Class Course will need to be replaced with the actual Course in the database. 
-                    classObject.CourseSourcedId = classObject.Course.CourseSourcedId;
-                    classObject.Course = null;
+                    //classObject.CourseSourcedId = classObject.Course.CourseSourcedId;
+                    //classObject.Course = null;
+                    var courseInDb = await _schoolContext.Courses.Where(c => c.CourseSourcedId == classObject.Course.CourseSourcedId).SingleOrDefaultAsync();
+                    classObject.Course = courseInDb;
 
                     //Add the Class to the database and save them
                     await _schoolContext.Classes.AddAsync(classObject);
@@ -452,17 +464,23 @@ namespace IDGenWebsite.Utilities
                         }
 
                         //Set the FK for User
-                        enrollment.UserSourcedId = enrollment.User.UserSourcedId;
-                        enrollment.User = null;
-
+                        //enrollment.UserSourcedId = enrollment.User.UserSourcedId;
+                        //enrollment.User = null;
+                        var userInDb = await _schoolContext.Users.Where(u => u.UserSourcedId == enrollment.User.UserSourcedId).SingleOrDefaultAsync();
+                        enrollment.User = userInDb;
 
                         //set the FK of the Org
-                        enrollment.OrgSourcedId = enrollment.School.OrgSourcedId;
-                        enrollment.School = null;
+                        //enrollment.OrgSourcedId = enrollment.School.OrgSourcedId;
+                        //enrollment.School = null;
+                        var orgInDb = await _schoolContext.Orgs.Where(o => o.OrgSourcedId == enrollment.School.OrgSourcedId).SingleOrDefaultAsync();
+                        enrollment.School = orgInDb;
 
                         //Set the fk of the class 
-                        enrollment.ClassSourcedId = enrollment.Class.ClassSourcedId;
-                        enrollment.Class = null;
+                        //enrollment.ClassSourcedId = enrollment.Class.ClassSourcedId;
+                        //enrollment.Class = null;
+                        var classInDb = await _schoolContext.Classes.Where(c => c.ClassSourcedId == enrollment.Class.ClassSourcedId).SingleOrDefaultAsync();
+                        enrollment.Class = classInDb;
+
                         await _schoolContext.Enrollments.AddAsync(enrollment);
 
                         //enrollments.Add(enrollment);

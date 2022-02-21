@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IDGenWebsite.Migrations
 {
-    public partial class IntitialMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,8 +18,8 @@ namespace IDGenWebsite.Migrations
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SchoolYear = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Parent_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Parent_SourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SchoolYear = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -159,9 +159,7 @@ namespace IDGenWebsite.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SchoolYearSessionSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CourseCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OrganizationOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SessionSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    OrganizationOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -215,17 +213,15 @@ namespace IDGenWebsite.Migrations
                     ClassCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClassType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CourseSourcedId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SchoolOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    OrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CourseSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SchoolOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Classes", x => x.ClassSourcedId);
                     table.ForeignKey(
-                        name: "FK_Classes_Courses_CourseSourcedId1",
-                        column: x => x.CourseSourcedId1,
+                        name: "FK_Classes_Courses_CourseSourcedId",
+                        column: x => x.CourseSourcedId,
                         principalTable: "Courses",
                         principalColumn: "CourseSourcedId",
                         onDelete: ReferentialAction.Restrict);
@@ -268,23 +264,20 @@ namespace IDGenWebsite.Migrations
                     EnrollmentSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateLastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserSourcedId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ClassSourcedId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     SchoolOrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Primary = table.Column<bool>(type: "bit", nullable: false),
                     BeginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClassSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrgSourcedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Enrollments", x => x.EnrollmentSourcedId);
                     table.ForeignKey(
-                        name: "FK_Enrollments_Classes_ClassSourcedId1",
-                        column: x => x.ClassSourcedId1,
+                        name: "FK_Enrollments_Classes_ClassSourcedId",
+                        column: x => x.ClassSourcedId,
                         principalTable: "Classes",
                         principalColumn: "ClassSourcedId",
                         onDelete: ReferentialAction.Restrict);
@@ -295,8 +288,8 @@ namespace IDGenWebsite.Migrations
                         principalColumn: "OrgSourcedId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Enrollments_Users_UserSourcedId1",
-                        column: x => x.UserSourcedId1,
+                        name: "FK_Enrollments_Users_UserSourcedId",
+                        column: x => x.UserSourcedId,
                         principalTable: "Users",
                         principalColumn: "UserSourcedId",
                         onDelete: ReferentialAction.Restrict);
@@ -513,9 +506,9 @@ namespace IDGenWebsite.Migrations
                 column: "ClassesClassSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Classes_CourseSourcedId1",
+                name: "IX_Classes_CourseSourcedId",
                 table: "Classes",
-                column: "CourseSourcedId1");
+                column: "CourseSourcedId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Classes_SchoolOrgSourcedId",
@@ -533,9 +526,9 @@ namespace IDGenWebsite.Migrations
                 column: "SchoolYearSessionSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_ClassSourcedId1",
+                name: "IX_Enrollments_ClassSourcedId",
                 table: "Enrollments",
-                column: "ClassSourcedId1");
+                column: "ClassSourcedId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Enrollments_SchoolOrgSourcedId",
@@ -543,9 +536,9 @@ namespace IDGenWebsite.Migrations
                 column: "SchoolOrgSourcedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enrollments_UserSourcedId1",
+                name: "IX_Enrollments_UserSourcedId",
                 table: "Enrollments",
-                column: "UserSourcedId1");
+                column: "UserSourcedId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grades_ClassesClassSourcedId",
