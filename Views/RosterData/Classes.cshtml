@@ -1,5 +1,4 @@
-﻿import { ajax } from "jquery";
-
+﻿
 @model Classes
 @{
     ViewData["Title"] = "Roster Data";
@@ -18,25 +17,25 @@
                     <thead class="custom-thead">
                         <tr>
                             <th>
-                                
+                                User Source Id
                             </th>
                             <th>
-                                
+                                Status
                             </th>
                             <th>
-                                
+                                First Name
                             </th>
                             <th>
-                                
+                                Last Name
                             </th>
                             <th>
-                                
+                                Role
                             </th>
                             <th>
-                                
+                                Identifier
                             </th>
                             <th>
-                                
+                                Email
                             </th>
                         </tr>
                     </thead>
@@ -133,9 +132,9 @@
                     {"data": "classCode", "name": "Class Code", "autoWidth": true},
                     {"data": "classType", "name": "Class Type", "autoWidth": true},
                     {"data": "location", "name": "Location", "autoWidth": true},
-                    {"data": "courseSourcedId", "name": "Course Sourced Id", "autoWidth": true},
-                    {"data": "school", "name": "School", "autoWidth": true},
-                    {"data": "orgSourcedId", "name": "Org Sourced Id", "autoWidth": true},
+                    {"data": "course.courseSourcedId", "name": "Course Sourced Id", "autoWidth": true},
+                    {"data": "school.name", "name": "School", "autoWidth": true},
+                    {"data": "school.sourcedId", "name": "Org Sourced Id", "autoWidth": true},
                 ]
             });
             var table = $('#classesDataTable').DataTable();
@@ -148,20 +147,37 @@
         });
         
         function GetClassUsers(classSourcedId){
-            $.ajax({
-                url: "/RosterData/GetClassUsers",
-                type: "get",
-                data: {"classSourcedId" : classSourcedId},
-                success: function(data){
-                    console.log(data);
-                    GetClassUsersSuccess(data);
+            $('#classUsersModalDataTable').dataTable({
+                "processing": true,
+                "destroy": true,
+                "paging": true,
+                "autoWidth": false,
+                
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "ajax": {
+                    "url": "/RosterData/GetClassUsers",
+                    "dataSrc": "Data",
+                    "type": "get",
+                    "data": function (d){
+                        d.classSourcedId = classSourcedId;
+                    }
                 },
-                error: function(){
-                    console.log("Error Loading Class Users");
-                } 
+                "columns":[
+                    {"data": "sourcedId", "name": "User Sourced Id", "autoWidth": true},
+                    {"data": "status", "name": "Status", "autoWidth": true},
+                    {"data": "givenName", "name": "First Name", "autoWidth": true},
+                    {"data": "familyName", "name": "Last Name", "autoWidth": true},
+                    {"data": "role", "name": "Role", "autoWidth": true},
+                    {"data": "identifier", "name": "Identifier", "autoWidth": true},
+                    {"data": "email", "name": "Email", "autoWidth": true},
+                ]
             });
+             $('#viewClassUsersModal').modal('show');
         }
-
+ 
     function GetClassUsersSuccess(data){
         console.log(data);
         $('#classUsersModalDataTable').dataTable({
@@ -169,7 +185,7 @@
         "paging": true,
         "autoWidth": false,
         "columns":[
-            {"data": "userSourcedId", "name": "User Sourced Id", "autoWidth": true},
+            {"data": "sourcedId", "name": "User Sourced Id", "autoWidth": true},
             {"data": "status", "name": "Status", "autoWidth": true},
             {"data": "givenName", "name": "First Name", "autoWidth": true},
             {"data": "familyName", "name": "Last Name", "autoWidth": true},
@@ -179,6 +195,7 @@
 
         ]
         });
+        var table = $('#classUsersModalDataTable').DataTable();
         $('#viewClassUsersModal').modal('show');
     }
     </script>

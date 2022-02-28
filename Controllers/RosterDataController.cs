@@ -131,29 +131,35 @@ namespace IDGenWebsite.Controllers
         {
             var classes = await _schoolContext.Classes.ToListAsync();
 
-            return new DataTableResponse
+            var dataTableResponse = new DataTableResponse
             {
                 RecordsTotal = classes.Count(),
                 RecordsFiltered = 10,
                 Data = classes.ToArray()
             };
+            return dataTableResponse;
         }
 
         [HttpGet]
         public async Task<string> GetClassUsers(string classSourcedId)
         {
             //Finally we send those user back to the frontend
-            //First We Need to get the class and its enrollments
+            //First We Need to get the class and its enrollments with users
             var selectedClass = await _schoolContext.Classes.Include(a => a.AcademicSessions).Include(e => e.Enrollments).ThenInclude(e => e.User).SingleOrDefaultAsync(c => c.ClassSourcedId == Guid.Parse(classSourcedId));
-         
+            List<Users> classUsers = new List<Users>();
+            foreach(var enrollment in selectedClass.Enrollments)
+            {
+                var user = enrollment.User;
+                classUsers.Add(user);
+            }
             var response = new DataTableResponse
             {
-                RecordsTotal = selectedClass.Enrollments.Count,
+                RecordsTotal = classUsers.Count,
                 RecordsFiltered = 10,
-                Data = selectedClass.Enrollments.ToArray()
+                Data = classUsers.ToArray()
             };
-
-            return JsonConvert.SerializeObject(response);
+            string jsonData = JsonConvert.SerializeObject(response, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            return jsonData;
 
         }
 

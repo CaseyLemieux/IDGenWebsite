@@ -279,3 +279,6 @@ h2.student-modal-header {
 
 /* Side Nav Styles
 -------------------------------------------------- */
+.modal-body{
+    display: table;
+}

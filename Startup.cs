@@ -21,6 +21,7 @@ using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web.UI;
+using System.Text.Json.Serialization;
 
 namespace IDGenWebsite
 {
@@ -54,8 +55,8 @@ namespace IDGenWebsite
             });
             services.AddRazorPages()
                  .AddMicrosoftIdentityUI();
-
             
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -14,7 +14,7 @@ namespace IDGenWebsite.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
         [JsonProperty("sourcedId")]
-        [Display(Name = "Sourced Id")]
+        [Display(Name = "Session Sourced Id")]
         public Guid SessionSourcedId { get; set; }
         [JsonProperty("status")]
         [Display(Name = "Status")]
